@@ -125,7 +125,9 @@ fun homeLogin(navController : NavHostController) {
                         fontWeight = FontWeight.Bold
                     ),
                     color = MaterialTheme.colors.secondary,
-                    fontSize = MaterialTheme.typography.h6.fontSize
+                    fontSize = MaterialTheme.typography.h6.fontSize,
+                    modifier = Modifier
+                        .clickable { navController.navigate(Screen.CreateAccount.route) }
                 )
             }
         }

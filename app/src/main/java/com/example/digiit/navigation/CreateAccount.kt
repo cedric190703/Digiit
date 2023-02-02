@@ -63,13 +63,13 @@ fun createAccount(navController : NavHostController) {
             Spacer(modifier = Modifier.padding(5.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 OutlinedTextField(
-                    value = emailVal.value,
-                    onValueChange = { emailVal.value = it },
+                    value = nomVal.value,
+                    onValueChange = { nomVal.value = it },
                     label = { Text(text = "Nom") },
                 )
                 OutlinedTextField(
-                    value = emailVal.value,
-                    onValueChange = { emailVal.value = it },
+                    value = prenomVal.value,
+                    onValueChange = { prenomVal.value = it },
                     label = { Text(text = "Prénom") },
                 )
                 OutlinedTextField(
@@ -101,7 +101,7 @@ fun createAccount(navController : NavHostController) {
                     color = MaterialTheme.colors.primary,
                     fontSize = MaterialTheme.typography.h4.fontSize,
                     modifier = Modifier
-                        .clickable { navController.navigate(Screen.HomeLogin.route) }
+                        .clickable { navController.navigate(Screen.ShowFonctionnalites.route) }
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
             }

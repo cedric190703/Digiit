@@ -111,7 +111,7 @@ fun lostPassword(navController : NavHostController) {
                         fontWeight = FontWeight.Bold
                     ),
                     color = MaterialTheme.colors.primary,
-                    fontSize = MaterialTheme.typography.h4.fontSize,
+                    fontSize = MaterialTheme.typography.h5.fontSize,
                     modifier = Modifier
                         .clickable { navController.navigate(Screen.HomeLogin.route) }
                 )
