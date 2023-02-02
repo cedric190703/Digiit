@@ -23,7 +23,9 @@ import com.example.digiit.R
 import com.example.digiit.Screen
 
 @Composable
-fun createAccount(navController : NavHostController) {
+fun createAccount(
+    onClick: () -> Unit
+) {
     val emailVal = remember { mutableStateOf("") }
     val passwordVal = remember { mutableStateOf("") }
     val nomVal = remember { mutableStateOf("") }
@@ -101,7 +103,7 @@ fun createAccount(navController : NavHostController) {
                     color = MaterialTheme.colors.primary,
                     fontSize = MaterialTheme.typography.h4.fontSize,
                     modifier = Modifier
-                        .clickable { navController.navigate(Screen.ShowFonctionnalites.route) }
+                        .clickable { onClick() }
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
             }

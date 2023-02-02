@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             DigiitTheme {
                 val navController = rememberNavController()
-                SetNavGraph(navController = navController)
+                RootNavigationGraph(navController = navController)
             }
         }
     }

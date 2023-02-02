@@ -25,7 +25,6 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 class dataFunctionnalites(@RawRes val resId: Int, val title: String, val description: String)
-
     val listData = listOf(
         dataFunctionnalites(
             R.raw.looking,
@@ -56,13 +55,14 @@ class dataFunctionnalites(@RawRes val resId: Int, val title: String, val descrip
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun fonctionnalites(navController : NavHostController) {
+fun fonctionnalites(
+    onClick: () -> Unit
+) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
     val (selectedPage, setSelectedPage) = remember {
         mutableStateOf(0)
     }
-
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             setSelectedPage(page)
@@ -158,7 +158,7 @@ fun fonctionnalites(navController : NavHostController) {
         if (selectedPage == listData.size - 1) {
             Button(
                 onClick = {
-                    navController.navigate(Screen.Home.route)
+                    onClick()
                 },
                 modifier = Modifier
                     .padding(16.dp)
@@ -166,7 +166,8 @@ fun fonctionnalites(navController : NavHostController) {
                     .height(56.dp)
                     .clip(RoundedCornerShape(16.dp))
             ) {
-                Text(text = "Commencer")
+                Text(
+                    text = "Commencer")
             }
         }
     }

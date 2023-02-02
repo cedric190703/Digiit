@@ -36,7 +36,7 @@ fun AnimatedSplashScreen(navController : NavHostController) {
     {
         startAnimation = true
         delay(4500)
-        navController.navigate(Screen.HomeLogin.route)
+        navController.navigate(AuthScreen.Login.route)
     }
     Splash(anim = anim.value)
 }

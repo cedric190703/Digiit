@@ -23,7 +23,9 @@ import com.example.digiit.R
 import com.example.digiit.Screen
 
 @Composable
-fun lostPassword(navController : NavHostController) {
+fun lostPassword(
+    onClick: () -> Unit
+) {
     val emailVal = remember { mutableStateOf("") }
     val password1 = remember { mutableStateOf("") }
     val password2 = remember { mutableStateOf("") }
@@ -113,7 +115,7 @@ fun lostPassword(navController : NavHostController) {
                     color = MaterialTheme.colors.primary,
                     fontSize = MaterialTheme.typography.h5.fontSize,
                     modifier = Modifier
-                        .clickable { navController.navigate(Screen.HomeLogin.route) }
+                        .clickable { onClick() }
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
             }

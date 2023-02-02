@@ -31,7 +31,11 @@ import com.example.digiit.R
 import com.example.digiit.Screen
 
 @Composable
-fun homeLogin(navController : NavHostController) {
+fun homeLogin(
+    onClick: () -> Unit,
+    SignUpClick: () -> Unit,
+    ForgotClick: () -> Unit
+) {
     val emailVal = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
@@ -99,7 +103,7 @@ fun homeLogin(navController : NavHostController) {
                     else PasswordVisualTransformation()
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
-                Button(onClick = { },
+                Button(onClick = { onClick() },
                     modifier = Modifier
                         .height(45.dp)) {
                     Text(text = "Se connecter",
@@ -115,7 +119,7 @@ fun homeLogin(navController : NavHostController) {
                     color = MaterialTheme.colors.primary,
                     fontSize = MaterialTheme.typography.h6.fontSize,
                     modifier = Modifier
-                        .clickable { navController.navigate(Screen.LostPassword.route) }
+                        .clickable { ForgotClick() }
                 )
                 Spacer(modifier = Modifier.padding(7.dp))
                 Text(
@@ -127,7 +131,7 @@ fun homeLogin(navController : NavHostController) {
                     color = MaterialTheme.colors.secondary,
                     fontSize = MaterialTheme.typography.h6.fontSize,
                     modifier = Modifier
-                        .clickable { navController.navigate(Screen.CreateAccount.route) }
+                        .clickable { SignUpClick() }
                 )
             }
         }
