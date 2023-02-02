@@ -23,10 +23,11 @@ import com.example.digiit.R
 import com.example.digiit.Screen
 
 @Composable
-fun lostPassword(navController : NavHostController) {
+fun createAccount(navController : NavHostController) {
     val emailVal = remember { mutableStateOf("") }
-    val password1 = remember { mutableStateOf("") }
-    val password2 = remember { mutableStateOf("") }
+    val passwordVal = remember { mutableStateOf("") }
+    val nomVal = remember { mutableStateOf("") }
+    val prenomVal = remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -46,14 +47,14 @@ fun lostPassword(navController : NavHostController) {
         {
             Image(
                 painter = painterResource(id = R.drawable.lost_password),
-                contentDescription = "logo password lost",
+                contentDescription = "logo créer un compte",
                 modifier = Modifier
                     .width(2000.dp)
                     .height(280.dp)
                     .padding(20.dp)
             )
             Text(
-                text = "Mot de passe oublié",
+                text = "Créer un compte",
                 style = TextStyle(
                     fontWeight = FontWeight.Bold
                 ),
@@ -64,43 +65,30 @@ fun lostPassword(navController : NavHostController) {
                 OutlinedTextField(
                     value = emailVal.value,
                     onValueChange = { emailVal.value = it },
+                    label = { Text(text = "Nom") },
+                )
+                OutlinedTextField(
+                    value = emailVal.value,
+                    onValueChange = { emailVal.value = it },
+                    label = { Text(text = "Prénom") },
+                )
+                OutlinedTextField(
+                    value = emailVal.value,
+                    onValueChange = { emailVal.value = it },
                     label = { Text(text = "Addresse email") },
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
-                Text(
-                    text = "Entrer le nouveau mot de passe",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    fontSize = MaterialTheme.typography.h6.fontSize
-                )
-                Spacer(modifier = Modifier.padding(3.dp))
                 OutlinedTextField(
-                    value = password1.value,
-                    onValueChange = { password1.value = it },
-                    label = { Text(text = "Mot de passe 1") },
-                    placeholder = { Text(text = "mot de passe 1") }
-                )
-                Spacer(modifier = Modifier.padding(10.dp))
-                Text(
-                    text = "Retaper le mot de passe",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    fontSize = MaterialTheme.typography.h6.fontSize
-                )
-                Spacer(modifier = Modifier.padding(3.dp))
-                OutlinedTextField(
-                    value = password2.value,
-                    onValueChange = { password2.value = it },
-                    label = { Text(text = "Mot de passe 2") },
-                    placeholder = { Text(text = "mot de passe 2") }
+                    value = passwordVal.value,
+                    onValueChange = { passwordVal.value = it },
+                    label = { Text(text = "Mot de passe") },
+                    placeholder = { Text(text = "mot de passe") }
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
                 Button(onClick = { },
                     modifier = Modifier
                         .height(45.dp)) {
-                    Text(text = "Changer mot de passe",
+                    Text(text = "Créer un compte",
                         fontSize = MaterialTheme.typography.h6.fontSize)
                 }
                 Spacer(modifier = Modifier.padding(8.dp))

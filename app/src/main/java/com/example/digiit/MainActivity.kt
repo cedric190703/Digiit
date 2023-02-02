@@ -1,6 +1,7 @@
 package com.example.digiit
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import com.example.digiit.ui.theme.DigiitTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setContent {
             DigiitTheme {
                 val navController = rememberNavController()
@@ -24,15 +26,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Composable
-fun test() {
-    Text(text = "test2")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    test()
 }

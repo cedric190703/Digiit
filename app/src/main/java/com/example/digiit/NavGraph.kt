@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.digiit.navigation.homeLogin
+import com.example.digiit.navigation.lostPassword
 
 @Composable
 fun SetNavGraph(
@@ -20,7 +21,12 @@ fun SetNavGraph(
 
         composable(route = Screen.HomeLogin.route)
         {
-            homeLogin()
+            homeLogin(navController)
+        }
+
+        composable(route = Screen.LostPassword.route)
+        {
+            lostPassword(navController)
         }
 
         composable(route = Screen.Home.route)

@@ -2,6 +2,7 @@ package com.example.digiit.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,10 +26,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.digiit.R
+import com.example.digiit.Screen
 
 @Composable
-fun homeLogin() {
+fun homeLogin(navController : NavHostController) {
     val emailVal = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
@@ -45,7 +48,7 @@ fun homeLogin() {
         {
             Image(
                 painter = painterResource(id = R.drawable.login),
-                contentDescription = "logo application",
+                contentDescription = "logo home login",
                 modifier = Modifier
                     .width(2000.dp)
                     .height(249.dp)
@@ -70,7 +73,7 @@ fun homeLogin() {
                 ),
                 fontSize = MaterialTheme.typography.h4.fontSize
             )
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.padding(5.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 OutlinedTextField(
                     value = emailVal.value,
@@ -89,14 +92,13 @@ fun homeLogin() {
                         IconButton(onClick = {
                             passwordVisibility.value = !passwordVisibility.value
                         }) {
-                            //Logo Icon eye
+                            //Logo Icon eye for password
                         }
                     },
                     visualTransformation = if(passwordVisibility.value) VisualTransformation.None
                     else PasswordVisualTransformation()
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
-
                 Button(onClick = { },
                     modifier = Modifier
                         .height(45.dp)) {
@@ -111,6 +113,18 @@ fun homeLogin() {
                         fontWeight = FontWeight.Bold
                     ),
                     color = MaterialTheme.colors.primary,
+                    fontSize = MaterialTheme.typography.h6.fontSize,
+                    modifier = Modifier
+                        .clickable { navController.navigate(Screen.LostPassword.route) }
+                )
+                Spacer(modifier = Modifier.padding(7.dp))
+                Text(
+                    text = "Créer un compte",
+                    textDecoration = TextDecoration.Underline,
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colors.secondary,
                     fontSize = MaterialTheme.typography.h6.fontSize
                 )
             }
