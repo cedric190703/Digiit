@@ -1,39 +1,35 @@
 package com.example.digiit.Home
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
-data class BottomNavItem(
-    val label: String,
-    val icon: ImageVector,
-    val route:String,
-)
+sealed class BottomBarScreen(
+    val route: String,
+    val title: String,
+    val icon: ImageVector
+) {
+    object Home : BottomBarScreen(
+        route = "HOME",
+        title = "HOME",
+        icon = Icons.Default.Home
+    )
 
-object NavItems {
-    val BottomNavItems = listOf(
-        BottomNavItem(
-            label = "Home",
-            icon = Icons.Filled.Home,
-            route = "home"
-        ),
-        BottomNavItem(
-            label = "Wallet",
-            icon = Icons.Filled.Email,
-            route = "wallet"
-        ),
-        BottomNavItem(
-            label = "Data",
-            icon = Icons.Filled.Person,
-            route = "data"
-        ),
-        BottomNavItem(
-            label = "Menu",
-            icon = Icons.Filled.Menu,
-            route = "menu"
-        )
+    object Wallet : BottomBarScreen(
+        route = "WALLET",
+        title = "WALLET",
+        icon = Icons.Default.Email
+    )
+
+    object Data : BottomBarScreen(
+        route = "DATA",
+        title = "DATA",
+        icon = Icons.Default.Share
+    )
+
+    object Menu : BottomBarScreen(
+        route = "MENU",
+        title = "MENU",
+        icon = Icons.Default.Menu
     )
 }

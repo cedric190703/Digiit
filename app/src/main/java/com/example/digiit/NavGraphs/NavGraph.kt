@@ -1,9 +1,10 @@
-package com.example.digiit
+package com.example.digiit.NavGraphs
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.digiit.AnimatedSplashScreen
 import com.example.digiit.ShowFunctionalities.fonctionnalites
 import com.example.digiit.navigation.createAccount
 import com.example.digiit.navigation.homeLogin

@@ -1,10 +1,10 @@
-package com.example.digiit
+package com.example.digiit.NavGraphs
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.digiit.Home.HomeScreen
+import com.example.digiit.SetHomeScreen
 
 @Composable
 fun RootNavigationGraph(navController: NavHostController) {
@@ -15,7 +15,7 @@ fun RootNavigationGraph(navController: NavHostController) {
     ) {
         authNavGraph(navController = navController)
         composable(route = Graph.HOME) {
-            SetHome(navController = navController)
+            SetHomeScreen()
         }
     }
 }
@@ -24,5 +24,4 @@ object Graph {
     const val ROOT = "root_graph"
     const val AUTHENTICATION = "auth_graph"
     const val HOME = "home_graph"
-    const val DETAILS = "details_graph"
 }
