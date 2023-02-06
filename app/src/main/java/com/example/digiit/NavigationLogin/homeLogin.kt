@@ -113,14 +113,14 @@ fun homeLogin(
                     modifier = Modifier
                         .clickable { ForgotClick() }
                 )
-                Spacer(modifier = Modifier.padding(7.dp))
+                Spacer(modifier = Modifier.padding(6.dp))
                 Text(
                     text = "Créer un compte",
                     textDecoration = TextDecoration.Underline,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold
                     ),
-                    color = MaterialTheme.colors.secondary,
+                    color = MaterialTheme.colors.primary,
                     fontSize = MaterialTheme.typography.h6.fontSize,
                     modifier = Modifier
                         .clickable { SignUpClick() }

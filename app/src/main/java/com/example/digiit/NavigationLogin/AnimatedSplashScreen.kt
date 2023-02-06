@@ -32,7 +32,7 @@ fun AnimatedSplashScreen(navController : NavHostController) {
     LaunchedEffect(key1 = true)
     {
         startAnimation = true
-        delay(4500)
+        delay(3800)
         navController.navigate(AuthScreen.Login.route)
     }
     Splash(anim = anim.value)

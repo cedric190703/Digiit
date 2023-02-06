@@ -1,32 +1,49 @@
 package com.example.digiit.Home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.example.digiit.R
 
 @Composable
 fun HomeScreen() {
-    Column(
+    Scaffold(
+        backgroundColor = Color.White,
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Home,
-            contentDescription = "home",
-            tint = Color(0xFF0F9D58)
-        )
-        Text(text = "Home tickets", color = Color.Black)
+            .fillMaxSize(),
+        content = { padding ->
+            HomeTicketContent(padding)
+        }, topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Tickets",
+                        color = Color.White
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.tickets),
+                            contentDescription = "Logo Home"
+                        )
+                    }
+                },
+
+                contentColor = Color.White,
+                elevation = 12.dp
+            )
+        }
+    )
+}
+
+@Composable
+fun HomeTicketContent(paddingValues: PaddingValues) {
+    Column() {
+        //TODO
     }
 }
