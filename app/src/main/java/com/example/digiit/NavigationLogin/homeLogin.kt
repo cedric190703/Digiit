@@ -102,8 +102,7 @@ fun homeLogin(
             Text(
                 text = "Créer un compte",
                 textDecoration = TextDecoration.Underline,
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold
+                style = TextStyle( fontWeight = FontWeight.Bold
                 ),
                 color = MaterialTheme.colors.primary,
                 fontSize = MaterialTheme.typography.h6.fontSize,
