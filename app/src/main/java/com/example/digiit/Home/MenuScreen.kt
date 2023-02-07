@@ -1,8 +1,11 @@
 package com.example.digiit.Home
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -49,7 +52,8 @@ fun MenuScreen() {
 @Composable
 fun MenuContent(paddingValues: PaddingValues) {
     Column(verticalArrangement = Arrangement.Center,
-           horizontalAlignment = Alignment.CenterHorizontally) {
+           horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.verticalScroll(rememberScrollState())) {
         Card(
             shape = RoundedCornerShape(8.dp),
             backgroundColor = MaterialTheme.colors.surface,
@@ -60,8 +64,8 @@ fun MenuContent(paddingValues: PaddingValues) {
         ) {
             Column(
                 modifier = Modifier
-                    .height(200.dp)
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .fillMaxHeight()
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -70,7 +74,7 @@ fun MenuContent(paddingValues: PaddingValues) {
                     Button(onClick = {},
                         Modifier.width(450.dp),
                         shape = RoundedCornerShape(180.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0694B8))) {
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF009DDB))) {
                         Icon(
                             painter = painterResource(id = R.drawable.profile),
                             contentDescription = "Logo profile",
@@ -87,7 +91,7 @@ fun MenuContent(paddingValues: PaddingValues) {
                     Button(onClick = {},
                         Modifier.width(450.dp),
                         shape = RoundedCornerShape(180.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0889CF))
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0083E7))
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.safety),
@@ -109,8 +113,8 @@ fun MenuContent(paddingValues: PaddingValues) {
         ) {
             Column(
                 modifier = Modifier
-                    .height(500.dp)
                     .padding(16.dp)
+                    .fillMaxHeight()
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -119,7 +123,7 @@ fun MenuContent(paddingValues: PaddingValues) {
                     Button(onClick = {},
                         Modifier.width(450.dp),
                         shape = RoundedCornerShape(180.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0877CC))) {
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF056CE9))) {
                         Icon(
                             painter = painterResource(id = R.drawable.settings),
                             contentDescription = "Logo reglages",
@@ -136,7 +140,7 @@ fun MenuContent(paddingValues: PaddingValues) {
                     Button(onClick = {},
                         Modifier.width(450.dp),
                         shape = RoundedCornerShape(180.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0D42C9))) {
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0638EB))) {
                         Icon(
                             painter = painterResource(id = R.drawable.folders),
                             contentDescription = "Logo confidentialite",
@@ -153,7 +157,7 @@ fun MenuContent(paddingValues: PaddingValues) {
                     Button(onClick = {},
                         Modifier.width(450.dp),
                         shape = RoundedCornerShape(180.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF053AD6))) {
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0118EB))) {
                         Icon(
                             painter = painterResource(id = R.drawable.style),
                             contentDescription = "Logo personnalisation",

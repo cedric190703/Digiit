@@ -33,6 +33,9 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
             createAccount (
                 onClick = {
                     navController.navigate(AuthScreen.Animation.route)
+                },
+                onLogin = {
+                    navController.navigate(AuthScreen.Login.route)
                 }
             )
         }
@@ -40,6 +43,9 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
             lostPassword(
                 onClick = {
                     navController.navigate(AuthScreen.SignUp.route)
+                },
+                onLogin = {
+                    navController.navigate(AuthScreen.Login.route)
                 }
             )
         }

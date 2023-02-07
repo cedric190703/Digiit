@@ -15,7 +15,6 @@ fun HomeNavGraph(
     navController: NavHostController,
     padding: PaddingValues
     ) {
-    println("here bro")
     NavHost(
         navController = navController,
         modifier = Modifier.padding(paddingValues = padding),

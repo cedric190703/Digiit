@@ -133,7 +133,7 @@ fun fonctionnalites(
                     },
                     modifier = Modifier.height(56.dp)
                 ) {
-                    Text(text = "Skip")
+                    Text(text = "Passer")
                 }
 
                 Button(

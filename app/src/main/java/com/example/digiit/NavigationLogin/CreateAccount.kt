@@ -4,6 +4,10 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +24,8 @@ import com.example.digiit.R
 
 @Composable
 fun createAccount(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLogin: () -> Unit
 ) {
     val emailVal = remember { mutableStateOf("") }
     val passwordVal = remember { mutableStateOf("") }
@@ -43,14 +48,25 @@ fun createAccount(
             verticalArrangement = Arrangement.Center
         )
         {
-            Image(
-                painter = painterResource(id = R.drawable.lost_password),
-                contentDescription = "logo créer un compte",
-                modifier = Modifier
-                    .width(2000.dp)
-                    .height(280.dp)
-                    .padding(20.dp)
-            )
+            Box() {
+                Button(modifier = Modifier
+                    .align(Alignment.TopStart),
+                    shape = RoundedCornerShape(60),
+                    onClick = { onLogin() }) {
+                    Icon(imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "array back logo logo",
+                    )
+                }
+                Image(
+                    painter = painterResource(id = R.drawable.create_account),
+                    contentDescription = "logo créer un compte",
+                    modifier = Modifier
+                        .width(2000.dp)
+                        .height(280.dp)
+                        .padding(20.dp)
+                        .align(Alignment.TopCenter)
+                )
+            }
             Text(
                 text = "Créer un compte",
                 style = TextStyle(
@@ -58,7 +74,7 @@ fun createAccount(
                 ),
                 fontSize = MaterialTheme.typography.h4.fontSize
             )
-            Spacer(modifier = Modifier.padding(5.dp))
+            Spacer(modifier = Modifier.padding(1.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 OutlinedTextField(
                     value = nomVal.value,
@@ -75,21 +91,20 @@ fun createAccount(
                     onValueChange = { emailVal.value = it },
                     label = { Text(text = "Addresse email") },
                 )
-                Spacer(modifier = Modifier.padding(10.dp))
                 OutlinedTextField(
                     value = passwordVal.value,
                     onValueChange = { passwordVal.value = it },
                     label = { Text(text = "Mot de passe") },
                     placeholder = { Text(text = "mot de passe") }
                 )
-                Spacer(modifier = Modifier.padding(20.dp))
-                Button(onClick = { },
+                Spacer(modifier = Modifier.padding(17.dp))
+                Button(onClick = { onClick() },
                     modifier = Modifier
                         .height(45.dp)) {
                     Text(text = "Créer un compte",
                         fontSize = MaterialTheme.typography.h6.fontSize)
                 }
-                Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(5.dp))
                 Text(
                     text = "Se connecter",
                     textDecoration = TextDecoration.Underline,
@@ -97,9 +112,7 @@ fun createAccount(
                         fontWeight = FontWeight.Bold
                     ),
                     color = MaterialTheme.colors.primary,
-                    fontSize = MaterialTheme.typography.h4.fontSize,
-                    modifier = Modifier
-                        .clickable { onClick() }
+                    fontSize = MaterialTheme.typography.h6.fontSize
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
             }

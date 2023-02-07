@@ -4,6 +4,8 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +22,8 @@ import com.example.digiit.R
 
 @Composable
 fun lostPassword(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLogin: () -> Unit
 ) {
     val emailVal = remember { mutableStateOf("") }
     val password1 = remember { mutableStateOf("") }
@@ -41,15 +44,25 @@ fun lostPassword(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         )
-        {
+        {Box() {
+            Button(modifier = Modifier
+                .align(Alignment.TopStart),
+                shape = RoundedCornerShape(60),
+                onClick = { onLogin() }) {
+                Icon(imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "array back logo logo",
+                )
+            }
             Image(
                 painter = painterResource(id = R.drawable.lost_password),
-                contentDescription = "logo password lost",
+                contentDescription = "logo créer un compte",
                 modifier = Modifier
                     .width(2000.dp)
                     .height(280.dp)
                     .padding(20.dp)
+                    .align(Alignment.TopCenter)
             )
+        }
             Text(
                 text = "Mot de passe oublié",
                 style = TextStyle(
@@ -57,7 +70,7 @@ fun lostPassword(
                 ),
                 fontSize = MaterialTheme.typography.h4.fontSize
             )
-            Spacer(modifier = Modifier.padding(5.dp))
+            Spacer(modifier = Modifier.padding(2.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 OutlinedTextField(
                     value = emailVal.value,
@@ -72,27 +85,17 @@ fun lostPassword(
                     ),
                     fontSize = MaterialTheme.typography.h6.fontSize
                 )
-                Spacer(modifier = Modifier.padding(3.dp))
                 OutlinedTextField(
                     value = password1.value,
                     onValueChange = { password1.value = it },
                     label = { Text(text = "Mot de passe 1") },
                     placeholder = { Text(text = "mot de passe 1") }
                 )
-                Spacer(modifier = Modifier.padding(10.dp))
-                Text(
-                    text = "Retaper le mot de passe",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    fontSize = MaterialTheme.typography.h6.fontSize
-                )
-                Spacer(modifier = Modifier.padding(3.dp))
                 OutlinedTextField(
                     value = password2.value,
                     onValueChange = { password2.value = it },
-                    label = { Text(text = "Mot de passe 2") },
-                    placeholder = { Text(text = "mot de passe 2") }
+                    label = { Text(text = "Retaper le mot de passe") },
+                    placeholder = { Text(text = "Retaper le mot de passe") }
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
                 Button(onClick = { },
@@ -101,7 +104,7 @@ fun lostPassword(
                     Text(text = "Changer mot de passe",
                         fontSize = MaterialTheme.typography.h6.fontSize)
                 }
-                Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(2.dp))
                 Text(
                     text = "Se connecter",
                     textDecoration = TextDecoration.Underline,
@@ -109,7 +112,7 @@ fun lostPassword(
                         fontWeight = FontWeight.Bold
                     ),
                     color = MaterialTheme.colors.primary,
-                    fontSize = MaterialTheme.typography.h5.fontSize,
+                    fontSize = MaterialTheme.typography.h6.fontSize,
                     modifier = Modifier
                         .clickable { onClick() }
                 )

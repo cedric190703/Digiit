@@ -1,8 +1,6 @@
 package com.example.digiit.navigation
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -32,100 +30,86 @@ fun homeLogin(
     val password = remember { mutableStateOf("") }
 
     val passwordVisibility = remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter)
-    {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White),
-            contentAlignment = Alignment.TopCenter)
-        {
-            Image(
-                painter = painterResource(id = R.drawable.login),
-                contentDescription = "logo home login",
-                modifier = Modifier
-                    .width(2000.dp)
-                    .height(249.dp)
+    Column(
+        modifier = Modifier
+            .clip(RoundedCornerShape(30.dp))
+            .background(Color.White)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
             )
-        }
-
-        Column(
+    {
+        Image(
+            painter = painterResource(id = R.drawable.login),
+            contentDescription = "logo créer un compte",
             modifier = Modifier
-                .fillMaxSize(0.63f)
-                .clip(RoundedCornerShape(30.dp))
-                .background(Color.White)
-                .width(1400.dp)
-                .padding(1.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-                )
-        {
+                .width(2000.dp)
+                .height(290.dp)
+                .padding(20.dp)
+        )
+        Text(
+            text = "Se connecter",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold
+            ),
+            fontSize = MaterialTheme.typography.h4.fontSize
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            OutlinedTextField(
+                value = emailVal.value,
+                onValueChange = { emailVal.value = it },
+                label = { Text(text = "Addresse email") },
+            )
+
+            Spacer(modifier = Modifier.padding(5.dp))
+
+            OutlinedTextField(
+                value = password.value,
+                onValueChange = { password.value = it },
+                label = { Text(text = "Mot de passe") },
+                placeholder = { Text(text = "mot de passe") },
+                trailingIcon = {
+                    IconButton(onClick = {
+                        passwordVisibility.value = !passwordVisibility.value
+                    }) {
+                        //Logo Icon eye for password
+                    }
+                },
+                visualTransformation = if(passwordVisibility.value) VisualTransformation.None
+                else PasswordVisualTransformation()
+            )
+            Spacer(modifier = Modifier.padding(21.dp))
+            Button(onClick = { onClick() },
+                modifier = Modifier
+                    .height(45.dp)) {
+                Text(text = "Se connecter",
+                    fontSize = MaterialTheme.typography.h6.fontSize)
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
             Text(
-                text = "Se connecter",
+                text = "Mot de passe oublié",
+                textDecoration = TextDecoration.Underline,
                 style = TextStyle(
                     fontWeight = FontWeight.Bold
                 ),
-                fontSize = MaterialTheme.typography.h4.fontSize
+                color = MaterialTheme.colors.primary,
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                modifier = Modifier
+                    .clickable { ForgotClick() }
             )
-            Spacer(modifier = Modifier.padding(5.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                OutlinedTextField(
-                    value = emailVal.value,
-                    onValueChange = { emailVal.value = it },
-                    label = { Text(text = "Addresse email") },
-                )
-
-                Spacer(modifier = Modifier.padding(10.dp))
-
-                OutlinedTextField(
-                    value = password.value,
-                    onValueChange = { password.value = it },
-                    label = { Text(text = "Mot de passe") },
-                    placeholder = { Text(text = "mot de passe") },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            passwordVisibility.value = !passwordVisibility.value
-                        }) {
-                            //Logo Icon eye for password
-                        }
-                    },
-                    visualTransformation = if(passwordVisibility.value) VisualTransformation.None
-                    else PasswordVisualTransformation()
-                )
-                Spacer(modifier = Modifier.padding(20.dp))
-                Button(onClick = { onClick() },
-                    modifier = Modifier
-                        .height(45.dp)) {
-                    Text(text = "Se connecter",
-                        fontSize = MaterialTheme.typography.h6.fontSize)
-                }
-                Spacer(modifier = Modifier.padding(8.dp))
-                Text(
-                    text = "Mot de passe oublié",
-                    textDecoration = TextDecoration.Underline,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colors.primary,
-                    fontSize = MaterialTheme.typography.h6.fontSize,
-                    modifier = Modifier
-                        .clickable { ForgotClick() }
-                )
-                Spacer(modifier = Modifier.padding(6.dp))
-                Text(
-                    text = "Créer un compte",
-                    textDecoration = TextDecoration.Underline,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colors.primary,
-                    fontSize = MaterialTheme.typography.h6.fontSize,
-                    modifier = Modifier
-                        .clickable { SignUpClick() }
-                )
-            }
+            Spacer(modifier = Modifier.padding(2.dp))
+            Text(
+                text = "Créer un compte",
+                textDecoration = TextDecoration.Underline,
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colors.primary,
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                modifier = Modifier
+                    .clickable { SignUpClick() }
+            )
         }
     }
 }
