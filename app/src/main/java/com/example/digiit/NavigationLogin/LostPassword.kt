@@ -22,8 +22,8 @@ import com.example.digiit.R
 
 @Composable
 fun lostPassword(
-    onClick: () -> Unit,
-    onLogin: () -> Unit
+    goLogin: () -> Unit,
+    sentMail: (String) -> Unit
 ) {
     val emailVal = remember { mutableStateOf("") }
     val password1 = remember { mutableStateOf("") }
@@ -48,7 +48,7 @@ fun lostPassword(
             Button(modifier = Modifier
                 .align(Alignment.TopStart),
                 shape = RoundedCornerShape(60),
-                onClick = { onLogin() }) {
+                onClick = { goLogin() }) {
                 Icon(imageVector = Icons.Default.ArrowBack,
                     contentDescription = "array back logo logo",
                 )
@@ -98,7 +98,7 @@ fun lostPassword(
                     placeholder = { Text(text = "Retaper le mot de passe") }
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
-                Button(onClick = { },
+                Button(onClick = { sentMail(emailVal.value) },
                     modifier = Modifier
                         .height(45.dp)) {
                     Text(text = "Changer mot de passe",
@@ -114,7 +114,7 @@ fun lostPassword(
                     color = MaterialTheme.colors.primary,
                     fontSize = MaterialTheme.typography.h6.fontSize,
                     modifier = Modifier
-                        .clickable { onClick() }
+                        .clickable { goLogin() }
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
             }

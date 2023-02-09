@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,7 +22,7 @@ import com.example.digiit.R
 
 @Composable
 fun createAccount(
-    onClick: () -> Unit,
+    onClick: (String, String) -> Unit,
     onLogin: () -> Unit
 ) {
     val emailVal = remember { mutableStateOf("") }
@@ -98,7 +96,7 @@ fun createAccount(
                     placeholder = { Text(text = "mot de passe") }
                 )
                 Spacer(modifier = Modifier.padding(17.dp))
-                Button(onClick = { onClick() },
+                Button(onClick = { onClick(emailVal.value, passwordVal.value) },
                     modifier = Modifier
                         .height(45.dp)) {
                     Text(text = "Créer un compte",
