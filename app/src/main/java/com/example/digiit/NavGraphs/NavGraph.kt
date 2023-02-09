@@ -10,7 +10,6 @@ import com.example.digiit.navigation.createAccount
 import com.example.digiit.navigation.homeLogin
 import com.example.digiit.navigation.lostPassword
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.tasks.await
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: FirebaseAuth) {
     navigation(
@@ -46,7 +45,20 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: Firebas
         }
         composable(route = AuthScreen.SignUp.route) {
             createAccount (
-                onClick = {
+                onClick = { _mail : String, _password : String ->
+                        println("User does not exist try to create it")
+                        //create user with email and password
+                        auth.createUserWithEmailAndPassword(_mail, _password).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                println("User is created")
+                                navController.popBackStack()
+                                navController.navigate(Graph.HOME)
+                            } else {
+                                println("User is not created")
+                                //print task.exception
+                                println(task.exception)
+                            }
+                    }
                     navController.navigate(AuthScreen.Animation.route)
                 },
                 onLogin = {
@@ -56,10 +68,17 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: Firebas
         }
         composable(route = AuthScreen.Forgot.route) {
             lostPassword(
-                onClick = {
-                    navController.navigate(AuthScreen.SignUp.route)
+                goLogin = {
+                    navController.navigate(AuthScreen.Login.route)
                 },
-                onLogin = {
+                sentMail = { _mail : String ->
+                    auth.sendPasswordResetEmail(_mail).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            println("Mail sent")
+                        } else {
+                            println("Mail not sent")
+                        }
+                    }
                     navController.navigate(AuthScreen.Login.route)
                 }
             )
