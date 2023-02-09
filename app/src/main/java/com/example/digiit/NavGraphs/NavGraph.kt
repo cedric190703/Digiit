@@ -9,17 +9,32 @@ import com.example.digiit.ShowFunctionalities.fonctionnalites
 import com.example.digiit.navigation.createAccount
 import com.example.digiit.navigation.homeLogin
 import com.example.digiit.navigation.lostPassword
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.tasks.await
 
-fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: FirebaseAuth) {
     navigation(
         route = Graph.AUTHENTICATION,
         startDestination = AuthScreen.Splash.route
     ) {
         composable(route = AuthScreen.Login.route) {
             homeLogin(
-                onClick = {
-                    navController.popBackStack()
-                    navController.navigate(Graph.HOME)
+                onClick = { _user: String, _password: String ->
+                    //print user and password
+                    println(_user)
+                    println(_password)
+                    //sign in with email and password
+                    auth.signInWithEmailAndPassword(_user, _password).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            println("User is signed in")
+                            navController.popBackStack()
+                            navController.navigate(Graph.HOME)
+                        } else {
+                            println("User is not signed in")
+                        }
+                    }
+                    //navController.popBackStack()
+                    //navController.navigate(Graph.HOME)
                 },
                 SignUpClick = {
                     navController.navigate(AuthScreen.SignUp.route)

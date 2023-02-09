@@ -22,7 +22,7 @@ import com.example.digiit.R
 
 @Composable
 fun homeLogin(
-    onClick: () -> Unit,
+    onClick: (user: String, password: String) -> Unit,
     SignUpClick: () -> Unit,
     ForgotClick: () -> Unit
 ) {
@@ -80,7 +80,7 @@ fun homeLogin(
                 else PasswordVisualTransformation()
             )
             Spacer(modifier = Modifier.padding(21.dp))
-            Button(onClick = { onClick() },
+            Button(onClick = { onClick(emailVal.value, password.value) },
                 modifier = Modifier
                     .height(45.dp)) {
                 Text(text = "Se connecter",

@@ -5,15 +5,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.digiit.SetHomeScreen
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun RootNavigationGraph(navController: NavHostController) {
+fun RootNavigationGraph(navController: NavHostController, auth: FirebaseAuth) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
         startDestination = Graph.AUTHENTICATION
     ) {
-        authNavGraph(navController = navController)
+        authNavGraph(navController = navController, auth = auth)
         composable(route = Graph.HOME) {
             SetHomeScreen()
         }
