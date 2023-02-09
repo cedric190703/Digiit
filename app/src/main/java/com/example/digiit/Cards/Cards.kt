@@ -1,4 +1,4 @@
-package Cards
+package com.example.digiit.Cards
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

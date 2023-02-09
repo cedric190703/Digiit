@@ -1,12 +1,12 @@
 package com.example.digiit.Home
 
-import Cards.tags
-import Cards.ticketsCard
-import androidx.compose.animation.AnimatedVisibility
+import android.widget.Toast
+import com.example.digiit.Cards.tags
+import com.example.digiit.Cards.ticketsCard
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,20 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.digiit.DialogDelete
+import com.example.digiit.DialogState
 import com.example.digiit.R
+import es.dmoral.toasty.Toasty
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Composable
 fun HomeScreen() {
+    val (showDialog, setShowDialog) =  remember { mutableStateOf(false) }
+    val context = LocalContext.current.applicationContext
     Scaffold(
         backgroundColor = Color.White,
         modifier = Modifier
@@ -60,7 +60,9 @@ fun HomeScreen() {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {},
+                onClick = {
+                    //Test for the toast
+                    Toasty.success(context, "Vous êtes bien connecté", Toast.LENGTH_SHORT, true).show() },
                 Modifier.size(70.dp),
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = Color.White,
@@ -69,6 +71,9 @@ fun HomeScreen() {
                     "add button",
                     modifier = Modifier.fillMaxSize(0.5F))
             }
+            //Tests for the Dialog
+            //DialogState(true,showDialog, onDismiss = setShowDialog)
+            //DialogDelete(showDialog, onDismiss = setShowDialog)
         }
     )
 }
@@ -82,7 +87,7 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
     modifier = Modifier.fillMaxWidth()) {
         SearchView()
 
-        LazyColumn {
+        LazyColumn(modifier = Modifier) {
             item {
                 ticketsCard(typeCommerce = tags.Alimentation,
                     tag = "Test",

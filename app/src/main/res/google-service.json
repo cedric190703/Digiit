@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "304261079233",
+    "project_id": "auth-digiit",
+    "storage_bucket": "auth-digiit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:304261079233:android:919998f2d0e55aa9f33440",
+        "android_client_info": {
+          "package_name": "com.example.digiit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "304261079233-8e74j229agetn0i09g5883rrjar30fdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjLFqaLhOrGqwnC7bJjlQE76kMDAjlD04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "304261079233-8e74j229agetn0i09g5883rrjar30fdn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

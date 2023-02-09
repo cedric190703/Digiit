@@ -28,7 +28,6 @@ fun homeLogin(
 ) {
     val emailVal = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-
     val passwordVisibility = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier

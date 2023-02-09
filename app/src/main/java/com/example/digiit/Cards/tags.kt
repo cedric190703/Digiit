@@ -1,4 +1,4 @@
-package Cards
+package com.example.digiit.Cards
 
 import com.example.digiit.R
 
