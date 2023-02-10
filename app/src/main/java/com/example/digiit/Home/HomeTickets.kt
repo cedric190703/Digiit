@@ -19,7 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.PopupProperties
 import com.example.digiit.DialogDelete
 import com.example.digiit.DialogState
 import com.example.digiit.R
@@ -86,7 +91,6 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth()) {
         SearchView()
-
         LazyColumn(modifier = Modifier) {
             item {
                 ticketsCard(typeCommerce = tags.Alimentation,
@@ -138,6 +142,11 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
 
 @Composable
 fun SearchView() {
+    val listItems = getMenuItemsList()
+    val listOrders = getMenuItemsFilter()
+    var expanded by remember {
+        mutableStateOf(false)
+    }
     var searchText by remember { mutableStateOf("") }
     val isVisible by remember {
         derivedStateOf {
@@ -179,11 +188,95 @@ fun SearchView() {
             },
         )
         Button(
-            onClick = { },
+            onClick = { expanded = true },
             modifier = Modifier.padding(5.dp)
         ) {
             Icon(painter = painterResource(id = R.drawable.filter),
-                contentDescription = "search logo")
+                contentDescription = "Filter logo")
+        }
+        DropdownMenu(
+            modifier = Modifier.width(width = 190.dp),
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            },
+            offset = DpOffset(x = (-102).dp, y = (-64).dp),
+            properties = PopupProperties()
+        ) {
+            Text(text = "Filtrer par :",
+                modifier = Modifier.padding(8.dp),
+                color = MaterialTheme.colors.primary,
+                fontSize = 18.sp,
+                textDecoration = TextDecoration.Underline,
+                fontWeight = FontWeight.Bold
+            )
+            listItems.forEach { menuItemData ->
+                DropdownMenuItem(
+                    onClick = {
+                        expanded = false
+                    },
+                    enabled = true
+                ) {
+                    Icon(
+                        painter = painterResource(id = menuItemData.icon),
+                        contentDescription = menuItemData.text,
+                        tint = MaterialTheme.colors.primary
+                    )
+                    Spacer(modifier = Modifier.width(width = 8.dp))
+                    Text(
+                        text = menuItemData.text,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                    )
+                }
+            }
+            Text(text = "Par ordre",
+                modifier = Modifier.padding(8.dp),
+                color = MaterialTheme.colors.primary,
+                fontSize = 18.sp,
+                textDecoration = TextDecoration.Underline,
+                fontWeight = FontWeight.Bold
+            )
+            listOrders.forEach { menuItemFilter ->
+                DropdownMenuItem(
+                    onClick = {
+                        expanded = false
+                    },
+                    enabled = true
+                ) {
+                    Icon(
+                        painter = painterResource(id = menuItemFilter.icon),
+                        contentDescription = menuItemFilter.text,
+                        tint = MaterialTheme.colors.primary
+                    )
+                    Spacer(modifier = Modifier.width(width = 8.dp))
+                    Text(
+                        text = menuItemFilter.text,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                    )
+                }
+            }
         }
     }
+}
+
+data class MenuItemData(val text: String, val icon: Int)
+
+fun getMenuItemsList(): ArrayList<MenuItemData> {
+    val listItems = ArrayList<MenuItemData>()
+    listItems.add(MenuItemData(text = "Enseigne", icon = R.drawable.sort_by_alphabet))
+    listItems.add(MenuItemData(text = "Date", icon = R.drawable.date))
+    listItems.add(MenuItemData(text = "Amont", icon = R.drawable.money))
+    listItems.add(MenuItemData(text = "Type", icon = R.drawable.store))
+
+    return listItems
+}
+
+fun getMenuItemsFilter(): ArrayList<MenuItemData> {
+    val listItems = ArrayList<MenuItemData>()
+    listItems.add(MenuItemData(text = "Croissant", icon = R.drawable.ascending))
+    listItems.add(MenuItemData(text = "Décroissant", icon = R.drawable.descending))
+
+    return listItems
 }
