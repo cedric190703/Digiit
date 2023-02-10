@@ -82,11 +82,9 @@ fun MenuContent(paddingValues: PaddingValues) {
         ) {
 
             item {
-                // User's image, name, email and edit button
                 UserDetails(context = context)
             }
 
-            // Show the options
             items(optionsList) { item ->
                 OptionsItemStyle(item = item, context = context)
             }
@@ -118,8 +116,6 @@ private fun UserDetails(context: Context) {
                     .weight(weight = 3f, fill = false)
                     .padding(start = 16.dp)
             ) {
-
-                // User's name
                 Text(
                     text = "User",
                     style = TextStyle(
@@ -128,7 +124,6 @@ private fun UserDetails(context: Context) {
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "a@a.com",
@@ -141,7 +136,6 @@ private fun UserDetails(context: Context) {
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            
             IconButton(
                 modifier = Modifier
                     .weight(weight = 1f, fill = false),
@@ -153,7 +147,17 @@ private fun UserDetails(context: Context) {
                     tint = MaterialTheme.colors.primary
                 )
             }
-
+            IconButton(
+                modifier = Modifier
+                    .weight(weight = 1f, fill = false),
+                onClick = { }) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(id = R.drawable.logout),
+                    contentDescription = "Deconnexion",
+                    tint = MaterialTheme.colors.primary
+                )
+            }
         }
     }
 }
