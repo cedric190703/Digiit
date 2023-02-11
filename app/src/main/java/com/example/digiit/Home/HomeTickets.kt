@@ -1,12 +1,10 @@
 package com.example.digiit.Home
 
-import android.widget.Toast
 import com.example.digiit.Cards.tags
 import com.example.digiit.Cards.ticketsCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -25,17 +23,14 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
-import com.example.digiit.DialogDelete
-import com.example.digiit.DialogState
 import com.example.digiit.R
-import es.dmoral.toasty.Toasty
+import com.example.digiit.photos.SelectOption
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun HomeScreen() {
-    val (showDialog, setShowDialog) =  remember { mutableStateOf(false) }
-    val context = LocalContext.current.applicationContext
+    val showDialog =  remember { mutableStateOf(false) }
     Scaffold(
         backgroundColor = Color.White,
         modifier = Modifier
@@ -65,9 +60,7 @@ fun HomeScreen() {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    //Test for the toast
-                    Toasty.success(context, "Vous êtes bien connecté", Toast.LENGTH_SHORT, true).show() },
+                onClick = { showDialog.value = true },
                 Modifier.size(70.dp),
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = Color.White,
@@ -76,16 +69,17 @@ fun HomeScreen() {
                     "add button",
                     modifier = Modifier.fillMaxSize(0.5F))
             }
-            //Tests for the Dialog
-            //DialogState(true,showDialog, onDismiss = setShowDialog)
-            //DialogDelete(showDialog, onDismiss = setShowDialog)
+            if(showDialog.value)
+                SelectOption(setShowDialog = {
+                    showDialog.value = it
+                })
         }
     )
 }
 
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues) {
-    val formatterDate = SimpleDateFormat("dd-MM-yyyy")
+    val formatterDate = SimpleDateFormat("dd/MM/yyyy")
     val formatterTime = SimpleDateFormat("HH:mm")
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -188,7 +182,10 @@ fun SearchView() {
             },
         )
         Button(
-            onClick = { expanded = true },
+            onClick = {
+                println(expanded)
+                expanded = !expanded
+                println(expanded) },
             modifier = Modifier.padding(5.dp)
         ) {
             Icon(painter = painterResource(id = R.drawable.filter),
@@ -198,9 +195,9 @@ fun SearchView() {
             modifier = Modifier.width(width = 190.dp),
             expanded = expanded,
             onDismissRequest = {
-                expanded = false
+                expanded = true
             },
-            offset = DpOffset(x = (-102).dp, y = (-64).dp),
+            offset = DpOffset(x = (-102).dp, y = (-15).dp),
             properties = PopupProperties()
         ) {
             Text(text = "Filtrer par :",
@@ -261,22 +258,22 @@ fun SearchView() {
     }
 }
 
-data class MenuItemData(val text: String, val icon: Int)
+data class MenuItemData(val text: String, val icon: Int, var backGround: Color)
 
 fun getMenuItemsList(): ArrayList<MenuItemData> {
     val listItems = ArrayList<MenuItemData>()
-    listItems.add(MenuItemData(text = "Enseigne", icon = R.drawable.sort_by_alphabet))
-    listItems.add(MenuItemData(text = "Date", icon = R.drawable.date))
-    listItems.add(MenuItemData(text = "Amont", icon = R.drawable.money))
-    listItems.add(MenuItemData(text = "Type", icon = R.drawable.store))
+    listItems.add(MenuItemData(text = "Enseigne", icon = R.drawable.sort_by_alphabet, Color.White))
+    listItems.add(MenuItemData(text = "Date", icon = R.drawable.date, Color.White))
+    listItems.add(MenuItemData(text = "Amont", icon = R.drawable.money, Color.White))
+    listItems.add(MenuItemData(text = "Type", icon = R.drawable.store, Color.White))
 
     return listItems
 }
 
 fun getMenuItemsFilter(): ArrayList<MenuItemData> {
     val listItems = ArrayList<MenuItemData>()
-    listItems.add(MenuItemData(text = "Croissant", icon = R.drawable.ascending))
-    listItems.add(MenuItemData(text = "Décroissant", icon = R.drawable.descending))
+    listItems.add(MenuItemData(text = "Croissant", icon = R.drawable.ascending, Color.White))
+    listItems.add(MenuItemData(text = "Décroissant", icon = R.drawable.descending, Color.White))
 
     return listItems
 }
