@@ -11,6 +11,7 @@ import com.example.digiit.navigation.homeLogin
 import com.example.digiit.navigation.lostPassword
 import com.google.firebase.auth.FirebaseAuth
 
+
 fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: FirebaseAuth) {
     navigation(
         route = Graph.AUTHENTICATION,
@@ -18,30 +19,22 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: Firebas
     ) {
         composable(route = AuthScreen.Login.route) {
             homeLogin(
-                onClick = { _user: String, _password: String ->
-                    //print user and password
-                    println(_user)
-                    println(_password)
-                    //sign in with email and password
-                    auth.signInWithEmailAndPassword(_user, _password).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            println("User is signed in")
-                            navController.popBackStack()
-                            navController.navigate(Graph.HOME)
-                        } else {
-                            println("User is not signed in")
-                        }
-                    }
-                    //navController.popBackStack()
-                    //navController.navigate(Graph.HOME)
+                /*
+                Login functions
+                */
+                getAuth = { ->
+                    return@homeLogin auth
+                },
+                goToHome = { ->
+                    navController.popBackStack()
+                    navController.navigate(Graph.HOME)
                 },
                 SignUpClick = {
                     navController.navigate(AuthScreen.SignUp.route)
-                },
-                ForgotClick = {
-                    navController.navigate(AuthScreen.Forgot.route)
                 }
-            )
+            ) {
+                navController.navigate(AuthScreen.Forgot.route)
+            }
         }
         composable(route = AuthScreen.SignUp.route) {
             createAccount (

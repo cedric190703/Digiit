@@ -1,5 +1,6 @@
 package com.example.digiit.navigation
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,15 +20,19 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.digiit.R
+import com.google.firebase.auth.FirebaseAuth
+import es.dmoral.toasty.Toasty
 
 @Composable
 fun homeLogin(
-    onClick: (user: String, password: String) -> Unit,
+    getAuth: () -> FirebaseAuth,
+    goToHome: () -> Unit,
     SignUpClick: () -> Unit,
     ForgotClick: () -> Unit
 ) {
     val emailVal = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    var context = androidx.compose.ui.platform.LocalContext.current
     val passwordVisibility = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -36,7 +41,7 @@ fun homeLogin(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-            )
+    )
     {
         Image(
             painter = painterResource(id = R.drawable.login),
@@ -75,15 +80,33 @@ fun homeLogin(
                         //Logo Icon eye for password
                     }
                 },
-                visualTransformation = if(passwordVisibility.value) VisualTransformation.None
+                visualTransformation = if (passwordVisibility.value) VisualTransformation.None
                 else PasswordVisualTransformation()
             )
             Spacer(modifier = Modifier.padding(21.dp))
-            Button(onClick = { onClick(emailVal.value, password.value) },
-                modifier = Modifier
-                    .height(45.dp)) {
-                Text(text = "Se connecter",
-                    fontSize = MaterialTheme.typography.h6.fontSize)
+            Button(
+                onClick = {
+                    //check if email address is correctly formatted
+                    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailVal.value).matches()) {
+                        Toasty.error(context, "Adresse email invalide", Toast.LENGTH_SHORT, true).show()
+                        return@Button
+                    }
+                    getAuth().signInWithEmailAndPassword(emailVal.value, password.value)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toasty.success(context, "Connexion réussie", Toast.LENGTH_SHORT, true).show()
+                                goToHome()
+                            } else {
+                                Toasty.error(context, "Connexion échouée", Toast.LENGTH_SHORT, true).show()
+                            }
+                        }
+                },
+                modifier = Modifier.height(45.dp)
+            ) {
+                Text(
+                    text = "Se connecter",
+                    fontSize = MaterialTheme.typography.h6.fontSize
+                )
             }
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
@@ -101,7 +124,8 @@ fun homeLogin(
             Text(
                 text = "Créer un compte",
                 textDecoration = TextDecoration.Underline,
-                style = TextStyle( fontWeight = FontWeight.Bold
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold
                 ),
                 color = MaterialTheme.colors.primary,
                 fontSize = MaterialTheme.typography.h6.fontSize,
