@@ -23,10 +23,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import coil.compose.AsyncImagePainter
 import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.digiit.R
+import com.example.digiit.TicketInfo.dialogTicketInfo
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.util.ArrayList
 
 @Composable
@@ -35,6 +38,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri
     }
+    val showDialogPhoto = remember { mutableStateOf(false) }
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
@@ -80,7 +84,9 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                             Icon(
                                 painterResource(id = R.drawable.select_photo),
                                 "Logo select photo",
-                            modifier = Modifier.padding(5.dp).size(20.dp),
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .size(20.dp),
                                 tint = Color.White)
                         }
                     )
@@ -89,12 +95,14 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                         modifier = Modifier.height(65.dp),
                         text = {  Text(text = "Prendre une photo",
                             fontSize = 17.sp) },
-                        onClick = {  },
+                        onClick = { showDialogPhoto.value = true },
                         backgroundColor = MaterialTheme.colors.primary,
                         icon ={
                             Icon(painter = painterResource(id = R.drawable.take_photo),
                                 "Logo take photo",
-                                modifier = Modifier.padding(5.dp).size(20.dp),
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .size(20.dp),
                                 tint = Color.White)
                         }
                     )
@@ -105,15 +113,14 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                                 .data(data = photoUri)
                                 .build()
                         )
-                        Image(
-                            painter = painter,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .fillMaxWidth()
-                                .border(6.0.dp, Color.Gray),
-                            contentScale = ContentScale.Crop
-                        )
+                        showDialogPhoto.value = true
+                        if(showDialogPhoto.value)
+                        {
+                            dialogTicketInfo(setShowDialogPhoto = {
+                                showDialogPhoto.value = it
+                                println(showDialogPhoto.value)
+                            }, painter)
+                        }
                     }
                 }
             }

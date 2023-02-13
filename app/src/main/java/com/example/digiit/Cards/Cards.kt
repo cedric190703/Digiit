@@ -18,25 +18,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.digiit.Home.ticket
 import com.example.digiit.R
 import java.util.*
 
 @Composable
 fun ticketsCard(
-    typeCommerce: tags,
-    tag: String,
-    titre: String,
-    prix: Int,
-    dateDate: String,
-    dateTime: String,
-    colorIcon: Color,
-    colorTag: Color,
-    colorText: Color
+    ticket: ticket
 ) {
     val paddingModifier = Modifier.padding(10.dp)
     Card(
         elevation = 10.dp,
-        border = BorderStroke(2.dp, colorIcon),
+        border = BorderStroke(2.dp, ticket.colorIcon),
         modifier = paddingModifier
     ) {
         Row(modifier = Modifier
@@ -52,18 +45,18 @@ fun ticketsCard(
                 OutlinedButton(onClick = {  },
                     modifier= Modifier.size(50.dp),
                     shape = CircleShape,
-                    border= BorderStroke(2.dp, colorIcon),
+                    border= BorderStroke(2.dp, ticket.colorIcon),
                     contentPadding = PaddingValues(0.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor =  colorIcon)
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor =  ticket.colorIcon)
                 ) {
                     Icon(modifier = Modifier.size(38.dp),
-                        painter = painterResource(typeCommerce.icon),
+                        painter = painterResource(ticket.typeCommerce.icon),
                         contentDescription = "icon description")
                 }
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = "#$tag",
-                    color = colorTag,
+                    text = "#$ticket.tag",
+                    color = ticket.colorTag,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold)
             }
@@ -73,23 +66,23 @@ fun ticketsCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = titre,
+                    text = ticket.titre,
                     modifier = Modifier.padding(vertical = 12.dp),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = colorText)
-                Text(text = dateDate)
-                Text(text = dateTime)
+                    color = ticket.colorText)
+                Text(text = ticket.dateDate)
+                Text(text = ticket.dateTime)
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Column(modifier = Modifier
                 .width(83.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center) {
-                Text(text = "${prix}$",
+                Text(text = "${ticket.prix}$",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = colorText)
+                    color = ticket.colorText)
             }
             Spacer(modifier = Modifier.padding(8.dp))
             Column(modifier = Modifier

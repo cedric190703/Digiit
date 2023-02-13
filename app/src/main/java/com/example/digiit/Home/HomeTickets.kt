@@ -5,6 +5,7 @@ import com.example.digiit.Cards.ticketsCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpOffset
@@ -77,58 +78,44 @@ fun HomeScreen() {
     )
 }
 
+data class ticket(val typeCommerce: tags,
+                  val tag: String,
+                  val titre: String,
+                  val prix: Int,
+                  val dateTime: String,
+                  val dateDate: String,
+                  val colorIcon: Color,
+                  val colorTag: Color,
+                  val colorText: Color)
+
+var listTickets = arrayListOf<ticket>()
+
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues) {
-    val formatterDate = SimpleDateFormat("dd/MM/yyyy")
-    val formatterTime = SimpleDateFormat("HH:mm")
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth()) {
         SearchView()
-        LazyColumn(modifier = Modifier) {
-            item {
-                ticketsCard(typeCommerce = tags.Alimentation,
-                    tag = "Test",
-                    titre = "Carrefour",
-                    prix = 42,
-                    dateTime = formatterTime.format(Date()),
-                    dateDate = formatterDate.format(Date()),
-                    colorIcon = Color.Blue,
-                    colorTag = Color.Red,
-                    colorText = Color.Black)
+        if(listTickets.size == 0)
+        {
+            Image(painter = painterResource(id = R.drawable.tickets_image),
+                contentDescription = "image for no data")
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Pas de tickets",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 36.sp
+                    )
+                )
             }
-            item {
-                ticketsCard(typeCommerce = tags.Artisan,
-                    tag = "Test2",
-                    titre = "Wallemart",
-                    prix = 42,
-                    dateTime = formatterTime.format(Date()),
-                    dateDate = formatterDate.format(Date()),
-                    colorIcon = Color.Gray,
-                    colorTag = Color.Blue,
-                    colorText = Color.Black)
-            }
-            item {
-                ticketsCard(typeCommerce = tags.Culture,
-                    tag = "Test3",
-                    titre = "U&W",
-                    prix = 42000,
-                    dateTime = formatterTime.format(Date()),
-                    dateDate = formatterDate.format(Date()),
-                    colorIcon = Color.Red,
-                    colorTag = Color.Blue,
-                    colorText = Color.Black)
-            }
-            item {
-                ticketsCard(typeCommerce = tags.Habillement,
-                    tag = "Test3",
-                    titre = "U&W",
-                    prix = 42000,
-                    dateTime = formatterTime.format(Date()),
-                    dateDate = formatterDate.format(Date()),
-                    colorIcon = Color.Black,
-                    colorTag = Color.DarkGray,
-                    colorText = Color.Black)
+        }
+        else
+        {
+            LazyColumn(modifier = Modifier) {
+                items(listTickets) { item ->
+                    ticketsCard(item)
+                }
             }
         }
     }

@@ -81,3 +81,7 @@ sealed class tags(
         icon = R.drawable.autre
     )
 }
+
+val listOfTags = listOf<String>(tags.Alimentation.title,tags.Artisan.title,tags.Centre_commercial.title,tags.Commerce_prox.title,
+tags.Culture.title, tags.Divers.title, tags.Habillement.title, tags.Jardinage.title, tags.Maison.title, tags.Santé.title,
+    tags.Services.title, tags.Sports.title, tags.Tourisme.title, tags.Transport.title, tags.Autre.title)
