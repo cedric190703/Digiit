@@ -3,6 +3,8 @@ package com.example.digiit.Home
 import com.example.digiit.Cards.tags
 import com.example.digiit.Cards.ticketsCard
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,8 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.example.digiit.R
 import com.example.digiit.photos.SelectOption
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlin.collections.ArrayList
 
 @Composable
 fun HomeScreen() {
@@ -78,6 +79,9 @@ fun HomeScreen() {
     )
 }
 
+val listItems = getMenuItemsList()
+val listOrders = getMenuItemsFilter()
+
 data class ticket(val typeCommerce: tags,
                   val tag: String,
                   val titre: String,
@@ -86,7 +90,8 @@ data class ticket(val typeCommerce: tags,
                   val dateDate: String,
                   val colorIcon: Color,
                   val colorTag: Color,
-                  val colorText: Color)
+                  val colorText: Color,
+                  val rating: Int)
 
 var listTickets = arrayListOf<ticket>()
 
@@ -123,8 +128,8 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
 
 @Composable
 fun SearchView() {
-    val listItems = getMenuItemsList()
-    val listOrders = getMenuItemsFilter()
+    var filterItem = remember { mutableStateOf("Enseigne") }
+    var filterOrder = remember { mutableStateOf("Croissant") }
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -179,7 +184,9 @@ fun SearchView() {
                 contentDescription = "Filter logo")
         }
         DropdownMenu(
-            modifier = Modifier.width(width = 190.dp),
+            modifier = Modifier
+                .width(width = 190.dp)
+                .border(1.5.dp, MaterialTheme.colors.primary),
             expanded = expanded,
             onDismissRequest = {
                 expanded = true
@@ -196,24 +203,32 @@ fun SearchView() {
             )
             listItems.forEach { menuItemData ->
                 DropdownMenuItem(
+                    modifier = Modifier.background(menuItemData.backGround),
                     onClick = {
                         expanded = false
+                        listItems.forEach{ e -> e.iconColor = Color.Blue
+                        e.backGround = Color.White}
+                        filterItem.value = menuItemData.text
+                        menuItemData.backGround = Color(0xFF0139CE)
+                        menuItemData.iconColor = Color.White
                     },
                     enabled = true
                 ) {
                     Icon(
                         painter = painterResource(id = menuItemData.icon),
                         contentDescription = menuItemData.text,
-                        tint = MaterialTheme.colors.primary
+                        tint = menuItemData.iconColor
                     )
                     Spacer(modifier = Modifier.width(width = 8.dp))
                     Text(
                         text = menuItemData.text,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
+                        color = menuItemData.iconColor
                     )
                 }
             }
+            Divider(color = Color.Black)
             Text(text = "Par ordre",
                 modifier = Modifier.padding(8.dp),
                 color = MaterialTheme.colors.primary,
@@ -223,21 +238,28 @@ fun SearchView() {
             )
             listOrders.forEach { menuItemFilter ->
                 DropdownMenuItem(
+                    modifier = Modifier.background(menuItemFilter.backGround),
                     onClick = {
                         expanded = false
+                        listOrders.forEach{ e -> e.iconColor = Color.Blue
+                            e.backGround = Color.White}
+                        menuItemFilter.backGround = Color(0xFF0139CE)
+                        menuItemFilter.iconColor = Color.White
+                        filterOrder.value = menuItemFilter.text
                     },
                     enabled = true
                 ) {
                     Icon(
                         painter = painterResource(id = menuItemFilter.icon),
                         contentDescription = menuItemFilter.text,
-                        tint = MaterialTheme.colors.primary
+                        tint = menuItemFilter.iconColor
                     )
                     Spacer(modifier = Modifier.width(width = 8.dp))
                     Text(
                         text = menuItemFilter.text,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
+                        color = menuItemFilter.iconColor
                     )
                 }
             }
@@ -245,22 +267,30 @@ fun SearchView() {
     }
 }
 
-data class MenuItemData(val text: String, val icon: Int, var backGround: Color)
+data class MenuItemData(val text: String, val icon: Int, var backGround: Color, var iconColor: Color)
 
 fun getMenuItemsList(): ArrayList<MenuItemData> {
-    val listItems = ArrayList<MenuItemData>()
-    listItems.add(MenuItemData(text = "Enseigne", icon = R.drawable.sort_by_alphabet, Color.White))
-    listItems.add(MenuItemData(text = "Date", icon = R.drawable.date, Color.White))
-    listItems.add(MenuItemData(text = "Amont", icon = R.drawable.money, Color.White))
-    listItems.add(MenuItemData(text = "Type", icon = R.drawable.store, Color.White))
+    var listItems = ArrayList<MenuItemData>()
+    listItems.add(MenuItemData(text = "Enseigne", icon = R.drawable.sort_by_alphabet, Color(0xFF0139CE), Color.White))
+    listItems.add(MenuItemData(text = "Date", icon = R.drawable.date, Color.White, Color(0xFF0139CE)))
+    listItems.add(MenuItemData(text = "Amont", icon = R.drawable.money, Color.White, Color(0xFF0139CE)))
+    listItems.add(MenuItemData(text = "Type", icon = R.drawable.store, Color.White, Color(0xFF0139CE)))
 
     return listItems
 }
 
 fun getMenuItemsFilter(): ArrayList<MenuItemData> {
     val listItems = ArrayList<MenuItemData>()
-    listItems.add(MenuItemData(text = "Croissant", icon = R.drawable.ascending, Color.White))
-    listItems.add(MenuItemData(text = "Décroissant", icon = R.drawable.descending, Color.White))
+    listItems.add(MenuItemData(text = "Croissant", icon = R.drawable.ascending, Color(0xFF0139CE), Color.White))
+    listItems.add(MenuItemData(text = "Décroissant", icon = R.drawable.descending, Color.White, Color(0xFF0139CE)))
 
     return listItems
+}
+
+fun ClearAllColor(listElement: ArrayList<MenuItemData>)
+{
+    for(item in listElement)
+    {
+
+    }
 }

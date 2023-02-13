@@ -89,6 +89,10 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.6.1'
     implementation("io.coil-kt:coil-compose:2.2.2")
 
+    //For dialogs
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.6'
+
+    //For rating bars
+    implementation 'com.github.MhmoudAlim:Compose-Ratingbar-library:0.0.1'
 }

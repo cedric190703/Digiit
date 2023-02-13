@@ -86,7 +86,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                                 "Logo select photo",
                             modifier = Modifier
                                 .padding(5.dp)
-                                .size(20.dp),
+                                .size(35.dp),
                                 tint = Color.White)
                         }
                     )
@@ -102,7 +102,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                                 "Logo take photo",
                                 modifier = Modifier
                                     .padding(5.dp)
-                                    .size(20.dp),
+                                    .size(35.dp),
                                 tint = Color.White)
                         }
                     )
