@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -45,7 +46,8 @@ fun MenuScreen() {
                     IconButton(onClick = { }) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu Logo")
+                            contentDescription = "Menu Logo"
+                        )
                     }
                 },
 
@@ -93,7 +95,7 @@ fun MenuContent(paddingValues: PaddingValues) {
 }
 
 @Composable
-private fun UserDetails(context: Context) {
+private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getInstance()) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -117,7 +119,7 @@ private fun UserDetails(context: Context) {
                     .padding(start = 16.dp)
             ) {
                 Text(
-                    text = "User",
+                    text = if (auth.currentUser?.displayName.toString() != "null") auth.currentUser?.displayName.toString() else "No Name",
                     style = TextStyle(
                         fontSize = 22.sp
                     ),
@@ -126,7 +128,7 @@ private fun UserDetails(context: Context) {
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = "a@a.com",
+                    text = auth.currentUser?.email.toString(),
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = Color.Gray,
@@ -150,7 +152,11 @@ private fun UserDetails(context: Context) {
             IconButton(
                 modifier = Modifier
                     .weight(weight = 1f, fill = false),
-                onClick = { }) {
+                onClick = {
+                    auth.signOut()
+                    //TODO : go to login screen
+
+                }) {
                 Icon(
                     modifier = Modifier.size(24.dp),
                     painter = painterResource(id = R.drawable.logout),

@@ -38,7 +38,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: Firebas
         }
         composable(route = AuthScreen.SignUp.route) {
             createAccount (
-                onClick = { _mail : String, _password : String ->
+                onClick = { _mail : String, _password : String , _name : String->
                         println("User does not exist try to create it")
                         //create user with email and password
                         auth.createUserWithEmailAndPassword(_mail, _password).addOnCompleteListener { task ->
@@ -46,6 +46,15 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: Firebas
                                 println("User is created")
                                 navController.popBackStack()
                                 navController.navigate(Graph.HOME)
+                                auth.currentUser?.sendEmailVerification()
+                                auth.signInWithEmailAndPassword(_mail, _password)
+                                //set user name
+                                auth.currentUser?.updateProfile(
+                                    com.google.firebase.auth.UserProfileChangeRequest.Builder()
+                                        .setDisplayName(_name)
+                                        .build()
+                                )
+
                             } else {
                                 println("User is not created")
                                 //print task.exception
