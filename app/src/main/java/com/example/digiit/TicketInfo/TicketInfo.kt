@@ -1,5 +1,6 @@
 package com.example.digiit.TicketInfo
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,23 +22,26 @@ import androidx.compose.ui.window.Dialog
 import com.example.digiit.Cards.listOfTags
 import com.example.digiit.Cards.tags
 import com.example.digiit.R
+import com.example.digiit.addTicket
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.listItemsSingleChoice
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import es.dmoral.toasty.Toasty
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun dialogTicketInfo(setShowDialogPhoto: (Boolean) -> Unit,
-                     painter: Painter) {
-    var titrelVal = remember {mutableStateOf(TextFieldValue(""))}
+fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
+
+    var titrelVal = remember { mutableStateOf("") }
     var prixVal = remember {mutableStateOf(TextFieldValue(""))}
     var tagVal = remember { mutableStateOf("") }
     var rating = remember { mutableStateOf(5)}
+    val comment = remember { mutableStateOf("") }
     var typeVal by remember {
         mutableStateOf(tags.Alimentation.title) }
     var typeState = rememberMaterialDialogState()
@@ -62,6 +67,7 @@ fun dialogTicketInfo(setShowDialogPhoto: (Boolean) -> Unit,
     }
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
+    val ctx = LocalContext.current
     Dialog(
         onDismissRequest = { setShowDialogPhoto(false) }) {
         Surface(
@@ -100,7 +106,10 @@ fun dialogTicketInfo(setShowDialogPhoto: (Boolean) -> Unit,
                         placeholder = { "Tag du ticket" }
                     )
                 }
-                Button(modifier = Modifier.width(250.dp).padding(4.dp), onClick = {
+                Spacer(modifier = Modifier.padding(12.dp))
+                Button(modifier = Modifier
+                    .width(250.dp)
+                    .padding(4.dp), onClick = {
                     typeState.show()
                 }) {
                     Text(text = "Sélectionner un type de produit", fontSize = 18.sp)
@@ -118,13 +127,12 @@ fun dialogTicketInfo(setShowDialogPhoto: (Boolean) -> Unit,
                 }) {
                     listItemsSingleChoice(
                         list = listOfTags,
-                        disabledIndices = setOf(1),
-                        initialSelection = 0
+                        disabledIndices = setOf(1)
                     ) {
                         typeVal = listOfTags[it]
                     }
                 }
-                Spacer(modifier = Modifier.padding(13.dp))
+                Spacer(modifier = Modifier.padding(5.dp))
                 Button(onClick = {
                     dateDialogState.show()
                 }) {
@@ -190,13 +198,30 @@ fun dialogTicketInfo(setShowDialogPhoto: (Boolean) -> Unit,
                     starsPadding = 12.dp
                 )
                 Spacer(modifier = Modifier.padding(13.dp))
+                OutlinedTextField(
+                    value = comment.value,
+                    modifier = Modifier.height(95.dp),
+                    onValueChange = { comment.value = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    label = { Text(text = "Commentaire") },
+                    placeholder = { "Commentaire du ticket" }
+                )
+                Spacer(modifier = Modifier.padding(13.dp))
                 Row() {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
                             .height(58.dp)
                             .padding(vertical = 10.dp, horizontal = 5.dp),
                         text = {  Text(text = "Ajouter élement", fontSize = 18.sp) },
-                        onClick = { setShowDialogPhoto(false)},
+                        onClick = { if(typeVal != "" && titrelVal.value != "") {
+                            addTicket(typeVal, tagVal.value, titrelVal.value,
+                                42, pickedDate.toString(),
+                                pickedTime.toString(), Color.Red, Color.Blue, Color.Black, rating.value, comment.value)
+                            setShowDialogPhoto(false)
+                            Toasty.success(ctx, "Le ticket a bien été ajouté", Toast.LENGTH_SHORT, true).show()
+                        } else {
+                            Toasty.error(ctx, "Des champs n'ont pas été remplis", Toast.LENGTH_SHORT, true).show()
+                        } },
                         backgroundColor = MaterialTheme.colors.primary
                     )
                     ExtendedFloatingActionButton(

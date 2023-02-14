@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -38,6 +39,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri
     }
+    val statePainter = remember { mutableStateOf(false) }
     val showDialogPhoto = remember { mutableStateOf(false) }
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(
@@ -78,7 +80,9 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                             fontSize = 17.sp) },
                         onClick = { launcher.launch(
                             PickVisualMediaRequest(
-                                mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)) },
+                                mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly))
+                            showDialogPhoto.value = true
+                        },
                         backgroundColor = MaterialTheme.colors.primary,
                         icon = {
                             Icon(
@@ -107,19 +111,18 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                         }
                     )
                     if (photoUri != null) {
-                        val painter = rememberAsyncImagePainter(
+                        var painter: Painter = rememberAsyncImagePainter(
                             ImageRequest
                                 .Builder(LocalContext.current)
                                 .data(data = photoUri)
                                 .build()
                         )
-                        showDialogPhoto.value = true
                         if(showDialogPhoto.value)
                         {
                             dialogTicketInfo(setShowDialogPhoto = {
                                 showDialogPhoto.value = it
-                                println(showDialogPhoto.value)
-                            }, painter)
+                                setShowDialog(false)
+                            }, painter = painter)
                         }
                     }
                 }

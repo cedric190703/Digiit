@@ -1,26 +1,30 @@
 package com.example.digiit.Cards
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.PopupProperties
+import com.example.digiit.Home.MenuItemData
+import com.example.digiit.Home.getMenuItemsList
+import com.example.digiit.Home.listOrders
 import com.example.digiit.Home.ticket
 import com.example.digiit.R
 import com.mahmoudalim.compose_rating_bar.RatingBarView
@@ -30,8 +34,10 @@ import java.util.*
 fun ticketsCard(
     ticket: ticket
 ) {
+    val listCardsItems = getCardsItems()
     val ratingVal = remember {mutableStateOf(ticket.rating)}
     val paddingModifier = Modifier.padding(10.dp)
+    var expanded by remember { mutableStateOf(false) }
     Card(
         elevation = 10.dp,
         border = BorderStroke(2.dp, ticket.colorIcon),
@@ -95,7 +101,8 @@ fun ticketsCard(
                 Column(modifier = Modifier
                     .width(45.dp),
                     verticalArrangement = Arrangement.Center) {
-                    OutlinedButton(onClick = {  },
+                    OutlinedButton(onClick = { expanded = true
+                    },
                         modifier= Modifier.size(50.dp),
                         shape = CircleShape,
                         contentPadding = PaddingValues(0.dp)
@@ -103,6 +110,32 @@ fun ticketsCard(
                         Icon(modifier = Modifier.size(35.dp),
                             painter = painterResource(id = R.drawable.more_vert),
                             contentDescription = "more vert icon")
+                        DropdownMenu(
+                            modifier = Modifier
+                                .width(width = 85.dp)
+                                .border(1.dp, MaterialTheme.colors.primary),
+                            expanded = expanded,
+                            onDismissRequest = {
+                                expanded = false
+                            },
+                            offset = DpOffset(x = (-11).dp, y = (-1).dp),
+                            properties = PopupProperties()
+                        ) {
+                            listCardsItems.forEach { item ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        expanded = false
+                                    },
+                                    enabled = true
+                                ) {
+                                    Icon(
+                                        imageVector = item.icon,
+                                        contentDescription = item.text,
+                                        tint = Color(0xFF0139CE)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -118,4 +151,14 @@ fun ticketsCard(
             Spacer(modifier = Modifier.padding(10.dp))
         }
     }
+}
+
+data class CardsItemData(val text: String, val icon: ImageVector)
+
+fun getCardsItems(): ArrayList<CardsItemData> {
+    val listItems = ArrayList<CardsItemData>()
+    listItems.add(CardsItemData(text = "Modifier", icon = Icons.Default.Delete))
+    listItems.add(CardsItemData(text = "Supprimer", icon = Icons.Default.Edit))
+
+    return listItems
 }

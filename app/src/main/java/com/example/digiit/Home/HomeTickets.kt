@@ -93,36 +93,10 @@ data class ticket(val typeCommerce: tags,
                   val colorIcon: Color,
                   val colorTag: Color,
                   val colorText: Color,
-                  val rating: Int)
+                  val rating: Int,
+                  val comment: String)
 
-var a = ticket(tags.Alimentation,"hello", "test1",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var b = ticket(tags.Alimentation,"hello", "test2",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var c = ticket(tags.Alimentation,"hello", "test3",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var d = ticket(tags.Alimentation,"hello", "test4",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var e = ticket(tags.Alimentation,"hello", "test5",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var f = ticket(tags.Alimentation,"hello", "test5",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var g = ticket(tags.Alimentation,"hello", "test5",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var h = ticket(tags.Alimentation,"hello", "test5",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var i = ticket(tags.Alimentation,"hello", "test5",
-    42, "12:54", "02/03/2023", Color.Red,
-    Color.Blue, Color.Black, 4)
-var listTickets = arrayListOf<ticket>(a, b, c, d, e, f, g, h, i)
+var listTickets = arrayListOf<ticket>()
 
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues) {
@@ -206,9 +180,8 @@ fun SearchView() {
         )
         Button(
             onClick = {
-                println(expanded)
-                expanded = !expanded
-                println(expanded) },
+                      expanded = true
+            },
             modifier = Modifier.padding(5.dp)
         ) {
             Icon(painter = painterResource(id = R.drawable.filter),
@@ -220,7 +193,7 @@ fun SearchView() {
                 .border(1.5.dp, MaterialTheme.colors.primary),
             expanded = expanded,
             onDismissRequest = {
-                expanded = true
+                expanded = false
             },
             offset = DpOffset(x = (-102).dp, y = (-15).dp),
             properties = PopupProperties()
@@ -236,12 +209,12 @@ fun SearchView() {
                 DropdownMenuItem(
                     modifier = Modifier.background(menuItemData.backGround),
                     onClick = {
-                        expanded = false
                         listItems.forEach{ e -> e.iconColor = Color.Blue
                         e.backGround = Color.White}
                         filterItem.value = menuItemData.text
                         menuItemData.backGround = Color(0xFF0139CE)
                         menuItemData.iconColor = Color.White
+                        expanded = false
                     },
                     enabled = true
                 ) {

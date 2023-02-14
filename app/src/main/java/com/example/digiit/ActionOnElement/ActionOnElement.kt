@@ -14,7 +14,8 @@ fun addTicket(type:String,
               colorIcon: Color,
               colorTag: Color,
               colorText: Color,
-              rating: Int) {
+              rating: Int,
+              comment: String) {
     val typeTags: tags
     typeTags = when(type){
         tags.Artisan.title -> tags.Artisan
@@ -35,6 +36,6 @@ fun addTicket(type:String,
     }
     val ticket = ticket(typeTags,
         tag, titre, prix, dateTime, dateDate,
-        colorIcon, colorTag, colorText, rating)
+        colorIcon, colorTag, colorText, rating, comment)
     listTickets.add(ticket)
 }
