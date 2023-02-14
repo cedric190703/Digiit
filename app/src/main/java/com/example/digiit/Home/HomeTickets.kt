@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.example.digiit.R
 import com.example.digiit.photos.SelectOption
+import com.example.digiit.scrollbar
 import kotlin.collections.ArrayList
 
 @Composable
@@ -93,10 +95,38 @@ data class ticket(val typeCommerce: tags,
                   val colorText: Color,
                   val rating: Int)
 
-var listTickets = arrayListOf<ticket>()
+var a = ticket(tags.Alimentation,"hello", "test1",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var b = ticket(tags.Alimentation,"hello", "test2",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var c = ticket(tags.Alimentation,"hello", "test3",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var d = ticket(tags.Alimentation,"hello", "test4",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var e = ticket(tags.Alimentation,"hello", "test5",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var f = ticket(tags.Alimentation,"hello", "test5",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var g = ticket(tags.Alimentation,"hello", "test5",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var h = ticket(tags.Alimentation,"hello", "test5",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var i = ticket(tags.Alimentation,"hello", "test5",
+    42, "12:54", "02/03/2023", Color.Red,
+    Color.Blue, Color.Black, 4)
+var listTickets = arrayListOf<ticket>(a, b, c, d, e, f, g, h, i)
 
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues) {
+    val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth()) {
@@ -117,7 +147,8 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
         }
         else
         {
-            LazyColumn(modifier = Modifier) {
+            LazyColumn(state = listState,
+                modifier = Modifier.scrollbar(state = listState)) {
                 items(listTickets) { item ->
                     ticketsCard(item)
                 }

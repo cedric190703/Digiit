@@ -62,7 +62,7 @@ fun ticketsCard(
                     }
                     Text(
                         modifier = Modifier.padding(vertical = 5.dp),
-                        text = "#$ticket.tag",
+                        text = "#${ticket.tag}",
                         color = ticket.colorTag,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold)
@@ -115,6 +115,7 @@ fun ticketsCard(
                 unRatedStarsColor = Color.LightGray,
                 starsPadding = 10.dp
             )
+            Spacer(modifier = Modifier.padding(10.dp))
         }
     }
 }
