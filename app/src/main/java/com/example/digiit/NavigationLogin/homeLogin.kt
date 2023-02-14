@@ -30,6 +30,11 @@ fun homeLogin(
     SignUpClick: () -> Unit,
     ForgotClick: () -> Unit
 ) {
+    //Already connected
+    if (getAuth().currentUser != null) {
+        goToHome()
+    }
+
     val emailVal = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     var context = androidx.compose.ui.platform.LocalContext.current
