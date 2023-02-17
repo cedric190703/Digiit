@@ -26,13 +26,13 @@ fun AnimatedSplashScreen(navController : NavHostController) {
     val anim = animateFloatAsState(
         targetValue = if(startAnimation) 1f else 0f,
         animationSpec = tween(
-            durationMillis = 3000
+            durationMillis = 2000
         )
     )
     LaunchedEffect(key1 = true)
     {
         startAnimation = true
-        delay(3000)
+        delay(2500)
         navController.navigate(AuthScreen.Login.route)
     }
     Splash(anim = anim.value)
@@ -41,7 +41,6 @@ fun AnimatedSplashScreen(navController : NavHostController) {
 @Composable
 fun Splash(anim: Float) {
     Box(modifier = Modifier
-        .background(MaterialTheme.colors.background)
         .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
@@ -56,7 +55,7 @@ fun Splash(anim: Float) {
             )
             Text(
                 text = "Digiit",
-                color = Color.White,
+                color = MaterialTheme.colors.primary,
                 textAlign = TextAlign.Right,
                 fontSize = MaterialTheme.typography.h1.fontSize,
                 fontWeight = FontWeight.Bold,

@@ -86,7 +86,6 @@ fun Modifier.scrollbar(
                     alpha = alpha,
                     cornerRadius = CornerRadius(x = trackCornerRadius.toPx(), y = trackCornerRadius.toPx()),
                 )
-
                 drawRoundRect(
                     color = knobColor,
                     topLeft =

@@ -2,7 +2,9 @@ package com.example.digiit.TicketInfo
 
 import android.widget.Toast
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -23,6 +25,7 @@ import com.example.digiit.Cards.listOfTags
 import com.example.digiit.Cards.tags
 import com.example.digiit.R
 import com.example.digiit.addTicket
+import com.example.digiit.scrollbar
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -36,7 +39,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
-
+    val listState = rememberLazyListState()
     var titrelVal = remember { mutableStateOf("") }
     var prixVal = remember {mutableStateOf(TextFieldValue(""))}
     var tagVal = remember { mutableStateOf("") }
@@ -76,7 +79,10 @@ fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
         ) {
             Column(verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    modifier = Modifier.verticalScroll(
+                        rememberScrollState(),
+                        enabled = true
+                    )) {
                 Image(
                     painter = painter,
                     contentDescription = "photo taken",

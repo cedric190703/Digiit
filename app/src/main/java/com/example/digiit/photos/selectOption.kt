@@ -60,10 +60,7 @@ class takePhoto : ComponentActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            Log.i("kilo", "Permission granted")
             shouldShowCamera.value = true
-        } else {
-            Log.i("kilo", "Permission denied")
         }
     }
 
@@ -100,7 +97,6 @@ class takePhoto : ComponentActivity() {
                 this,
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED -> {
-                Log.i("kilo", "Permission previously granted")
                 shouldShowCamera.value = true
             }
 
@@ -114,11 +110,14 @@ class takePhoto : ComponentActivity() {
     }
 
     private fun handleImageCapture(uri: Uri) {
-        Log.i("kilo", "Image captured: $uri")
         shouldShowCamera.value = false
-
         photoUri = uri
         shouldShowPhoto.value = true
+        val resultIntent = Intent().apply {
+            putExtra("PHOTO_URI", photoUri)
+        }
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
     }
 
     private fun getOutputDirectory(): File {
@@ -137,7 +136,6 @@ class takePhoto : ComponentActivity() {
 
 @Composable
 fun SelectOption(setShowDialog: (Boolean) -> Unit){
-
     var photoUri: Uri? by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri
@@ -146,7 +144,12 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
     val stateTakePhoto = remember { mutableStateOf(false)}
     val takePhotoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-
+            val data = result.data
+            val uri = data?.getParcelableExtra<Uri>("PHOTO_URI")
+            if (uri != null) {
+                photoUri = uri
+                showDialogPhoto.value = true
+            }
         }
     }
     Dialog(onDismissRequest = { setShowDialog(false) }) {
@@ -237,6 +240,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                     }
                     if(stateTakePhoto.value)
                         takePhotoLauncher.launch(Intent(LocalContext.current, takePhoto::class.java))
+                        stateTakePhoto.value = false
                 }
             }
         }
