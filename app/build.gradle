@@ -95,4 +95,11 @@ dependencies {
 
     //For rating bars
     implementation 'com.github.MhmoudAlim:Compose-Ratingbar-library:0.0.1'
+
+    //For CameraX
+    def camerax_version = "1.0.1"
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    implementation "androidx.camera:camera-view:1.0.0-alpha27"
+
 }

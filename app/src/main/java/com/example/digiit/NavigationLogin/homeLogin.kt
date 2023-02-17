@@ -31,9 +31,9 @@ fun homeLogin(
     ForgotClick: () -> Unit
 ) {
     //Already connected
-    if (getAuth().currentUser != null) {
-        goToHome()
-    }
+    //if (getAuth().currentUser != null) {
+    //    goToHome()
+    //}
 
     val emailVal = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }

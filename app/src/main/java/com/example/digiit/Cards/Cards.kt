@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
@@ -159,6 +160,6 @@ fun getCardsItems(): ArrayList<CardsItemData> {
     val listItems = ArrayList<CardsItemData>()
     listItems.add(CardsItemData(text = "Modifier", icon = Icons.Default.Delete))
     listItems.add(CardsItemData(text = "Supprimer", icon = Icons.Default.Edit))
-
+    listItems.add(CardsItemData(text = "Télecharger", icon = Icons.Default.ArrowDropDown))
     return listItems
 }

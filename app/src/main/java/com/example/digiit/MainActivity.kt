@@ -1,28 +1,18 @@
 package com.example.digiit
 
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.digiit.NavGraphs.RootNavigationGraph
 import com.example.digiit.ui.theme.DigiitTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
 
 class MainActivity : ComponentActivity() {
-
+    var a = "vf"
+    var b = a.length
     lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         auth = Firebase.auth
