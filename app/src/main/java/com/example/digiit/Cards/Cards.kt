@@ -23,9 +23,6 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
-import com.example.digiit.Home.MenuItemData
-import com.example.digiit.Home.getMenuItemsList
-import com.example.digiit.Home.listOrders
 import com.example.digiit.Home.ticket
 import com.example.digiit.R
 import com.mahmoudalim.compose_rating_bar.RatingBarView

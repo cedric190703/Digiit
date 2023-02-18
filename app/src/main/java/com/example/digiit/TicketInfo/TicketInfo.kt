@@ -216,8 +216,8 @@ fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                 Row() {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
-                            .height(58.dp)
-                            .padding(vertical = 10.dp, horizontal = 5.dp),
+                            .height(65.dp)
+                            .padding(vertical = 18.dp, horizontal = 5.dp),
                         text = {  Text(text = "Ajouter élement", fontSize = 18.sp) },
                         onClick = { if(typeVal != "" && titrelVal.value != "") {
                             addTicket(typeVal, tagVal.value, titrelVal.value,
@@ -232,8 +232,8 @@ fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                     )
                     ExtendedFloatingActionButton(
                         modifier = Modifier
-                            .height(58.dp)
-                            .padding(vertical = 10.dp, horizontal = 5.dp),
+                            .height(65.dp)
+                            .padding(vertical = 18.dp, horizontal = 5.dp),
                         text = {  Text(text = "Fermer", fontSize = 18.sp) },
                         onClick = { setShowDialogPhoto(false) },
                         backgroundColor = MaterialTheme.colors.primary
