@@ -216,13 +216,13 @@ fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                 Row() {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
-                            .height(65.dp)
+                            .height(85.dp)
                             .padding(vertical = 18.dp, horizontal = 5.dp),
                         text = {  Text(text = "Ajouter élement", fontSize = 18.sp) },
                         onClick = { if(typeVal != "" && titrelVal.value != "") {
                             addTicket(typeVal, tagVal.value, titrelVal.value,
-                                42, pickedDate.toString(),
-                                pickedTime.toString(), Color.Red, Color.Blue, Color.Black, rating.value, comment.value)
+                                42, pickedTime.toString(), pickedDate.toString(),
+                                Color.Red, Color.Blue, Color.Black, rating.value, comment.value)
                             setShowDialogPhoto(false)
                             Toasty.success(ctx, "Le ticket a bien été ajouté", Toast.LENGTH_SHORT, true).show()
                         } else {
@@ -232,7 +232,7 @@ fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                     )
                     ExtendedFloatingActionButton(
                         modifier = Modifier
-                            .height(65.dp)
+                            .height(85.dp)
                             .padding(vertical = 18.dp, horizontal = 5.dp),
                         text = {  Text(text = "Fermer", fontSize = 18.sp) },
                         onClick = { setShowDialogPhoto(false) },

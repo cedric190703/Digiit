@@ -32,14 +32,15 @@ import java.util.*
 fun ticketsCard(
     ticket: ticket
 ) {
-    val listCardsItems = getCardsItems()
     val ratingVal = remember {mutableStateOf(ticket.rating)}
-    val paddingModifier = Modifier.padding(10.dp)
-    var expanded by remember { mutableStateOf(false) }
+    val showDialog = remember { mutableStateOf(false)}
     Card(
         elevation = 10.dp,
         border = BorderStroke(2.dp, ticket.colorIcon),
-        modifier = paddingModifier
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()
+            .clickable { showDialog.value = true },
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally,
                verticalArrangement = Arrangement.Center) {
@@ -96,46 +97,10 @@ fun ticketsCard(
                         color = ticket.colorText)
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
-                Column(modifier = Modifier
-                    .width(45.dp),
-                    verticalArrangement = Arrangement.Center) {
-                    OutlinedButton(onClick = { expanded = true
-                    },
-                        modifier= Modifier.size(50.dp),
-                        shape = CircleShape,
-                        contentPadding = PaddingValues(0.dp)
-                    ) {
-                        Icon(modifier = Modifier.size(35.dp),
-                            painter = painterResource(id = R.drawable.more_vert),
-                            contentDescription = "more vert icon")
-                        DropdownMenu(
-                            modifier = Modifier
-                                .width(width = 85.dp)
-                                .border(1.dp, MaterialTheme.colors.primary),
-                            expanded = expanded,
-                            onDismissRequest = {
-                                expanded = false
-                            },
-                            offset = DpOffset(x = (-11).dp, y = (-1).dp),
-                            properties = PopupProperties()
-                        ) {
-                            listCardsItems.forEach { item ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        expanded = false
-                                    },
-                                    enabled = true
-                                ) {
-                                    Icon(
-                                        imageVector = item.icon,
-                                        contentDescription = item.text,
-                                        tint = Color(0xFF0139CE)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
+            }
+            if(showDialog.value)
+            {
+                cardViewSmall(setState = { showDialog.value = it }, ticket)
             }
             RatingBarView(
                 rating = ratingVal,
@@ -149,14 +114,4 @@ fun ticketsCard(
             Spacer(modifier = Modifier.padding(10.dp))
         }
     }
-}
-
-data class CardsItemData(val text: String, val icon: ImageVector)
-
-fun getCardsItems(): ArrayList<CardsItemData> {
-    val listItems = ArrayList<CardsItemData>()
-    listItems.add(CardsItemData(text = "Modifier", icon = Icons.Default.Delete))
-    listItems.add(CardsItemData(text = "Supprimer", icon = Icons.Default.Edit))
-    listItems.add(CardsItemData(text = "Télecharger", icon = Icons.Default.ArrowDropDown))
-    return listItems
 }

@@ -41,6 +41,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.font.FontWeight
 import androidx.core.app.ActivityCompat
 import coil.compose.rememberImagePainter
 import java.io.File
@@ -168,14 +169,9 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "Sélectionner une action",
-                            fontSize = 23.sp
-                        )
                         OutlinedButton(onClick = { setShowDialog(false) },
-                            modifier= Modifier.size(33.dp),
+                            modifier= Modifier.size(35.dp),
                             shape = CircleShape,
-                            border= BorderStroke(1.dp, Color.Red),
                             contentPadding = PaddingValues(0.dp),
                             colors = ButtonDefaults.outlinedButtonColors(contentColor =  Color.Red)
                         ) {
@@ -184,11 +180,17 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                                 contentDescription = "icon description")
                         }
                     }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "Sélectionner une action",
+                        fontSize = 23.sp
+                    )
                     Spacer(modifier = Modifier.height(25.dp))
                     ExtendedFloatingActionButton(
                         modifier = Modifier.height(65.dp),
                         text = {  Text(text = "Sélectionner une photo",
-                            fontSize = 17.sp) },
+                            fontSize = 17.sp, fontWeight = FontWeight.Bold
+                        ) },
                         onClick = { launcher.launch(
                             PickVisualMediaRequest(
                                 mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -239,8 +241,10 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                         }
                     }
                     if(stateTakePhoto.value)
+                    {
                         takePhotoLauncher.launch(Intent(LocalContext.current, takePhoto::class.java))
                         stateTakePhoto.value = false
+                    }
                 }
             }
         }
