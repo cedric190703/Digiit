@@ -1,9 +1,6 @@
 package com.example.digiit.Cards
 
-import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,21 +11,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.digiit.DialogDelete
+import com.example.digiit.Home.listTickets
 import com.example.digiit.Home.ticket
 import com.example.digiit.R
-import com.example.digiit.addTicket
 import com.mahmoudalim.compose_rating_bar.RatingBarView
-import es.dmoral.toasty.Toasty
 
 @Composable
 fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
     val ratingVal = remember { mutableStateOf(ticket.rating) }
+    val showDialog = remember { mutableStateOf(false) }
     Dialog(onDismissRequest = { setState(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
@@ -82,7 +79,8 @@ fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                     )
                     Spacer(modifier = Modifier.padding(12.dp))
                     Column(verticalArrangement = Arrangement.Center) {
-                        Row(horizontalArrangement = Arrangement.Center) {
+                        Row(horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 modifier = Modifier.padding(vertical = 5.dp),
                                 text = "Effectué le :",
@@ -99,10 +97,11 @@ fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                        Row(horizontalArrangement = Arrangement.Start) {
+                        Row(horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 modifier = Modifier.padding(vertical = 5.dp),
-                                text = "Effectué à :",
+                                text = "Effectué à :     ",
                                 color = Color.White,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
@@ -150,9 +149,15 @@ fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                                 .height(85.dp)
                                 .padding(vertical = 18.dp, horizontal = 5.dp),
                             text = {  Text(text = "Supprimer", fontSize = 18.sp) },
-                            onClick = {  },
+                            onClick = { showDialog.value = true },
                             backgroundColor = MaterialTheme.colors.primary
                         )
+                    }
+                    if(showDialog.value)
+                    {
+                        DialogDelete(idx = listTickets.indexOf(ticket) ,Tickets = listTickets ,onDismiss = {
+                            showDialog.value = it
+                        })
                     }
                 }
             }

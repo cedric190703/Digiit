@@ -166,28 +166,23 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                     verticalArrangement = Arrangement.Center) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        OutlinedButton(onClick = { setShowDialog(false) },
-                            modifier= Modifier.size(35.dp),
-                            shape = CircleShape,
-                            contentPadding = PaddingValues(0.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor =  Color.Red)
-                        ) {
-                            Icon(modifier = Modifier.size(28.dp),
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "icon description")
+                        IconButton(onClick = { setShowDialog(false) }) {
+                            Icon(imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = MaterialTheme.colors.primary,
+                                modifier = Modifier.size(32.dp))
                         }
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Sélectionner une action",
-                        fontSize = 23.sp
+                        fontSize = 27.sp
                     )
                     Spacer(modifier = Modifier.height(25.dp))
                     ExtendedFloatingActionButton(
-                        modifier = Modifier.height(65.dp),
+                        modifier = Modifier.height(85.dp).fillMaxWidth().padding(horizontal = 5.dp),
                         text = {  Text(text = "Sélectionner une photo",
                             fontSize = 17.sp, fontWeight = FontWeight.Bold
                         ) },
@@ -209,7 +204,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                     )
                     Spacer(modifier = Modifier.padding(12.dp))
                     ExtendedFloatingActionButton(
-                        modifier = Modifier.height(65.dp),
+                        modifier = Modifier.height(85.dp).fillMaxWidth().padding(horizontal = 5.dp),
                         text = {  Text(text = "Prendre une photo",
                             fontSize = 17.sp) },
                         onClick = {
@@ -218,6 +213,24 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                         backgroundColor = MaterialTheme.colors.primary,
                         icon = {
                             Icon(painter = painterResource(id = R.drawable.take_photo),
+                                "Logo take photo",
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .size(35.dp),
+                                tint = Color.White)
+                        }
+                    )
+                    Spacer(modifier = Modifier.padding(12.dp))
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier.height(85.dp).fillMaxWidth().padding(horizontal = 5.dp),
+                        text = {  Text(text = "Sélectionner un fichier",
+                            fontSize = 17.sp) },
+                        onClick = {
+
+                        },
+                        backgroundColor = MaterialTheme.colors.primary,
+                        icon = {
+                            Icon(painter = painterResource(id = R.drawable.file),
                                 "Logo take photo",
                                 modifier = Modifier
                                     .padding(5.dp)
