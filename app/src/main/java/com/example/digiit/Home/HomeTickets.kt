@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -76,17 +77,20 @@ fun HomeScreen() {
     )
 }
 
-data class ticket(val typeCommerce: tags,
-                  val tag: String,
-                  val titre: String,
-                  val prix: Int,
-                  val dateTime: String,
-                  val dateDate: String,
-                  val colorIcon: Color,
-                  val colorTag: Color,
-                  val colorText: Color,
-                  val rating: Int,
-                  val comment: String)
+data class ticket(
+    var typeCommerce: tags,
+    var tag: String,
+    var titre: String,
+    var prix: Int,
+    var dateTime: String,
+    var dateDate: String,
+    var colorIcon: Color,
+    var colorTag: Color,
+    var colorText: Color,
+    var rating: Int,
+    var comment: String,
+    var painter: Painter
+)
 
 var listTickets = mutableStateListOf<ticket>()
 
@@ -136,7 +140,6 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
                                 DismissDirection.EndToStart -> Color.Red
                                 null -> Color.Transparent
                             }
-
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()

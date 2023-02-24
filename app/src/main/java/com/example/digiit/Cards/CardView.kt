@@ -1,5 +1,6 @@
 package com.example.digiit.Cards
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -26,6 +27,7 @@ import com.mahmoudalim.compose_rating_bar.RatingBarView
 fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
     val ratingVal = remember { mutableStateOf(ticket.rating) }
     val showDialog = remember { mutableStateOf(false) }
+    val dialogModif = remember { mutableStateOf(false) }
     Dialog(onDismissRequest = { setState(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
@@ -141,7 +143,7 @@ fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                                 .height(85.dp)
                                 .padding(vertical = 18.dp, horizontal = 5.dp),
                             text = {  Text(text = "Modifier", fontSize = 18.sp) },
-                            onClick = { },
+                            onClick = { dialogModif.value = true },
                             backgroundColor = MaterialTheme.colors.primary
                         )
                         ExtendedFloatingActionButton(
@@ -158,6 +160,13 @@ fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                         DialogDelete(idx = listTickets.indexOf(ticket) ,Tickets = listTickets ,onDismiss = {
                             showDialog.value = it
                         })
+                    }
+                    if(dialogModif.value)
+                    {
+                        ModifElement(ticket = ticket,
+                            setShowDialog = {
+                                dialogModif.value = it
+                            })
                     }
                 }
             }
