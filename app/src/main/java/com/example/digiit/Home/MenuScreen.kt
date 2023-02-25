@@ -71,11 +71,9 @@ fun MenuContent(paddingValues: PaddingValues) {
 
             // Add the data to optionsList
             prepareOptionsData()
-
             listPrepared = true
         }
     }
-
     if (listPrepared) {
 
         LazyColumn(
@@ -102,12 +100,8 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            modifier = Modifier
-                .size(72.dp),
-            painter = painterResource(id = R.drawable.profile),
-            contentDescription = "The image"
-        )
+        Icon(painter = painterResource(id = R.drawable.profile),
+            contentDescription = "logo profile")
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -178,7 +172,6 @@ private fun OptionsItemStyle(item: OptionsData, context: Context) {
             .padding(all = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Icon(
             modifier = Modifier
                 .size(32.dp),
@@ -186,7 +179,6 @@ private fun OptionsItemStyle(item: OptionsData, context: Context) {
             contentDescription = item.title,
             tint = MaterialTheme.colors.primary
         )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth(),

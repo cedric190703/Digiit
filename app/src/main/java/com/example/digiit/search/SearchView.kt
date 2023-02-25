@@ -181,15 +181,8 @@ fun SearchViewHomeWallet() {
         .padding(top = 10.dp, bottom = 20.dp)
         .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(id = R.drawable.account),
-            contentDescription = "profile image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape)
-                .padding(8.dp)
-        )
+        Icon(painter = painterResource(id = R.drawable.profile),
+            contentDescription = "logo profile")
         TextField(
             value = searchText,
             onValueChange = { searchText = it },

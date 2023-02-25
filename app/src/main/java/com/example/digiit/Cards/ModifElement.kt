@@ -221,7 +221,6 @@ fun ModifElement(
                     value = comment.value,
                     modifier = Modifier.height(95.dp),
                     onValueChange = { comment.value = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Commentaire") },
                     placeholder = { "Commentaire du ticket" }
                 )

@@ -153,6 +153,12 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
             }
         }
     }
+    val pickFileLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            photoUri = uri
+        }
+    )
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
@@ -226,12 +232,12 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                         text = {  Text(text = "Sélectionner un fichier",
                             fontSize = 17.sp) },
                         onClick = {
-
+                            pickFileLauncher.launch("application/pdf,text/plain,image/jpeg,image/png,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document")
                         },
                         backgroundColor = MaterialTheme.colors.primary,
                         icon = {
                             Icon(painter = painterResource(id = R.drawable.file),
-                                "Logo take photo",
+                                "Logo select a file",
                                 modifier = Modifier
                                     .padding(5.dp)
                                     .size(35.dp),

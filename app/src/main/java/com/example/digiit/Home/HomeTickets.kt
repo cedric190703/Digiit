@@ -126,8 +126,7 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
                     val state= rememberDismissState(
                         confirmStateChange = {
                             if (it==DismissValue.DismissedToStart){
-                                showDialog.value = true
-                                idx.value = listTickets.indexOf(item)
+                                listTickets.remove(item)
                             }
                             true
                         }
@@ -161,12 +160,6 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
                         directions=setOf(DismissDirection.EndToStart)
                     )
                 }
-            }
-            if(showDialog.value)
-            {
-                DialogDelete(idx = idx.value ,Tickets = listTickets ,onDismiss = {
-                    showDialog.value = it
-                })
             }
         }
     }

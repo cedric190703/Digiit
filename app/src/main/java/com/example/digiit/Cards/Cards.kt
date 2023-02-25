@@ -36,11 +36,17 @@ fun ticketsCard(
     val showDialog = remember { mutableStateOf(false)}
     Card(
         elevation = 10.dp,
-        border = BorderStroke(2.dp, ticket.colorIcon),
+        border = BorderStroke(1.dp, ticket.colorIcon),
         modifier = Modifier
-            .padding(4.dp)
+            .padding(5.dp)
             .fillMaxWidth()
-            .clickable { showDialog.value = true },
+            .clickable { showDialog.value = true }
+            .border(
+                width = 3.dp,
+                color = Color.Red,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clip(RoundedCornerShape(16.dp))
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally,
                verticalArrangement = Arrangement.Center) {
@@ -109,7 +115,8 @@ fun ticketsCard(
                 ratedStarsColor = MaterialTheme.colors.primary,
                 starIcon = painterResource(id = R.drawable.full_star),
                 unRatedStarsColor = Color.LightGray,
-                starsPadding = 10.dp
+                starsPadding = 6.dp,
+                starSize = 35.dp
             )
             Spacer(modifier = Modifier.padding(10.dp))
         }
