@@ -18,7 +18,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.digiit.Cards.listOfTags
 import com.example.digiit.data.Tags
 import com.example.digiit.R
 import com.example.digiit.addTicket
@@ -41,7 +40,7 @@ fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
     var rating = remember { mutableStateOf(5)}
     val comment = remember { mutableStateOf("") }
     var typeVal by remember {
-        mutableStateOf(Tags.Alimentation.title) }
+        mutableStateOf(Tags.Food.title) }
     var typeState = rememberMaterialDialogState()
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
@@ -126,11 +125,12 @@ fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                     positiveButton(text = "Ok")
                     negativeButton(text = "Fermer")
                 }) {
+                    val items = Tags.values().map { tag -> tag.title }
                     listItemsSingleChoice(
-                        list = listOfTags,
+                        list = items,
                         disabledIndices = setOf(1)
                     ) {
-                        typeVal = listOfTags[it]
+                        typeVal = items[it]
                     }
                 }
                 Spacer(modifier = Modifier.padding(5.dp))

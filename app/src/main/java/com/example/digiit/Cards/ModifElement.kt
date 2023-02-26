@@ -24,6 +24,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.digiit.Home.ticket
 import com.example.digiit.R
 import com.example.digiit.addTicket
+import com.example.digiit.data.Tags
 import com.example.digiit.modifTicket
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -134,11 +135,12 @@ fun ModifElement(
                     positiveButton(text = "Ok")
                     negativeButton(text = "Fermer")
                 }) {
+                    val items = Tags.values().map { tag -> tag.title }
                     listItemsSingleChoice(
-                        list = listOfTags,
+                        list = items,
                         disabledIndices = setOf(1)
                     ) {
-                        typeVal = listOfTags[it]
+                        typeVal = items[it]
                     }
                 }
                 Spacer(modifier = Modifier.padding(5.dp))
