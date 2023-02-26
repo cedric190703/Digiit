@@ -93,7 +93,7 @@ fun LineChart() {
         Pair("May", 40f),
         Pair("June", 20f)
     )
-    
+
     val lineEntries = dataPoints.mapIndexed { index, data ->
         Entry(index.toFloat(), data.second)
     }
