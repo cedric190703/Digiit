@@ -2,14 +2,14 @@ package com.example.digiit
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import com.example.digiit.Cards.tags
+import com.example.digiit.data.Tags
 import com.example.digiit.Home.listTickets
 import com.example.digiit.Home.ticket
 
 fun addTicket(type:String,
               tag: String,
               titre: String,
-              prix: Int,
+              price: Int,
               dateTime: String,
               dateDate: String,
               colorIcon: Color,
@@ -19,10 +19,8 @@ fun addTicket(type:String,
               comment: String,
               painter: Painter
 ) {
-    val typeTags: tags
-    typeTags = getIcon(type)
-    val ticket = ticket(typeTags,
-        tag, titre, prix, dateTime, dateDate,
+    val ticket = ticket(getTagByName(type),
+        tag, titre, price, dateTime, dateDate,
         colorIcon, colorTag, colorText, rating, comment, painter)
     listTickets.add(ticket)
 }
@@ -30,7 +28,7 @@ fun addTicket(type:String,
 fun modifTicket(type:String,
                 tag: String,
                 titre: String,
-                prix: Int,
+                price: Int,
                 dateTime: String,
                 dateDate: String,
                 colorIcon: Color,
@@ -42,10 +40,8 @@ fun modifTicket(type:String,
                 ticket: ticket)
 {
     val idx = listTickets.indexOf(ticket)
-    val typeTags: tags
-    typeTags = getIcon(type)
     listTickets[idx].titre = titre
-    listTickets[idx].prix = prix
+    listTickets[idx].prix = price
     listTickets[idx].dateDate = dateDate
     listTickets[idx].dateTime = dateTime
     listTickets[idx].colorIcon = colorIcon
@@ -54,28 +50,15 @@ fun modifTicket(type:String,
     listTickets[idx].painter = painter
     listTickets[idx].colorText = colorText
     listTickets[idx].colorTag = colorTag
-    listTickets[idx].typeCommerce = typeTags
+    listTickets[idx].typeCommerce = getTagByName(type)
     listTickets[idx].tag = tag
 }
 
-fun getIcon(type:String): tags
+fun getTagByName(type:String): Tags
 {
-    var icon = when(type){
-        tags.Artisan.title -> tags.Artisan
-        tags.Alimentation.title -> tags.Alimentation
-        tags.Centre_commercial.title -> tags.Centre_commercial
-        tags.Commerce_prox.title -> tags.Commerce_prox
-        tags.Culture.title -> tags.Culture
-        tags.Divers.title -> tags.Divers
-        tags.Habillement.title -> tags.Habillement
-        tags.Jardinage.title -> tags.Jardinage
-        tags.Maison.title -> tags.Maison
-        tags.Santé.title -> tags.Santé
-        tags.Services.title -> tags.Services
-        tags.Sports.title -> tags.Sports
-        tags.Tourisme.title -> tags.Tourisme
-        tags.Transport.title -> tags.Transport
-        else -> tags.Autre
+    for (tag in Tags.values()) {
+        if (tag.title.equals(type, true))
+            return tag
     }
-    return icon
+    return Tags.Other
 }

@@ -1,6 +1,6 @@
 package com.example.digiit.Home
 
-import com.example.digiit.Cards.tags
+import com.example.digiit.data.Tags
 import com.example.digiit.Cards.ticketsCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,7 +21,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.digiit.DialogDelete
 import com.example.digiit.R
 import com.example.digiit.photos.SelectOption
 import com.example.digiit.scrollbar
@@ -78,7 +77,7 @@ fun HomeScreen() {
 }
 
 data class ticket(
-    var typeCommerce: tags,
+    var typeCommerce: Tags,
     var tag: String,
     var titre: String,
     var prix: Int,

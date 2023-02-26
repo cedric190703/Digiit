@@ -2,9 +2,7 @@ package com.example.digiit.TicketInfo
 
 import android.widget.Toast
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -17,15 +15,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.digiit.Cards.listOfTags
-import com.example.digiit.Cards.tags
+import com.example.digiit.data.Tags
 import com.example.digiit.R
 import com.example.digiit.addTicket
-import com.example.digiit.scrollbar
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -45,7 +41,7 @@ fun dialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
     var rating = remember { mutableStateOf(5)}
     val comment = remember { mutableStateOf("") }
     var typeVal by remember {
-        mutableStateOf(tags.Alimentation.title) }
+        mutableStateOf(Tags.Alimentation.title) }
     var typeState = rememberMaterialDialogState()
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
