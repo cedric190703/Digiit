@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".photos.takePhoto"
+        <activity android:name=".photos.TakePhoto"
             android:label="takePhoto"
             android:theme="@style/Theme.Digiit"
             />
