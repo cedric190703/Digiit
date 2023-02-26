@@ -9,10 +9,15 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun RootNavigationGraph(navController: NavHostController, auth: FirebaseAuth) {
+    var sd = Graph.AUTHENTICATION
+    if (auth.currentUser != null) {
+        sd = Graph.HOME
+    }
+
     NavHost(
         navController = navController,
         route = Graph.ROOT,
-        startDestination = Graph.AUTHENTICATION
+        startDestination = sd
     ) {
         authNavGraph(navController = navController, auth = auth)
         composable(route = Graph.HOME) {
