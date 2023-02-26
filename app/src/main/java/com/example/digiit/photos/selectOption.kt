@@ -51,12 +51,9 @@ import java.util.concurrent.Executors
 class takePhoto : ComponentActivity() {
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
-
     private var shouldShowCamera: MutableState<Boolean> = mutableStateOf(false)
-
     private lateinit var photoUri: Uri
     private var shouldShowPhoto: MutableState<Boolean> = mutableStateOf(false)
-
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -64,7 +61,6 @@ class takePhoto : ComponentActivity() {
             shouldShowCamera.value = true
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -233,7 +229,8 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                             fontSize = 17.sp) },
                         onClick = {
                             pickFileLauncher.launch("application/pdf,text/plain,image/jpeg,image/png,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-                        },
+                            showDialogPhoto.value = true
+                                  },
                         backgroundColor = MaterialTheme.colors.primary,
                         icon = {
                             Icon(painter = painterResource(id = R.drawable.file),
@@ -264,6 +261,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit){
                         takePhotoLauncher.launch(Intent(LocalContext.current, takePhoto::class.java))
                         stateTakePhoto.value = false
                     }
+
                 }
             }
         }

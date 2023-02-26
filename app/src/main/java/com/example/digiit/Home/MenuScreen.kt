@@ -21,6 +21,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.digiit.Menu.Confidentalite
+import com.example.digiit.Menu.EditAccount
 import com.example.digiit.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +40,7 @@ fun MenuScreen() {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Menu",
+                        text = "com/example/digiit/Menu",
                         color = Color.White
                     )
                 },
@@ -60,11 +62,13 @@ fun MenuScreen() {
 
 private val optionsList: ArrayList<OptionsData> = ArrayList()
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MenuContent(paddingValues: PaddingValues) {
     val context = LocalContext.current.applicationContext
     var listPrepared by remember { mutableStateOf(false) }
-
+    val showDialogAccount = remember { mutableStateOf(false) }
+    val showConfidentialiteDialog = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         withContext(Dispatchers.Default) {
             optionsList.clear()
@@ -75,25 +79,45 @@ fun MenuContent(paddingValues: PaddingValues) {
         }
     }
     if (listPrepared) {
-
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
-
             item {
                 UserDetails(context = context)
             }
-
             items(optionsList) { item ->
-                OptionsItemStyle(item = item, context = context)
+                when(item.title)
+                {
+                    "Compte" ->  OptionsItemStyle(item = item, context = context, onClick = {
+                        showDialogAccount.value = it
+                    })
+                    "Confidentialité" -> OptionsItemStyle(item = item, context = context, onClick = {
+                        showConfidentialiteDialog.value = it
+                    })
+                    else -> OptionsItemStyle(item = item, context = context, onClick = {
+                        //nothing
+                    })
+                }
             }
+        }
+        if(showDialogAccount.value)
+        {
+            EditAccount(onDismiss = {
+                showDialogAccount.value = it
+            })
+        }
+        if(showConfidentialiteDialog.value)
+        {
+            Confidentalite(onDismiss = {
+                showConfidentialiteDialog.value = it
+            })
         }
     }
 }
 
 @Composable
 private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getInstance()) {
+    val showDialogAccount = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,17 +159,6 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
             IconButton(
                 modifier = Modifier
                     .weight(weight = 1f, fill = false),
-                onClick = { }) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = "Edit Details",
-                    tint = MaterialTheme.colors.primary
-                )
-            }
-            IconButton(
-                modifier = Modifier
-                    .weight(weight = 1f, fill = false),
                 onClick = {
                     auth.signOut()
                     //TODO : go to login screen
@@ -158,16 +171,29 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
                     tint = MaterialTheme.colors.primary
                 )
             }
+            if(showDialogAccount.value)
+            {
+                EditAccount(onDismiss = {
+                    showDialogAccount.value = it
+                })
+            }
         }
     }
 }
 
 @Composable
-private fun OptionsItemStyle(item: OptionsData, context: Context) {
+private fun OptionsItemStyle(
+    item: OptionsData,
+    context: Context,
+    onClick: (Boolean) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = true) {
+            .clickable(
+                enabled = true
+            ) {
+                onClick(true)
             }
             .padding(all = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -190,16 +216,13 @@ private fun OptionsItemStyle(item: OptionsData, context: Context) {
                     .weight(weight = 3f, fill = false)
                     .padding(start = 16.dp)
             ) {
-
                 Text(
                     text = item.title,
                     style = TextStyle(
                         fontSize = 18.sp
                     )
                 )
-
                 Spacer(modifier = Modifier.height(2.dp))
-
                 Text(
                     text = item.subTitle,
                     style = TextStyle(
@@ -208,9 +231,7 @@ private fun OptionsItemStyle(item: OptionsData, context: Context) {
                         color = Color.Gray
                     )
                 )
-
             }
-
             Icon(
                 modifier = Modifier
                     .weight(weight = 1f, fill = false),
@@ -219,7 +240,6 @@ private fun OptionsItemStyle(item: OptionsData, context: Context) {
                 tint = Color.Black.copy(alpha = 0.70f)
             )
         }
-
     }
 }
 

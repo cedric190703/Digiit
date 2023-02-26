@@ -46,7 +46,7 @@ fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                         IconButton(onClick = { setState(false) }) {
                             Icon(imageVector = Icons.Default.Close,
                                 contentDescription = "Close",
-                                tint = Color.White,
+                                tint = MaterialTheme.colors.primary,
                                 modifier = Modifier.size(38.dp))
                         }
                     }
@@ -131,7 +131,7 @@ fun cardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                         unRatedStarsColor = Color.Gray,
                         starsPadding = 10.dp
                     )
-                    Spacer(modifier = Modifier.padding(8.dp))
+                    Spacer(modifier = Modifier.padding(12.dp))
                     ExtendedFloatingActionButton(
                         modifier = Modifier
                             .height(85.dp)
