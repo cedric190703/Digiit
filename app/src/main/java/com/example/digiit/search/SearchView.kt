@@ -379,7 +379,7 @@ val listItemsForWallet = getMenuItemForWallet()
 data class MenuItemData(val text: String, val icon: Int, var backGround: Color, var iconColor: Color)
 
 fun getMenuItemsList(): ArrayList<MenuItemData> {
-    var listItems = ArrayList<MenuItemData>()
+    val listItems = ArrayList<MenuItemData>()
     listItems.add(MenuItemData(text = "Enseigne", icon = R.drawable.sort_by_alphabet, Color(0xFF0139CE), Color.White))
     listItems.add(MenuItemData(text = "Date", icon = R.drawable.date, Color.White, Color(0xFF0139CE)))
     listItems.add(MenuItemData(text = "Amont", icon = R.drawable.money, Color.White, Color(0xFF0139CE)))
@@ -397,7 +397,7 @@ fun getMenuItemsFilter(): ArrayList<MenuItemData> {
 }
 
 fun getMenuItemForWallet(): ArrayList<MenuItemData> {
-    var listItems = ArrayList<MenuItemData>()
+    val listItems = ArrayList<MenuItemData>()
     listItems.add(MenuItemData(text = "Tout", icon = R.drawable.all, Color(0xFFCA7800), Color.White))
     listItems.add(MenuItemData(text = "Carte fidélité", icon = R.drawable.wallet, Color.White, Color(0xFFCA7800)))
     listItems.add(MenuItemData(text = "Facture", icon = R.drawable.money, Color.White, Color(0xFFCA7800)))
