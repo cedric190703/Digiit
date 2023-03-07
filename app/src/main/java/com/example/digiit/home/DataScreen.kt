@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.digiit.R
-import com.example.digiit.graphs.LineChart
+import com.example.digiit.graphs.*
 
 @Composable
 fun DataScreen() {
@@ -62,6 +62,6 @@ fun DataScreen() {
 @Composable
 fun DataContent(paddingValues: PaddingValues) {
     Column {
-        LineChart()
+        HorizontalBarChart()
     }
 }
