@@ -41,14 +41,14 @@ fun SearchViewHomeTicket() {
         .padding(top = 10.dp, bottom = 20.dp)
         .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(id = R.drawable.account),
+        Icon(
+            painter = painterResource(id = R.drawable.profile),
             contentDescription = "profile image",
-            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(60.dp)
                 .clip(CircleShape)
-                .padding(8.dp)
+                .padding(8.dp),
+            tint = MaterialTheme.colors.primary
         )
         TextField(
             value = searchText,
@@ -181,14 +181,14 @@ fun SearchViewHomeWallet() {
         .padding(top = 10.dp, bottom = 20.dp)
         .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(id = R.drawable.account),
+        Icon(
+            painter = painterResource(id = R.drawable.profile),
             contentDescription = "profile image",
-            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(60.dp)
                 .clip(CircleShape)
-                .padding(8.dp)
+                .padding(8.dp),
+            tint = MaterialTheme.colors.primary
         )
         TextField(
             value = searchText,

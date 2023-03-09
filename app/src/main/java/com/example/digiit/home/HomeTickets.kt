@@ -97,8 +97,6 @@ var listTickets = mutableStateListOf<ticket>()
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues) {
     val listState = rememberLazyListState()
-    val showDialog = remember { mutableStateOf(false) }
-    val idx = remember { mutableStateOf(0)}
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth()) {
@@ -112,7 +110,7 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
                     text = "Pas de tickets",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 36.sp
+                        fontSize = 32.sp
                     )
                 )
             }

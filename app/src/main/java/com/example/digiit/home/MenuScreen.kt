@@ -38,7 +38,7 @@ fun MenuScreen() {
             TopAppBar(
                 title = {
                     Text(
-                        text = "com/example/digiit/menus",
+                        text = "Menu",
                         color = Color.White
                     )
                 },
@@ -123,7 +123,9 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(painter = painterResource(id = R.drawable.profile),
-            contentDescription = "logo profile")
+            contentDescription = "logo profile",
+            modifier = Modifier.size(60.dp),
+            tint = MaterialTheme.colors.primary)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -160,7 +162,6 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
                 onClick = {
                     auth.signOut()
                     //TODO : go to login screen
-
                 }) {
                 Icon(
                     modifier = Modifier.size(24.dp),

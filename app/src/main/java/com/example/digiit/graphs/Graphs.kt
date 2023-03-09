@@ -30,6 +30,17 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.charts.HorizontalBarChart
+import com.github.mikephil.charting.charts.BubbleChart
+import com.github.mikephil.charting.data.BubbleData
+import com.github.mikephil.charting.data.BubbleDataSet
+import com.github.mikephil.charting.data.BubbleEntry
+import com.github.mikephil.charting.charts.RadarChart
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.data.RadarDataSet
+import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
+
 
 @Composable
 fun BarChart() {
@@ -290,7 +301,6 @@ fun GroupedBarChart() {
             BarEntry(6f, floatArrayOf(10f, 18f)),
         ),
         "Group 2",
-
     )
     dataSet2.stackLabels = arrayOf("Value 1", "Value 2")
     dataSet2.color = Color.RED
@@ -522,6 +532,166 @@ fun HorizontalBarChart() {
                     chart.notifyDataSetChanged()
                 },
                 modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
+}
+
+@Composable
+fun BubbleChart() {
+    val dataPoints = listOf(
+        Triple(0f, 30f, 5f),
+        Triple(1f, 40f, 10f),
+        Triple(2f, 15f, 20f),
+        Triple(3f, 50f, 15f),
+        Triple(4f, 25f, 8f),
+        Triple(5f, 35f, 12f)
+    )
+
+    val bubbleEntries = dataPoints.map { data ->
+        BubbleEntry(data.first, data.second, data.third)
+    }
+
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .border(
+                width = 1.dp,
+                color = androidx.compose.ui.graphics.Color.Blue,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .fillMaxWidth()
+            .height(300.dp)
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            AndroidView(
+                factory = { context ->
+                    BubbleChart(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        setDrawGridBackground(false)
+                        description.isEnabled = false
+                        setTouchEnabled(true)
+                        setPinchZoom(true)
+
+                        val bubbleDataSet = BubbleDataSet(bubbleEntries, "Data Set")
+                        bubbleDataSet.colors = listOf(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW)
+                        bubbleDataSet.valueTextSize = 12f
+
+                        val bubbleData = BubbleData(bubbleDataSet)
+                        data = bubbleData
+
+                        xAxis.setDrawGridLines(false)
+                        xAxis.axisMinimum = -0.5f
+                        xAxis.axisMaximum = dataPoints.size - 0.5f
+                        xAxis.valueFormatter = object : ValueFormatter() {
+                            override fun getFormattedValue(value: Float): String {
+                                return dataPoints[value.toInt()].first.toString()
+                            }
+                        }
+
+                        axisLeft.axisMinimum = 0f
+                        axisLeft.axisMaximum = 60f
+
+                        axisRight.isEnabled = false
+
+                        legend.isEnabled = false
+                    }
+                },
+                update = { chart ->
+                    val bubbleDataSet = BubbleDataSet(bubbleEntries, "Data Set")
+                    bubbleDataSet.colors = listOf(Color.MAGENTA, Color.CYAN, Color.DKGRAY, Color.LTGRAY)
+                    bubbleDataSet.valueTextSize = 16f
+
+                    val bubbleData = BubbleData(bubbleDataSet)
+                    chart.data = bubbleData
+                    chart.notifyDataSetChanged()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun RadarChart() {
+    val dataPoints = listOf(
+        Pair("Speed", 70f),
+        Pair("Power", 30f),
+        Pair("Endurance", 50f),
+        Pair("Agility", 90f),
+        Pair("Accuracy", 80f),
+        Pair("Reaction Time", 65f)
+    )
+
+    val radarEntries = dataPoints.mapIndexed { index, data ->
+        RadarEntry(data.second).apply {
+            dataPoints[index].first
+        }
+    }
+
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .border(
+                width = 1.dp,
+                color = androidx.compose.ui.graphics.Color.Blue,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .fillMaxWidth()
+            .height(340.dp)
+    ) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(320.dp)) {
+            AndroidView(
+                factory = { context ->
+                    RadarChart(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        setTouchEnabled(true)
+                        webLineWidth = 1f
+                        webColor = Color.GRAY
+                        webLineWidthInner = 1f
+                        webColorInner = Color.GRAY
+                        webAlpha = 100
+
+                        val radarDataSet = RadarDataSet(radarEntries, "Stats")
+                        radarDataSet.color = Color.BLUE
+                        radarDataSet.fillColor = Color.BLUE
+                        radarDataSet.setDrawFilled(true)
+                        radarDataSet.lineWidth = 2f
+
+                        val radarData = RadarData(listOf<IRadarDataSet>(radarDataSet))
+                        data = radarData
+
+                        xAxis.apply {
+                            valueFormatter = object : ValueFormatter() {
+                                override fun getFormattedValue(value: Float): String {
+                                    return dataPoints[value.toInt() % dataPoints.size].first
+                                }
+                            }
+                            textSize = 14f
+                        }
+
+                        yAxis.apply {
+                            setDrawLabels(false)
+                            setAxisMinValue(0f)
+                            setAxisMaxValue(100f)
+                        }
+
+                        legend.isEnabled = false
+                        description.isEnabled = false
+                    }
+                },
+                update = { chart ->
+                    chart.data.notifyDataChanged()
+                    chart.data.setValueTextSize(13f)
+                    chart.notifyDataSetChanged()
+                }
             )
         }
     }

@@ -48,7 +48,6 @@ fun WalletScreen() {
                         )
                     }
                 },
-
                 contentColor = Color.White,
                 elevation = 12.dp
             )
@@ -84,7 +83,7 @@ fun WalletContent(paddingValues: PaddingValues) {
                     text = "Pas d'éléments",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 36.sp
+                        fontSize = 32.sp
                     )
                 )
             }
