@@ -103,6 +103,7 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
         SearchViewHomeTicket()
         if(listTickets.size == 0)
         {
+            Spacer(modifier = Modifier.padding(20.dp))
             Image(painter = painterResource(id = R.drawable.tickets_image),
                 contentDescription = "image for no data")
             Column(modifier = Modifier.padding(16.dp)) {

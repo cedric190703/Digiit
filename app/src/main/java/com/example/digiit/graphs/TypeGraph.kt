@@ -9,35 +9,35 @@ enum class TypeGraph(
     val icon: Int
 ) {
     CubicLine(
-        title = "Cubic Lines chart",
+        title = "Lignes",
         icon = R.drawable.line_chart
     ),
     LineChart(
-        title = "Cubic Lines chart",
+        title = "Cubiques",
         icon = R.drawable.line_chart
     ),
     BubbleGraph(
-        title = "Bubble graph",
+        title = "Bulles",
         icon = R.drawable.bubblechart
     ),
     BarChart(
-        title = "Bar chart",
+        title = "Barres",
         icon = R.drawable.barchart
     ),
     GroupedBarChart(
-        title = "Grouped chart",
+        title = "Groupe",
         icon = R.drawable.groupe_graph
     ),
     PieChart(
-        title = "Pie chart",
+        title = "Pie",
         icon = R.drawable.piechart
     ),
     HorizontalBarChart(
-        title = "Horizontal chart",
+        title = "Horizontal",
         icon = R.drawable.horizontal_chart
     ),
     RadarChartData(
-        title = "Radar chart",
+        title = "Radar",
         icon = R.drawable.radarchart
     )
 }
