@@ -2,17 +2,20 @@ package com.example.digiit.data.ticket
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import com.example.digiit.data.Tags
+import com.example.digiit.data.TradeKinds
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import java.io.File
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-class RemoteTicket(private val document: DocumentReference) : Ticket() {
+
+class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) {
     fun load(item: DocumentSnapshot) {
+        file = File("remote/${item.id}/user.dat")
         lastEdit = item.getTimestamp("lastEdit")!!.seconds
-        type = Tags.valueOf(item.getString("type")!!)
+        type = TradeKinds.valueOf(item.getString("type")!!)
         tag = item.getString("tag")!!
         title = item.getString("title")!!
         price = item.getDouble("price")!!.toFloat()
@@ -24,11 +27,18 @@ class RemoteTicket(private val document: DocumentReference) : Ticket() {
         colorText = Color(item.getLong("colors.text")!!)
     }
 
-    override fun reload() {
-        TODO("Not yet implemented")
+    override fun reload(callback: ActionCallback) {
+        document.get().addOnCompleteListener {task ->
+            if (task.isSuccessful) {
+                load(task.result)
+                callback(null)
+            } else {
+                callback(task.exception)
+            }
+        }
     }
 
-    override fun save() {
+    override fun save(callback: ActionCallback) {
         val data = hashMapOf(
             "lastEdit" to FieldValue.serverTimestamp(),
             "type" to type.name,
@@ -44,10 +54,14 @@ class RemoteTicket(private val document: DocumentReference) : Ticket() {
                 "text" to colorText.toArgb()
             )
         )
-        document.set(data)
+        document.set(data).addOnCompleteListener { task ->
+            callback(task.exception)
+        }
     }
 
-    override fun delete() {
-        TODO("Not yet implemented")
+    override fun delete(callback: ActionCallback) {
+        document.delete().addOnCompleteListener { task ->
+            callback(task.exception)
+        }
     }
 }

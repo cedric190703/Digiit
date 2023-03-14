@@ -1,6 +1,6 @@
 package com.example.digiit.home
 
-import com.example.digiit.data.Tags
+import com.example.digiit.data.TradeKinds
 import com.example.digiit.cards.TicketsCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -77,7 +77,7 @@ fun HomeScreen() {
 }
 
 data class ticket(
-    var typeCommerce: Tags,
+    var typeCommerce: TradeKinds,
     var tag: String,
     var titre: String,
     var prix: Int,

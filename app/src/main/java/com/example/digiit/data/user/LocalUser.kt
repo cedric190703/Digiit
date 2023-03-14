@@ -10,8 +10,11 @@ import java.io.File
 class LocalUser(private val ctx: Context, private val userId: String): User() {
     private var userDataFolder: File = ctx.filesDir.resolve("locals").resolve(userId)
 
-    private var name = ""
     private var email = ""
+
+    override var name = "unimplemented"
+
+    override val local = true
 
     init {
         load()
@@ -22,18 +25,6 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
         name = stream.readString()
         email = stream.readString()
         stream.close()
-    }
-
-    override fun isLocal(): Boolean {
-        return true
-    }
-
-    override fun getName(): String {
-        return name
-    }
-
-    override fun getEmail(): String {
-        return email
     }
 
     override fun queryTickets(callback: (success: Boolean) -> Unit) {

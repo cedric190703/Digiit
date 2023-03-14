@@ -2,7 +2,6 @@ package com.example.digiit.data.user
 
 import com.example.digiit.data.ticket.RemoteTicket
 import com.example.digiit.data.ticket.Ticket
-import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
@@ -11,14 +10,18 @@ import com.google.firebase.ktx.Firebase
 
 class RemoteUser(app: FirebaseApp, private val user: FirebaseUser) : User() {
     private val firestore = Firebase.firestore(app)
+    private var logged = false
 
-    override fun isLocal(): Boolean {
-        return false
+    var email = ""
+
+    override var name = ""
+
+    override val local = false
+
+    fun load() {
+        name = user.displayName.orEmpty()
+        email = user.email.orEmpty()
     }
-
-    override fun getName() = user.displayName.orEmpty()
-
-    override fun getEmail() = user.email.orEmpty()
 
     override fun queryTickets(callback: (success: Boolean) -> Unit) {
         val query = firestore.collection("users").document(user.uid).collection("tickets")

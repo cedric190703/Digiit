@@ -2,7 +2,7 @@ package com.example.digiit.actiononelement
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import com.example.digiit.data.Tags
+import com.example.digiit.data.TradeKinds
 import com.example.digiit.home.listTickets
 import com.example.digiit.home.ticket
 
@@ -55,11 +55,11 @@ fun editTicket(type:String,
     listTickets[idx].tag = tag
 }
 
-fun getTagByName(type:String): Tags
+fun getTagByName(type:String): TradeKinds
 {
-    for (tag in Tags.values()) {
+    for (tag in TradeKinds.values()) {
         if (tag.title.equals(type, true))
             return tag
     }
-    return Tags.Other
+    return TradeKinds.Other
 }

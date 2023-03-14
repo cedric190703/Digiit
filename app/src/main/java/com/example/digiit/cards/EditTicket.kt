@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.digiit.home.ticket
 import com.example.digiit.R
-import com.example.digiit.data.Tags
+import com.example.digiit.data.TradeKinds
 import com.example.digiit.actiononelement.editTicket
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -133,7 +133,7 @@ fun EditTicket(
                     positiveButton(text = "Ok")
                     negativeButton(text = "Fermer")
                 }) {
-                    val items = Tags.values().map { tag -> tag.title }
+                    val items = TradeKinds.values().map { tag -> tag.title }
                     listItemsSingleChoice(
                         list = items,
                         disabledIndices = setOf(1)

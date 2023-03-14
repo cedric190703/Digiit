@@ -2,7 +2,7 @@ package com.example.digiit.data
 
 import com.example.digiit.R
 
-enum class Tags(
+enum class TradeKinds(
     val title: String,
     val icon: Int
 ) {
@@ -81,9 +81,3 @@ enum class Tags(
         icon = R.drawable.autre
     )
 }
-
-/*
-val listOfTags = listOf<String>(Tags.Alimentation.title,Tags.Artisan.title,Tags.Centre_commercial.title,Tags.Commerce_prox.title,
-Tags.Culture.title, Tags.Divers.title, Tags.Habillement.title, Tags.Jardinage.title, Tags.Maison.title, Tags.Santé.title,
-    Tags.Services.title, Tags.Sports.title, Tags.Tourisme.title, Tags.Transport.title, Tags.Autre.title)
-*/

@@ -1,21 +1,23 @@
 package com.example.digiit.data.ticket
 
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import com.example.digiit.data.Tags
+import com.example.digiit.data.TradeKinds
 import com.example.digiit.utils.BinaryInputStream
 import com.example.digiit.utils.BinaryOutputStream
 import java.io.File
+import java.io.IOException
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 
-class LocalTicket(private val file: File) : Ticket() {
+open class LocalTicket(protected var file: File?) : Ticket() {
     fun load() {
-        val stream = BinaryInputStream(file.inputStream())
+        val stream = BinaryInputStream(file!!.inputStream())
         lastEdit = stream.readLong()
         title = stream.readString()
-        type = Tags.valueOf(stream.readCString())
+        type = TradeKinds.valueOf(stream.readCString())
         tag = stream.readString()
         price = stream.readFloat()
         rating = stream.readFloat()
@@ -27,12 +29,13 @@ class LocalTicket(private val file: File) : Ticket() {
         stream.close()
     }
 
-    override fun reload() {
-        TODO("Not yet implemented")
+    override fun reload(callback: ActionCallback) {
+        load()
+        callback(null)
     }
 
-    override fun save() {
-        val stream = BinaryOutputStream(file.outputStream())
+    override fun save(callback: ActionCallback) {
+        val stream = BinaryOutputStream(file!!.outputStream())
         stream.writeLong(lastEdit)
         stream.writeString(title)
         stream.writeCString(type.name)
@@ -45,9 +48,17 @@ class LocalTicket(private val file: File) : Ticket() {
         writeColor(stream, colorTag)
         writeColor(stream, colorTag)
         stream.close()
+        callback(null)
     }
 
-    override fun delete() {
+    override fun delete(callback: ActionCallback) {
+        if (file!!.delete())
+            callback(null)
+        else
+            callback(IOException("Can't delete file"))
+    }
+
+    override fun loadImage(callback: (error: Exception?, bitmap: Bitmap?) -> Unit) {
         TODO("Not yet implemented")
     }
 
