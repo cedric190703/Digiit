@@ -97,14 +97,13 @@ var listTickets = mutableStateListOf<ticket>()
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues) {
     val listState = rememberLazyListState()
-    val showDialog = remember { mutableStateOf(false) }
-    val idx = remember { mutableStateOf(0)}
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth()) {
         SearchViewHomeTicket()
         if(listTickets.size == 0)
         {
+            Spacer(modifier = Modifier.padding(20.dp))
             Image(painter = painterResource(id = R.drawable.tickets_image),
                 contentDescription = "image for no data")
             Column(modifier = Modifier.padding(16.dp)) {
@@ -112,7 +111,7 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
                     text = "Pas de tickets",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 36.sp
+                        fontSize = 32.sp
                     )
                 )
             }

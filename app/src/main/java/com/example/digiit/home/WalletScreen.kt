@@ -48,7 +48,6 @@ fun WalletScreen() {
                         )
                     }
                 },
-
                 contentColor = Color.White,
                 elevation = 12.dp
             )
@@ -77,6 +76,7 @@ fun WalletContent(paddingValues: PaddingValues) {
         SearchViewHomeWallet()
         if(listWallets.size == 0)
         {
+            Spacer(modifier = Modifier.padding(20.dp))
             Image(painter = painterResource(id = R.drawable.wallet_image),
                 contentDescription = "image for no data")
             Column(modifier = Modifier.padding(16.dp)) {
@@ -84,7 +84,7 @@ fun WalletContent(paddingValues: PaddingValues) {
                     text = "Pas d'éléments",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 36.sp
+                        fontSize = 32.sp
                     )
                 )
             }
