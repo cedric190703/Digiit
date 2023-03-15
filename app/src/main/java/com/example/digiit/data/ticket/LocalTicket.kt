@@ -58,7 +58,11 @@ open class LocalTicket(protected var file: File?) : Ticket() {
             callback(IOException("Can't delete file"))
     }
 
-    override fun loadImage(callback: (error: Exception?, bitmap: Bitmap?) -> Unit) {
+    override fun loadImage(callback: ActionCallback) {
+        TODO("Not yet implemented")
+    }
+
+    override fun saveImage(callback: ActionCallback) {
         TODO("Not yet implemented")
     }
 

@@ -28,8 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
-import com.example.digiit.cards.TicketsCard
-import com.example.digiit.data.Tags
 import com.example.digiit.graphs.*
 import com.example.digiit.scrollbar.scrollbar
 
