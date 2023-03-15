@@ -31,6 +31,7 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
         date = LocalDateTime.ofEpochSecond(item.getLong("date")!!, 0, ZoneOffset.UTC)
         rating = item.getDouble("rating")!!.toFloat()
         comment = item.getString("comment")!!
+        imageId = item.getString("image").orEmpty()
         colorIcon = Color(item.getLong("colors.icon")!!)
         colorTag = Color(item.getLong("colors.tag")!!)
         colorText = Color(item.getLong("colors.text")!!)
@@ -57,6 +58,7 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
             "date" to date.toEpochSecond(ZoneOffset.UTC),
             "rating" to rating,
             "comment" to comment,
+            "image" to imageId,
             "colors" to hashMapOf(
                 "icon" to colorIcon.toArgb(),
                 "tag" to colorTag.toArgb(),
