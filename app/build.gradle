@@ -67,7 +67,8 @@ dependencies {
 
     // Google Firebase
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.3'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.4'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
 
     // For composition
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"

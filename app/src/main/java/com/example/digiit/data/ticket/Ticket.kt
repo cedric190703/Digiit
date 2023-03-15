@@ -1,5 +1,6 @@
 package com.example.digiit.data.ticket
 
+import android.app.Notification.Action
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
 import com.example.digiit.data.TradeKinds
@@ -21,6 +22,7 @@ abstract class Ticket(var type: TradeKinds = TradeKinds.Other,
                       var colorText: Color = Color.Black
 ) {
     var lastEdit: Long = -1
+    var image: Bitmap? = null
 
     abstract fun reload(callback: ActionCallback)
 
@@ -28,5 +30,7 @@ abstract class Ticket(var type: TradeKinds = TradeKinds.Other,
 
     abstract fun delete(callback: ActionCallback)
 
-    abstract fun loadImage(callback: (error: Exception?, bitmap: Bitmap?) -> Unit)
+    abstract fun loadImage(callback: ActionCallback)
+
+    abstract fun saveImage(callback: ActionCallback)
 }
