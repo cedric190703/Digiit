@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.UUID
 
 
 class RemoteUser(app: FirebaseApp, private val user: FirebaseUser) : User() {
@@ -39,7 +40,10 @@ class RemoteUser(app: FirebaseApp, private val user: FirebaseUser) : User() {
         }
     }
 
-    override fun addTicket(ticket: Ticket) {
-        TODO("Not yet implemented")
+    override fun createTicket(): Ticket {
+        val tickets = firestore.collection("users").document(user.uid).collection("tickets")
+        val ticket = RemoteTicket(tickets.document(UUID.randomUUID().toString()))
+        tickets.add(ticket)
+        return ticket
     }
 }

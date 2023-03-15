@@ -9,6 +9,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -20,6 +21,7 @@ import java.util.UUID
 class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) {
     private val storage = Firebase.storage(document.firestore.app)
     private var imageId = ""
+    private var imageRef : StorageReference? = null
 
     fun load(item: DocumentSnapshot) {
         file = File("remote/${item.id}/user.dat")
@@ -35,6 +37,9 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
         colorIcon = Color(item.getLong("colors.icon")!!)
         colorTag = Color(item.getLong("colors.tag")!!)
         colorText = Color(item.getLong("colors.text")!!)
+        if (imageId.isNotEmpty()) {
+            imageRef = storage.getReference("images/$imageId")
+        }
     }
 
     override fun reload(callback: ActionCallback) {
@@ -71,15 +76,28 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
     }
 
     override fun delete(callback: ActionCallback) {
-        document.delete().addOnCompleteListener { task ->
-            callback(task.exception)
+        if (imageRef != null) {
+            imageRef!!.delete().addOnCompleteListener { task1 ->
+                if (task1.isSuccessful) {
+                    deleteInFirebase(callback)
+                } else {
+                    callback(task1.exception)
+                }
+            }
+        } else {
+            deleteInFirebase(callback)
+        }
+    }
+
+    private fun deleteInFirebase(callback: ActionCallback) {
+        document.delete().addOnCompleteListener { task2 ->
+            callback(task2.exception)
         }
     }
 
     override fun loadImage(callback: ActionCallback) {
-        if (imageId.isNotEmpty()) {
-            val ref = storage.getReference("images/$imageId")
-            ref.getBytes(MAX_IMAGE_SIZE).addOnCompleteListener { task ->
+        if (imageRef != null) {
+            imageRef!!.getBytes(MAX_IMAGE_SIZE).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     image = BitmapFactory.decodeByteArray(task.result, 0, task.result.size)
                     callback(null)
@@ -94,12 +112,12 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
         if (image != null) {
             val bytes = ByteArrayOutputStream()
             image!!.compress(Bitmap.CompressFormat.JPEG, 80, bytes)
-            if (imageId.isEmpty()) {
+            if (imageRef == null) {
                 // If there is no already saved image then create a new id
                 imageId = UUID.randomUUID().toString();
+                imageRef = storage.getReference("images/$imageId")
             }
-            val ref = storage.getReference("images/$imageId")
-            ref.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->
+            imageRef!!.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->
                 callback(task.exception)
             }
         }

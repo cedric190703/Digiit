@@ -39,7 +39,7 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
         callback(true)
     }
 
-    override fun addTicket(ticket: Ticket) {
+    override fun createTicket(): Ticket {
         TODO("Not yet implemented")
     }
 }

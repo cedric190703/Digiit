@@ -15,5 +15,5 @@ abstract class User {
         return tickets
     }
 
-    abstract fun addTicket(ticket: Ticket)
+    abstract fun createTicket(): Ticket
 }
