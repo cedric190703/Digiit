@@ -31,17 +31,27 @@ import es.dmoral.toasty.Toasty
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import com.example.digiit.ui.theme.Primary
+import com.vanpra.composematerialdialogs.color.colorChooser
 
 @Composable
 fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
-    var titrelVal = remember { mutableStateOf("") }
-    var prixVal = remember {mutableStateOf("")}
-    var tagVal = remember { mutableStateOf("") }
-    var rating = remember { mutableStateOf(5)}
+    val titrelVal = remember { mutableStateOf("") }
+    val prixVal = remember {mutableStateOf("")}
+    val tagVal = remember { mutableStateOf("") }
+    val rating = remember { mutableStateOf(5)}
+    val colorTextIdx = remember{ mutableStateOf(18) }
+    val colorText = remember { mutableStateOf(Primary[colorTextIdx.value]) }
+    val colorIconIdx = remember{ mutableStateOf(5) }
+    val colorIcon = remember { mutableStateOf(Primary[colorIconIdx.value]) }
+    val colorTagIdx = remember{ mutableStateOf(5) }
+    val colorTag = remember { mutableStateOf(Primary[colorTagIdx.value]) }
     val comment = remember { mutableStateOf("") }
     var typeVal by remember {
         mutableStateOf(TradeKinds.Food.title) }
-    var typeState = rememberMaterialDialogState()
+    val typeState = rememberMaterialDialogState()
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -64,6 +74,9 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
     }
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
+    val colorTextDialog = rememberMaterialDialogState()
+    val colorIconDialog = rememberMaterialDialogState()
+    val colorTagDialog = rememberMaterialDialogState()
     val ctx = LocalContext.current
     Dialog(
         onDismissRequest = { setShowDialogPhoto(false) }) {
@@ -208,6 +221,60 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                     placeholder = { "Commentaire du ticket" }
                 )
                 Spacer(modifier = Modifier.padding(13.dp))
+                Button(modifier = Modifier.padding(horizontal = 12.dp) ,onClick = {
+                    colorTextDialog.show()
+                }) {
+                    Text(text = "Sélectionner une couleur pour le texte:", fontSize = 18.sp)
+                }
+                MaterialDialog(
+                    dialogState = colorTextDialog,
+                    buttons = {
+                        positiveButton(text = "Ok")
+                        negativeButton(text = "Fermer")
+                    }
+                ) {
+                    colorChooser(colors = Primary, initialSelection = colorTextIdx.value) {
+                        colorText.value = it
+                        colorTextIdx.value = Primary.indexOf(colorText.value)
+                    }
+                }
+                Spacer(modifier = Modifier.padding(13.dp))
+                Button(modifier = Modifier.padding(horizontal = 12.dp) ,onClick = {
+                    colorIconDialog.show()
+                }) {
+                    Text(text = "Sélectionner une couleur pour l'icone:", fontSize = 18.sp)
+                }
+                MaterialDialog(
+                    dialogState = colorIconDialog,
+                    buttons = {
+                        positiveButton(text = "Ok")
+                        negativeButton(text = "Fermer")
+                    }
+                ) {
+                    colorChooser(colors = Primary, initialSelection = colorIconIdx.value) {
+                        colorIcon.value = it
+                        colorIconIdx.value = Primary.indexOf(colorIcon.value)
+                    }
+                }
+                Spacer(modifier = Modifier.padding(13.dp))
+                Button(modifier = Modifier.padding(horizontal = 12.dp) ,onClick = {
+                    colorTagDialog.show()
+                }) {
+                    Text(text = "Sélectionner une couleur pour le tag:", fontSize = 18.sp)
+                }
+                MaterialDialog(
+                    dialogState = colorTagDialog,
+                    buttons = {
+                        positiveButton(text = "Ok")
+                        negativeButton(text = "Fermer")
+                    }
+                ) {
+                    colorChooser(colors = Primary, initialSelection = colorTagIdx.value) {
+                        colorTag.value = it
+                        colorTagIdx.value = Primary.indexOf(colorTag.value)
+                    }
+                }
+                Spacer(modifier = Modifier.padding(13.dp))
                 Row() {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
@@ -217,7 +284,7 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                         onClick = { if(typeVal != "" && titrelVal.value != "") {
                             createTicket(typeVal, tagVal.value, titrelVal.value,
                                 prixVal.value.toInt(), pickedTime.toString(), pickedDate.toString(),
-                                Color.Red, Color.Blue, Color.Black, rating.value, comment.value, painter)
+                                colorText.value, colorIcon.value, colorTag.value, rating.value, comment.value, painter)
                             setShowDialogPhoto(false)
                             Toasty.success(ctx, "Le ticket a bien été ajouté", Toast.LENGTH_SHORT, true).show()
                         } else {

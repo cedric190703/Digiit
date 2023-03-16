@@ -41,7 +41,6 @@ import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 
-
 @Composable
 fun BarChart() {
     val dataPoints = listOf(
