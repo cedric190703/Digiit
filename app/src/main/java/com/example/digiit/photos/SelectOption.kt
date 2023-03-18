@@ -22,15 +22,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.example.digiit.R
 import com.example.digiit.ticketinfo.DialogTicketInfo
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,6 +42,22 @@ import coil.compose.rememberImagePainter
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import com.example.digiit.data.user.User
+
+fun createBitmapFromUri(context: Context, uri: Uri?): Bitmap {
+    val inputStream = uri?.let { context.contentResolver.openInputStream(it) }
+    return BitmapFactory.decodeStream(inputStream)
+}
+
+fun rotateBitmap(bitmap: Bitmap): Bitmap {
+    val matrix = Matrix()
+    matrix.postRotate(90f)
+    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+}
 
 class TakePhoto : ComponentActivity() {
     private lateinit var outputDirectory: File
@@ -130,7 +143,7 @@ class TakePhoto : ComponentActivity() {
 }
 
 @Composable
-fun selectOption(setShowDialog: (Boolean) -> Unit){
+fun selectOption(setShowDialog: (Boolean) -> Unit, user: User?){
     var photoUri: Uri? by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri
@@ -240,18 +253,14 @@ fun selectOption(setShowDialog: (Boolean) -> Unit){
                         }
                     )
                     if (photoUri != null) {
-                        var painter: Painter = rememberAsyncImagePainter(
-                            ImageRequest
-                                .Builder(LocalContext.current)
-                                .data(data = photoUri)
-                                .build()
-                        )
+                        val bitmapTmp: Bitmap = createBitmapFromUri(context = LocalContext.current, uri = photoUri)
+                        val bitmap = rotateBitmap(bitmapTmp)
                         if(showDialogPhoto.value)
                         {
                             DialogTicketInfo(setShowDialogPhoto = {
                                 showDialogPhoto.value = it
                                 setShowDialog(false)
-                            }, painter = painter)
+                            }, bitmap = bitmap, user = user)
                         }
                     }
                     if(stateTakePhoto.value)

@@ -20,7 +20,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.digiit.R
+import com.example.digiit.data.UserProvider
+import com.example.digiit.data.user.RemoteUser
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.auth.User
 import es.dmoral.toasty.Toasty
 
 @Composable
@@ -30,11 +34,7 @@ fun HomeLogin(
     SignUpClick: () -> Unit,
     ForgotClick: () -> Unit
 ) {
-    //Already connected
-    //if (getAuth().currentUser != null) {
-    //    goToHome()
-    //}
-
+    var user: User? = null
     val emailVal = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     var context = androidx.compose.ui.platform.LocalContext.current

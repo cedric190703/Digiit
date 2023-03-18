@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.digiit.data.user.User
 import com.example.digiit.home.*
 import com.example.digiit.navgraphs.Graph
 
@@ -23,6 +24,7 @@ fun HomeNavGraph(
     ) {
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(
+
             )
         }
         composable(route = BottomBarScreen.Wallet.route) {

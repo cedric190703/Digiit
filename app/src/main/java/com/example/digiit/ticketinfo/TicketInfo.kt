@@ -1,5 +1,6 @@
 package com.example.digiit.ticketinfo
 
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -33,14 +34,21 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.ui.graphics.asImageBitmap
+import com.example.digiit.data.user.RemoteUser
+import com.example.digiit.data.user.User
 import com.example.digiit.ui.theme.Primary
 import com.vanpra.composematerialdialogs.color.colorChooser
 
 @Composable
-fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
+fun DialogTicketInfo(
+    user: User?, bitmap: Bitmap,
+    setShowDialogPhoto: (Boolean) -> Unit) {
+    val items = TradeKinds.values().map { tag -> tag.title }
     val titrelVal = remember { mutableStateOf("") }
     val prixVal = remember {mutableStateOf("")}
-    val tagVal = remember { mutableStateOf("") }
+    val idxTag = remember{ mutableStateOf(0)}
+    val tagVal = remember { mutableStateOf(items[idxTag.value]) }
     val rating = remember { mutableStateOf(5)}
     val colorTextIdx = remember{ mutableStateOf(18) }
     val colorText = remember { mutableStateOf(Primary[colorTextIdx.value]) }
@@ -56,7 +64,7 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
         mutableStateOf(LocalDate.now())
     }
     var pickedTime by remember {
-        mutableStateOf(LocalTime.NOON)
+        mutableStateOf(LocalTime.now())
     }
     val formattedDate by remember {
         derivedStateOf {
@@ -91,7 +99,7 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                         enabled = true
                     )) {
                 Image(
-                    painter = painter,
+                    bitmap = bitmap.asImageBitmap(),
                     contentDescription = "photo taken",
                     modifier = Modifier
                         .padding(17.dp)
@@ -138,12 +146,12 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                     positiveButton(text = "Ok")
                     negativeButton(text = "Fermer")
                 }) {
-                    val items = TradeKinds.values().map { tag -> tag.title }
                     listItemsSingleChoice(
                         list = items,
-                        disabledIndices = setOf(1)
+                        initialSelection = idxTag.value
                     ) {
                         typeVal = items[it]
+                        idxTag.value = items.indexOf(typeVal)
                     }
                 }
                 Spacer(modifier = Modifier.padding(5.dp))
@@ -180,7 +188,7 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                     }
                 ) {
                     datepicker(
-                        initialDate = LocalDate.now(),
+                        initialDate = pickedDate,
                         title = "Sélectionner une date",
                     ) {
                         pickedDate = it
@@ -194,7 +202,7 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                     }
                 ) {
                     timepicker(
-                        initialTime = LocalTime.NOON,
+                        initialTime = pickedTime,
                         title = "Sélectionner l'heure"
                     ) {
                         pickedTime = it
@@ -216,7 +224,6 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                     value = comment.value,
                     modifier = Modifier.height(95.dp),
                     onValueChange = { comment.value = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Commentaire") },
                     placeholder = { "Commentaire du ticket" }
                 )
@@ -284,7 +291,7 @@ fun DialogTicketInfo(painter: Painter, setShowDialogPhoto: (Boolean) -> Unit) {
                         onClick = { if(typeVal != "" && titrelVal.value != "") {
                             createTicket(typeVal, tagVal.value, titrelVal.value,
                                 prixVal.value.toInt(), pickedTime.toString(), pickedDate.toString(),
-                                colorText.value, colorIcon.value, colorTag.value, rating.value, comment.value, painter)
+                                colorText.value, colorIcon.value, colorTag.value, rating.value, comment.value, bitmap, user)
                             setShowDialogPhoto(false)
                             Toasty.success(ctx, "Le ticket a bien été ajouté", Toast.LENGTH_SHORT, true).show()
                         } else {

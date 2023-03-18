@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
+import com.example.digiit.data.user.RemoteUser
+import com.example.digiit.data.user.User
 import com.example.digiit.photos.selectOption
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeTicket
@@ -30,6 +32,7 @@ import com.example.digiit.search.SearchViewHomeTicket
 @Composable
 fun HomeScreen() {
     val showDialog =  remember { mutableStateOf(false) }
+    var user: User? = null
     Scaffold(
         backgroundColor = Color.White,
         modifier = Modifier
@@ -71,7 +74,7 @@ fun HomeScreen() {
             if(showDialog.value)
                 selectOption(setShowDialog = {
                     showDialog.value = it
-                })
+                }, user = user)
         }
     )
 }
@@ -125,6 +128,8 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
                         confirmStateChange = {
                             if (it==DismissValue.DismissedToStart){
                                 listTickets.remove(item)
+                                // Remove the receipt with this when the user is imported in this function
+                                // ticket.remove(item)
                             }
                             true
                         }

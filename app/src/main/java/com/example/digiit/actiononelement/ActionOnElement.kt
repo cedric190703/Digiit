@@ -3,8 +3,12 @@ package com.example.digiit.actiononelement
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import com.example.digiit.data.TradeKinds
+import com.example.digiit.data.user.User
 import com.example.digiit.home.listTickets
 import com.example.digiit.home.ticket
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import android.graphics.Bitmap
 
 fun createTicket(type:String,
                  tag: String,
@@ -17,13 +21,33 @@ fun createTicket(type:String,
                  colorText: Color,
                  rating: Int,
                  comment: String,
-                 painter: Painter
+                 bitmap: Bitmap,
+                 user: User?
 ) {
-    val ticket = ticket(
-        getTagByName(type),
-        tag, titre, price, dateTime, dateDate,
-        colorIcon, colorTag, colorText, rating, comment, painter)
-    listTickets.add(ticket)
+    if(user != null) {
+        var ticket = user.createTicket()
+        ticket.type = TradeKinds.Food
+        ticket.colorIcon = colorIcon
+        ticket.colorTag = colorTag
+        ticket.colorText = colorText
+        ticket.comment = comment
+        ticket.tag = tag
+        ticket.price = price.toFloat()
+        ticket.title = titre
+        ticket.rating = rating.toFloat()
+        ticket.type = getTagByName(type)
+        val dateString = dateDate+dateTime
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+        val dateTime = LocalDateTime.parse(dateString, formatter)
+        ticket.date = dateTime
+        ticket.image = bitmap
+        ticket.save {error ->
+            if (error != null)
+                print(error)
+            else
+                print("Ticket successfully saved")
+        }
+    }
 }
 
 fun editTicket(type:String,
