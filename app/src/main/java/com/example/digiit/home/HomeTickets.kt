@@ -1,5 +1,6 @@
 package com.example.digiit.home
 
+import android.graphics.Bitmap
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.cards.TicketsCard
 import androidx.compose.foundation.Image
@@ -79,6 +80,7 @@ fun HomeScreen() {
     )
 }
 
+// For the tests but at the end use the Ticket from the folder data
 data class ticket(
     var typeCommerce: TradeKinds,
     var tag: String,
@@ -91,7 +93,7 @@ data class ticket(
     var colorText: Color,
     var rating: Int,
     var comment: String,
-    var painter: Painter
+    var bitmap: Bitmap
 )
 
 var listTickets = mutableStateListOf<ticket>()
