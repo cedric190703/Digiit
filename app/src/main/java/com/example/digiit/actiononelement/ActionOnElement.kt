@@ -35,8 +35,8 @@ fun createTicket(type:String,
         ticket.title = titre
         ticket.rating = rating.toFloat()
         ticket.type = getTagByName(type)
-        val dateString = dateDate+dateTime
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+        val dateString = "$dateDate $dateTime"
+        val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")
         val dateTime = LocalDateTime.parse(dateString, formatter)
         ticket.date = dateTime
         ticket.image = bitmap

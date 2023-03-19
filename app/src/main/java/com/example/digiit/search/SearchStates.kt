@@ -1,62 +1,161 @@
 package com.example.digiit.search
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.digiit.home.ticket
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import com.example.digiit.data.CommercialType
+import com.example.digiit.home.wallet
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-enum class SearchDisplay {
-    InitialResults, Suggestions, Results, NoResults
-}
-
-@Stable
-class SearchState(
-    query: TextFieldValue,
-    focused: Boolean,
-    searching: Boolean,
-    searchResults: List<ticket>
-) {
-    var query by mutableStateOf(query)
-    var focused by mutableStateOf(focused)
-    var searching by mutableStateOf(searching)
-    var searchResults by mutableStateOf(searchResults)
-
-    val searchDisplay: SearchDisplay
-        get() = when {
-            !focused && query.text.isEmpty() -> SearchDisplay.InitialResults
-            focused && query.text.isEmpty() -> SearchDisplay.Suggestions
-            searchResults.isEmpty() -> SearchDisplay.NoResults
-            else -> SearchDisplay.Results
+@Composable
+fun SearchTickets(items: List<ticket>,
+           filter: String,
+           order: String){
+    var searchText by remember { mutableStateOf("") }
+    val isVisible by remember {
+        derivedStateOf {
+            searchText.isNotBlank()
         }
+    }
+    val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")
+
+    // Filter on elements
+    val filteredItems = if (searchText.isNotBlank()) {
+        items.filter { ticket ->
+            ticket.titre.contains(searchText) || ticket.tag.contains(
+                searchText
+            )
+        }
+    } else {
+        items
+    }
+
+    // Sort filtered items by order and the type of the filter
+    val sortedItems = if (order == "Croissant") {
+        filteredItems.sortedWith(compareBy { ticket ->
+            when (filter) {
+                "Enseigne" -> ticket.titre
+                "Date" -> LocalDateTime.parse(ticket.dateDate, formatter)
+                "Type" -> ticket.typeCommerce.title
+                "Amont" -> ticket.prix
+                else -> ticket.titre
+            }
+        })
+    } else {
+        filteredItems.sortedWith(compareByDescending { ticket ->
+            when (filter) {
+                "Enseigne" -> ticket.titre
+                "Date" -> LocalDateTime.parse(ticket.dateDate, formatter)
+                "Type" -> ticket.typeCommerce.title
+                "Amont" -> ticket.prix
+                else -> ticket.titre
+            }
+        })
+    }
+
+    // TextField to have the searchText from the user
+    TextField(
+        value = searchText,
+        onValueChange = { searchText = it },
+        label = { Text("Search") },
+        modifier = Modifier
+            .padding(10.dp)
+            .width(250.dp),
+        leadingIcon = { Icon(Icons.Filled.Search, "search icon") },
+        trailingIcon = {
+            if (isVisible) {
+                IconButton(
+                    onClick = { searchText = "" }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Clear"
+                    )
+                }
+            }
+        },
+    )
 }
 
 @Composable
-fun rememberSearchState(
-    query: TextFieldValue = TextFieldValue(""),
-    focused: Boolean = false,
-    searching: Boolean = false,
-    searchResults: List<ticket> = emptyList()
-): SearchState {
-    return remember {
-        SearchState(
-            query = query,
-            focused = focused,
-            searching = searching,
-            searchResults = searchResults
-        )
+fun SearchWallets(items: List<wallet>,
+                  filter: String,
+                  order: String,
+                  commercialType: String){
+    var searchText by remember { mutableStateOf("") }
+    val isVisible by remember {
+        derivedStateOf {
+            searchText.isNotBlank()
+        }
     }
+    val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")
+
+    // Filter on elements
+    val filteredItems = if (searchText.isNotBlank()) {
+        items.filter { wallet ->
+            wallet.titre.contains(searchText) ||
+                    wallet.tag.contains(searchText) &&
+                    if (wallet.walletType.title != "Tout") {
+                        wallet.walletType.title == commercialType
+                    } else {
+                        true
+                    }
+        }
+    } else {
+        items
+    }
+
+    // Sort filtered items by order and the type of the filter
+    val sortedItems = if (order == "Croissant") {
+        filteredItems.sortedWith(compareBy { ticket ->
+            when (filter) {
+                "Enseigne" -> ticket.titre
+                "Date" -> LocalDateTime.parse(ticket.dateDate, formatter)
+                "Type" -> ticket.typeCommerce.title
+                "Amont" -> ticket.prix
+                else -> ticket.titre
+            }
+        })
+    } else {
+        filteredItems.sortedWith(compareByDescending { ticket ->
+            when (filter) {
+                "Enseigne" -> ticket.titre
+                "Date" -> LocalDateTime.parse(ticket.dateDate, formatter)
+                "Type" -> ticket.typeCommerce.title
+                "Amont" -> ticket.prix
+                else -> ticket.titre
+            }
+        })
+    }
+
+    // TextField to have the searchText from the user
+    TextField(
+        value = searchText,
+        onValueChange = { searchText = it },
+        label = { Text("Search") },
+        modifier = Modifier
+            .padding(10.dp)
+            .width(250.dp),
+        leadingIcon = { Icon(Icons.Filled.Search, "search icon") },
+        trailingIcon = {
+            if (isVisible) {
+                IconButton(
+                    onClick = { searchText = "" }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Clear"
+                    )
+                }
+            }
+        },
+    )
 }

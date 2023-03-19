@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.example.digiit.R
+import com.example.digiit.home.listTickets
+import com.example.digiit.home.listWallets
+import com.example.digiit.home.ticket
 
 @Composable
 fun SearchViewHomeTicket() {
@@ -28,12 +31,6 @@ fun SearchViewHomeTicket() {
     var filterOrder = remember { mutableStateOf("Croissant") }
     var expanded by remember {
         mutableStateOf(false)
-    }
-    var searchText by remember { mutableStateOf("") }
-    val isVisible by remember {
-        derivedStateOf {
-            searchText.isNotBlank()
-        }
     }
     Row (modifier = Modifier
         .padding(top = 10.dp, bottom = 20.dp)
@@ -48,27 +45,9 @@ fun SearchViewHomeTicket() {
                 .padding(8.dp),
             tint = MaterialTheme.colors.primary
         )
-        TextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text("Search") },
-            modifier = Modifier
-                .padding(10.dp)
-                .width(250.dp),
-            leadingIcon = { Icon(Icons.Filled.Search, "search icon") },
-            trailingIcon = {
-                if (isVisible) {
-                    IconButton(
-                        onClick = { searchText = "" }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear"
-                        )
-                    }
-                }
-            },
-        )
+        SearchTickets(listTickets,
+            filter = filterItem.value,
+            order = filterOrder.value)
         Button(
             onClick = {
                 expanded = true
@@ -169,12 +148,6 @@ fun SearchViewHomeWallet() {
     var filterOrder = remember { mutableStateOf("Croissant") }
     var expanded by remember { mutableStateOf(false) }
     var expandedState by remember { mutableStateOf(false) }
-    var searchText by remember { mutableStateOf("") }
-    val isVisible by remember {
-        derivedStateOf {
-            searchText.isNotBlank()
-        }
-    }
     Row (modifier = Modifier
         .padding(top = 10.dp, bottom = 20.dp)
         .fillMaxWidth(),
@@ -188,27 +161,10 @@ fun SearchViewHomeWallet() {
                 .padding(8.dp),
             tint = MaterialTheme.colors.primary
         )
-        TextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text("Search") },
-            modifier = Modifier
-                .padding(10.dp)
-                .width(175.dp),
-            leadingIcon = { Icon(Icons.Filled.Search, "search icon") },
-            trailingIcon = {
-                if (isVisible) {
-                    IconButton(
-                        onClick = { searchText = "" }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear"
-                        )
-                    }
-                }
-            },
-        )
+        SearchWallets(listWallets,
+            filter = filterItem.value,
+            order = filterOrder.value,
+            commercialType = typeItem.value)
         Row() {
             Button(
                 onClick = {

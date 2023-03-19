@@ -29,7 +29,7 @@ import com.example.digiit.data.TradeKinds
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeWallet
 
-var listWallets = arrayListOf<ticket>()
+var listWallets = mutableStateListOf<wallet>()
 
 @Composable
 fun WalletScreen() {
