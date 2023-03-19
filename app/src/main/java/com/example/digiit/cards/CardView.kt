@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,7 @@ import com.example.digiit.dialog.DialogDelete
 import com.example.digiit.home.listTickets
 import com.example.digiit.home.ticket
 import com.example.digiit.R
+import com.example.digiit.home.wallet
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 
 @Composable
@@ -224,7 +226,7 @@ fun CardViewBig(
                 }
                 Spacer(modifier = Modifier.padding(6.dp))
                 Image(
-                    painter = ticket.painter,
+                    bitmap = ticket.bitmap.asImageBitmap(),
                     contentDescription = "photo taken",
                     modifier = Modifier
                         .padding(17.dp)
@@ -358,6 +360,335 @@ fun CardViewBig(
                         setShowDialog = {
                             dialogModif.value = it
                         })
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
+    val ratingVal = remember { mutableStateOf(wallet.rating) }
+    val showDialog = remember { mutableStateOf(false) }
+    val dialogModif = remember { mutableStateOf(false) }
+    val bigScreen = remember { mutableStateOf(false) }
+    Dialog(onDismissRequest = { setState(false) }) {
+        Surface(
+            shape = RoundedCornerShape(15.dp),
+            color = wallet.colorIcon) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(onClick = { setState(false) }) {
+                        Icon(imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.size(38.dp))
+                    }
+                }
+                Spacer(modifier = Modifier.padding(12.dp))
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = "${wallet.prix}$",
+                    color = Color.White,
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(12.dp))
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = wallet.titre,
+                    color = Color.White,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(12.dp))
+                ExtendedFloatingActionButton(
+                    modifier = Modifier.height(65.dp),
+                    text = {  Text(text = wallet.typeCommerce.title,
+                        fontSize = 17.sp, color = Color.White) },
+                    backgroundColor = Color.Transparent,
+                    onClick = {  },
+                    icon = {
+                        Icon(painter = painterResource(wallet.typeCommerce.icon),
+                            "Logo type ticket",
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .size(35.dp),
+                            tint = Color.White)
+                    }
+                )
+                Spacer(modifier = Modifier.padding(12.dp))
+                Column(verticalArrangement = Arrangement.Center) {
+                    Row(horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = "Effectué le :",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.padding(20.dp))
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = wallet.dateDate,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = "Effectué à :     ",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.padding(20.dp))
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = wallet.dateTime,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.padding(12.dp))
+                RatingBarView(
+                    rating = ratingVal,
+                    isRatingEditable = false,
+                    isViewAnimated = false,
+                    ratedStarsColor = Color.White,
+                    starIcon = painterResource(id = R.drawable.full_star),
+                    unRatedStarsColor = Color.Gray,
+                    starsPadding = 10.dp
+                )
+                Spacer(modifier = Modifier.padding(12.dp))
+                ExtendedFloatingActionButton(
+                    modifier = Modifier
+                        .height(85.dp)
+                        .padding(vertical = 18.dp, horizontal = 5.dp),
+                    text = {  Text(text = "Plus de détails", fontSize = 18.sp) },
+                    onClick = {
+                        bigScreen.value = true
+                    },
+                    backgroundColor = MaterialTheme.colors.primary
+                )
+                Row() {
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .height(85.dp)
+                            .padding(vertical = 18.dp, horizontal = 5.dp),
+                        text = {  Text(text = "Modifier", fontSize = 18.sp) },
+                        onClick = { dialogModif.value = true },
+                        backgroundColor = MaterialTheme.colors.primary
+                    )
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .height(85.dp)
+                            .padding(vertical = 18.dp, horizontal = 5.dp),
+                        text = {  Text(text = "Supprimer", fontSize = 18.sp) },
+                        onClick = { showDialog.value = true },
+                        backgroundColor = MaterialTheme.colors.primary
+                    )
+                }
+                if(showDialog.value)
+                {
+                    // Delete Wallet
+                }
+                if(dialogModif.value)
+                {
+                    // Edit Wallet
+                }
+                if(bigScreen.value)
+                {
+                    CardViewBigWallet(setState = {
+                        bigScreen.value = it
+                    },
+                        wallet = wallet,
+                        setLittleDialog = {
+                            setState(false)
+                        })
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CardViewBigWallet(
+    setState: (Boolean) -> Unit,
+    wallet: wallet,
+    setLittleDialog: (Boolean) -> Unit
+) {
+    val ratingVal = remember { mutableStateOf(wallet.rating) }
+    val showDialog = remember { mutableStateOf(false) }
+    val dialogModif = remember { mutableStateOf(false) }
+    Dialog(onDismissRequest = { setState(false) }) {
+        Surface(
+            shape = RoundedCornerShape(15.dp),
+            color = wallet.colorIcon) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.verticalScroll(
+                    rememberScrollState(),
+                    enabled = true
+                )
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(onClick = {
+                        setState(false)
+                        setLittleDialog(false)}) {
+                        Icon(imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = Color.White,
+                            modifier = Modifier.size(38.dp))
+                    }
+                }
+                Spacer(modifier = Modifier.padding(6.dp))
+                Image(
+                    bitmap = wallet.bitmap.asImageBitmap(),
+                    contentDescription = "photo taken",
+                    modifier = Modifier
+                        .padding(17.dp)
+                        .size(350.dp)
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = "${wallet.prix}$",
+                    color = Color.White,
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = wallet.titre,
+                    color = Color.White,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = "#${wallet.tag}",
+                    color = Color.White,
+                    fontSize = 35.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+                ExtendedFloatingActionButton(
+                    modifier = Modifier.height(65.dp),
+                    text = {  Text(text = wallet.typeCommerce.title,
+                        fontSize = 17.sp, color = Color.White) },
+                    backgroundColor = Color.Transparent,
+                    onClick = {  },
+                    icon = {
+                        Icon(painter = painterResource(wallet.typeCommerce.icon),
+                            "Logo type ticket",
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .size(35.dp),
+                            tint = Color.White)
+                    }
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+                Column(verticalArrangement = Arrangement.Center) {
+                    Row(horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = "Effectué le :",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.padding(20.dp))
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = wallet.dateDate,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = "Effectué à :     ",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.padding(20.dp))
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = wallet.dateTime,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.padding(6.dp))
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = wallet.comment,
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+                RatingBarView(
+                    rating = ratingVal,
+                    isRatingEditable = false,
+                    isViewAnimated = false,
+                    ratedStarsColor = Color.White,
+                    starIcon = painterResource(id = R.drawable.full_star),
+                    unRatedStarsColor = Color.Gray,
+                    starsPadding = 10.dp
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+                Row() {
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .height(85.dp)
+                            .padding(vertical = 18.dp, horizontal = 5.dp),
+                        text = {  Text(text = "Modifier", fontSize = 18.sp) },
+                        onClick = { dialogModif.value = true },
+                        backgroundColor = MaterialTheme.colors.primary
+                    )
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .height(85.dp)
+                            .padding(vertical = 18.dp, horizontal = 5.dp),
+                        text = {  Text(text = "Supprimer", fontSize = 18.sp) },
+                        onClick = { showDialog.value = true },
+                        backgroundColor = MaterialTheme.colors.primary
+                    )
+                }
+                if(showDialog.value)
+                {
+                    // Delete Wallet
+                }
+                if(dialogModif.value)
+                {
+                    // Edit Wallet
                 }
             }
         }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -85,7 +86,7 @@ fun EditTicket(
                 )
             ) {
                 Image(
-                    painter = ticket.painter,
+                    bitmap = ticket.bitmap.asImageBitmap(),
                     contentDescription = "photo taken",
                     modifier = Modifier
                         .padding(17.dp)
@@ -233,7 +234,7 @@ fun EditTicket(
                         onClick = { if(typeVal != "" && titrelVal.value != "") {
                             editTicket(typeVal, tagVal.value, titrelVal.value,
                                 prixVal.value.toInt(), pickedTime.toString(), pickedDate.toString(),
-                                Color.Red, Color.Blue, Color.Black, rating.value, comment.value, ticket.painter, ticket)
+                                Color.Red, Color.Blue, Color.Black, rating.value, comment.value, ticket.bitmap, ticket)
                             setShowDialog(false)
                             Toasty.success(ctx, "Le ticket a bien été modifié", Toast.LENGTH_SHORT, true).show()
                         } else {

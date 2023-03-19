@@ -1,7 +1,6 @@
 package com.example.digiit.actiononelement
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.user.User
 import com.example.digiit.home.listTickets
@@ -61,7 +60,7 @@ fun editTicket(type:String,
                colorText: Color,
                rating: Int,
                comment: String,
-               painter: Painter,
+               bitmap: Bitmap,
                ticket: ticket)
 {
     val idx = listTickets.indexOf(ticket)
@@ -72,7 +71,7 @@ fun editTicket(type:String,
     listTickets[idx].colorIcon = colorIcon
     listTickets[idx].comment = comment
     listTickets[idx].rating = rating
-    listTickets[idx].painter = painter
+    listTickets[idx].bitmap = bitmap
     listTickets[idx].colorText = colorText
     listTickets[idx].colorTag = colorTag
     listTickets[idx].typeCommerce = getTagByName(type)
