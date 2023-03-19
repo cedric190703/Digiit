@@ -25,11 +25,20 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.digiit.R
+import com.google.firebase.auth.FirebaseAuth
 import es.dmoral.toasty.Toasty
 
 @Composable
 fun EditAccount(onDismiss: (Boolean) -> Unit) {
-    val account = remember { Account("Name","Prenom", "a@a.com", "424.43$") }
+    // Get real data from database
+    // get current user
+
+    val  user = FirebaseAuth.getInstance().currentUser
+    val account = remember { Account(user?.displayName.toString(), "Prenom", user?.email.toString(), "46.69$") }
+    // TODO : create a db to store other account data
+
+
+
     var name = remember { mutableStateOf(account.name) }
     var prenom = remember { mutableStateOf(account.prenom) }
     var email = remember { mutableStateOf(account.email) }
@@ -103,17 +112,17 @@ fun EditAccount(onDismiss: (Boolean) -> Unit) {
                 OutlinedTextField(
                     value = name.value,
                     onValueChange = { name.value = it },
-                    label = { Text(text = "Nom") })
+                    label = { Text(text = "${account.name}") })
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = prenom.value,
                     onValueChange = { prenom.value = it },
-                    label = { Text(text = "Prénom") })
+                    label = { Text(text = "${account.prenom}") })
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = email.value,
                     onValueChange = { email.value = it },
-                    label = { Text(text = "Email") })
+                    label = { Text(text = "${account.email}") })
                 Spacer(modifier = Modifier.padding(8.dp))
                 Text(
                     text = "Argent dépensé ce mois-ci: ",

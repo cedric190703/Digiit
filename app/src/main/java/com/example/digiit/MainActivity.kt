@@ -9,14 +9,17 @@ import com.example.digiit.ui.theme.DigiitTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     var a = "vf"
     lateinit var auth: FirebaseAuth
+    lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         auth = Firebase.auth
+        db = Firebase.firestore
 
         super.onCreate(savedInstanceState)
         setContent {
