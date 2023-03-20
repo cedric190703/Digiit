@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.sp
 import com.example.digiit.menus.Confidentiality
 import com.example.digiit.menus.EditAccount
 import com.example.digiit.R
+import com.example.digiit.menus.Help
+import com.example.digiit.menus.SettingsElement
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -67,6 +69,8 @@ fun MenuContent(paddingValues: PaddingValues) {
     var listPrepared by remember { mutableStateOf(false) }
     val showDialogAccount = remember { mutableStateOf(false) }
     val showConfidentialiteDialog = remember { mutableStateOf(false) }
+    val showDialogHelp = remember { mutableStateOf(false) }
+    val showDialogSettings = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         withContext(Dispatchers.Default) {
             optionsList.clear()
@@ -92,6 +96,12 @@ fun MenuContent(paddingValues: PaddingValues) {
                     "Confidentialité" -> OptionsItemStyle(item = item, context = context, onClick = {
                         showConfidentialiteDialog.value = it
                     })
+                    "Aides" -> OptionsItemStyle(item = item, context = context, onClick = {
+                        showDialogHelp.value = it
+                    })
+                    "Réglages" -> OptionsItemStyle(item = item, context = context, onClick = {
+                        showDialogSettings.value = it
+                    })
                     else -> OptionsItemStyle(item = item, context = context, onClick = {
                         //nothing
                     })
@@ -108,6 +118,18 @@ fun MenuContent(paddingValues: PaddingValues) {
         {
             Confidentiality(onDismiss = {
                 showConfidentialiteDialog.value = it
+            })
+        }
+        if(showDialogHelp.value)
+        {
+            Help(onDismiss = {
+                showDialogHelp.value = it
+            })
+        }
+        if(showDialogSettings.value)
+        {
+            SettingsElement(onDismiss = {
+                showDialogSettings.value = it
             })
         }
     }
@@ -280,9 +302,9 @@ private fun prepareOptionsData() {
 
     optionsList.add(
         OptionsData(
-            icon = R.drawable.style,
-            title = "Personnalisation",
-            subTitle = "Personnalisez votre application"
+            icon = R.drawable.help,
+            title = "Aides",
+            subTitle = "Obtenir de l'aide"
         )
     )
 }

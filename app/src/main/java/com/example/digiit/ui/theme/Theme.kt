@@ -17,14 +17,6 @@ private val LightColorPalette = lightColors(
     primaryVariant = Purple700,
     secondary = Purple500,
     background = ApplicationBackGround
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
 
 @Composable
@@ -42,3 +34,4 @@ fun DigiitTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
         content = content
     )
 }
+

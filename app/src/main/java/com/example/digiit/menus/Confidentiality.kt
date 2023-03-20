@@ -31,7 +31,7 @@ fun Confidentiality(onDismiss: (Boolean) -> Unit) {
         "Collecte d'informations" to "Nous collectons des informations lorsque vous utilisez notre application, y compris des informations sur votre appareil et sur la façon dont vous interagissez avec l'application.",
         "Utilisation des informations" to "Nous utilisons les informations que nous collectons pour améliorer notre application et personnaliser votre expérience utilisateur. Nous ne vendons pas ces informations à des tiers.",
         "Protection des informations" to "Nous prenons des mesures de sécurité pour protéger les informations que nous collectons contre l'accès non autorisé, la modification, la divulgation ou la destruction.",
-        "Cookies" to "Nous n'utilisons pas de cookies dans notre application.",
+        "Cookies" to "Nous utilisons l'outil de gestion de données : Firebase qui utilise des cookies.",
         "Modifications de la politique" to "Nous pouvons mettre à jour cette politique de confidentialité de temps à autre en publiant une nouvelle version sur notre site web. Nous vous informerons de tout changement important apporté à cette politique de confidentialité.",
         "Contact" to "Si vous avez des questions ou des préoccupations concernant notre politique de confidentialité, veuillez nous contacter à l'adresse suivante : [adresse e-mail]."
     )
