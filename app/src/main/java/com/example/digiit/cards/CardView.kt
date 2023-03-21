@@ -20,19 +20,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.digiit.dialog.DialogDelete
-import com.example.digiit.home.listTickets
-import com.example.digiit.home.ticket
 import com.example.digiit.R
+import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.home.wallet
 import com.mahmoudalim.compose_rating_bar.RatingBarView
+import java.time.format.DateTimeFormatter
+
 
 @Composable
-fun CardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
-    val ratingVal = remember { mutableStateOf(ticket.rating) }
+fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
+    val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
     val dialogModif = remember { mutableStateOf(false) }
     val bigScreen = remember { mutableStateOf(false) }
+
     Dialog(onDismissRequest = { setState(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
@@ -55,7 +56,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                     Spacer(modifier = Modifier.padding(12.dp))
                     Text(
                         modifier = Modifier.padding(vertical = 5.dp),
-                        text = "${ticket.prix}$",
+                        text = "${ticket.price}$",
                         color = Color.White,
                         fontSize = 40.sp,
                         fontWeight = FontWeight.Bold
@@ -63,7 +64,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                     Spacer(modifier = Modifier.padding(12.dp))
                     Text(
                         modifier = Modifier.padding(vertical = 5.dp),
-                        text = ticket.titre,
+                        text = ticket.title,
                         color = Color.White,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold
@@ -71,12 +72,12 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                     Spacer(modifier = Modifier.padding(12.dp))
                     ExtendedFloatingActionButton(
                         modifier = Modifier.height(65.dp),
-                        text = {  Text(text = ticket.typeCommerce.title,
+                        text = {  Text(text = ticket.type.title,
                             fontSize = 17.sp, color = Color.White) },
                         backgroundColor = Color.Transparent,
                         onClick = {  },
                         icon = {
-                            Icon(painter = painterResource(ticket.typeCommerce.icon),
+                            Icon(painter = painterResource(ticket.type.icon),
                                 "Logo type ticket",
                                 modifier = Modifier
                                     .padding(5.dp)
@@ -98,7 +99,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                             Spacer(modifier = Modifier.padding(20.dp))
                             Text(
                                 modifier = Modifier.padding(vertical = 5.dp),
-                                text = ticket.dateDate,
+                                text = ticket.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                                 color = Color.White,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
@@ -116,7 +117,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                             Spacer(modifier = Modifier.padding(20.dp))
                             Text(
                                 modifier = Modifier.padding(vertical = 5.dp),
-                                text = ticket.dateTime,
+                                text = ticket.date.format(DateTimeFormatter.ofPattern("HH:mm")),
                                 color = Color.White,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
@@ -164,7 +165,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
                     }
                     if(showDialog.value)
                     {
-                        DialogDelete(idx = listTickets.indexOf(ticket) ,Tickets = listTickets ,onDismiss = {
+                        DialogDelete(ticket, onDismiss = {
                             showDialog.value = it
                         })
                     }
@@ -193,10 +194,10 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: ticket) {
 @Composable
 fun CardViewBig(
     setState: (Boolean) -> Unit,
-    ticket: ticket,
+    ticket: Ticket,
     setLittleDialog: (Boolean) -> Unit
     ) {
-    val ratingVal = remember { mutableStateOf(ticket.rating) }
+    val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
     val dialogModif = remember { mutableStateOf(false) }
     Dialog(onDismissRequest = { setState(false) }) {
@@ -226,7 +227,7 @@ fun CardViewBig(
                 }
                 Spacer(modifier = Modifier.padding(6.dp))
                 Image(
-                    bitmap = ticket.bitmap.asImageBitmap(),
+                    bitmap = ticket.getImageBitmapOrDefault(),
                     contentDescription = "photo taken",
                     modifier = Modifier
                         .padding(17.dp)
@@ -235,7 +236,7 @@ fun CardViewBig(
                 Spacer(modifier = Modifier.padding(6.dp))
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = "${ticket.prix}$",
+                    text = "${ticket.price}$",
                     color = Color.White,
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
@@ -243,7 +244,7 @@ fun CardViewBig(
                 Spacer(modifier = Modifier.padding(6.dp))
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = ticket.titre,
+                    text = ticket.title,
                     color = Color.White,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
@@ -259,12 +260,12 @@ fun CardViewBig(
                 Spacer(modifier = Modifier.padding(6.dp))
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(65.dp),
-                    text = {  Text(text = ticket.typeCommerce.title,
+                    text = {  Text(text = ticket.type.title,
                         fontSize = 17.sp, color = Color.White) },
                     backgroundColor = Color.Transparent,
                     onClick = {  },
                     icon = {
-                        Icon(painter = painterResource(ticket.typeCommerce.icon),
+                        Icon(painter = painterResource(ticket.type.icon),
                             "Logo type ticket",
                             modifier = Modifier
                                 .padding(5.dp)
@@ -286,7 +287,7 @@ fun CardViewBig(
                         Spacer(modifier = Modifier.padding(20.dp))
                         Text(
                             modifier = Modifier.padding(vertical = 5.dp),
-                            text = ticket.dateDate,
+                            text = ticket.date.format(DateTimeFormatter.ofPattern("")),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -304,7 +305,7 @@ fun CardViewBig(
                         Spacer(modifier = Modifier.padding(20.dp))
                         Text(
                             modifier = Modifier.padding(vertical = 5.dp),
-                            text = ticket.dateTime,
+                            text = ticket.date.format(DateTimeFormatter.ofPattern("")),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -350,7 +351,7 @@ fun CardViewBig(
                 }
                 if(showDialog.value)
                 {
-                    DialogDelete(idx = listTickets.indexOf(ticket) ,Tickets = listTickets ,onDismiss = {
+                    DialogDelete(ticket, onDismiss = {
                         showDialog.value = it
                     })
                 }

@@ -21,17 +21,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.example.digiit.R
-import com.example.digiit.home.listTickets
+import com.example.digiit.data.UserProvider
 import com.example.digiit.home.listWallets
-import com.example.digiit.home.ticket
+
 
 @Composable
-fun SearchViewHomeTicket() {
-    var filterItem = remember { mutableStateOf("Enseigne") }
-    var filterOrder = remember { mutableStateOf("Croissant") }
-    var expanded by remember {
-        mutableStateOf(false)
-    }
+fun SearchViewHomeTicket(auth: UserProvider) {
+    val filterItem = remember { mutableStateOf("Enseigne") }
+    val filterOrder = remember { mutableStateOf("Croissant") }
+    var expanded by remember { mutableStateOf(false) }
+
     Row (modifier = Modifier
         .padding(top = 10.dp, bottom = 20.dp)
         .fillMaxWidth(),
@@ -45,7 +44,7 @@ fun SearchViewHomeTicket() {
                 .padding(8.dp),
             tint = MaterialTheme.colors.primary
         )
-        SearchTickets(listTickets,
+        SearchTickets(auth.user?.getTickets().orEmpty(),
             filter = filterItem.value,
             order = filterOrder.value)
         Button(

@@ -22,8 +22,8 @@ import com.example.digiit.R
 
 @Composable
 fun CreateAccount(
-    onClick: (String, String, String) -> Unit,
-    onLogin: () -> Unit
+    onClickCreate: (String, String, String) -> Unit,
+    onClickLogin: () -> Unit
 ) {
     val emailVal = remember { mutableStateOf("") }
     val passwordVal = remember { mutableStateOf("") }
@@ -50,7 +50,7 @@ fun CreateAccount(
                 Button(modifier = Modifier
                     .align(Alignment.TopStart),
                     shape = RoundedCornerShape(60),
-                    onClick = { onLogin() }) {
+                    onClick = { onClickLogin() }) {
                     Icon(imageVector = Icons.Default.ArrowBack,
                         contentDescription = "array back logo logo",
                     )
@@ -96,7 +96,7 @@ fun CreateAccount(
                     placeholder = { Text(text = "mot de passe") }
                 )
                 Spacer(modifier = Modifier.padding(17.dp))
-                Button(onClick = { onClick(emailVal.value, passwordVal.value, prenomVal.value) },
+                Button(onClick = { onClickCreate(emailVal.value, passwordVal.value, prenomVal.value) },
                     modifier = Modifier
                         .height(45.dp)) {
                     Text(text = "Créer un compte",

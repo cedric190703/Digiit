@@ -1,13 +1,10 @@
 package com.example.digiit.home
 
-import android.graphics.Bitmap
-import com.example.digiit.data.TradeKinds
 import com.example.digiit.cards.TicketsCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,30 +13,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
-import com.example.digiit.data.user.RemoteUser
-import com.example.digiit.data.user.User
-import com.example.digiit.photos.selectOption
+import com.example.digiit.data.UserProvider
+import com.example.digiit.photos.SelectOption
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeTicket
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(auth: UserProvider) {
     val showDialog =  remember { mutableStateOf(false) }
-    var user: User? = null
+
     Scaffold(
         backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->
-            HomeTicketContent(padding)
+            HomeTicketContent(padding, auth)
         }, topBar = {
             TopAppBar(
                 title = {
@@ -73,40 +69,24 @@ fun HomeScreen() {
                     modifier = Modifier.fillMaxSize(0.5F))
             }
             if(showDialog.value)
-                selectOption(setShowDialog = {
+                SelectOption(setShowDialog = {
                     showDialog.value = it
-                }, user = user)
+                }, user = auth.user)
         }
     )
 }
 
-// For the tests but at the end use the Ticket from the folder data
-data class ticket(
-    var typeCommerce: TradeKinds,
-    var tag: String,
-    var titre: String,
-    var prix: Int,
-    var dateTime: String,
-    var dateDate: String,
-    var colorIcon: Color,
-    var colorTag: Color,
-    var colorText: Color,
-    var rating: Int,
-    var comment: String,
-    var bitmap: Bitmap
-)
-
-var listTickets = mutableStateListOf<ticket>()
 
 @ExperimentalMaterialApi
 @Composable
-fun HomeTicketContent(paddingValues: PaddingValues) {
+fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
+    val listTickets = auth.user?.getTickets().orEmpty().toMutableList()
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth()) {
-        SearchViewHomeTicket()
-        if(listTickets.size == 0)
+        SearchViewHomeTicket(auth)
+        if(listTickets.isEmpty())
         {
             Spacer(modifier = Modifier.padding(20.dp))
             Image(painter = painterResource(id = R.drawable.tickets_image),
@@ -125,11 +105,11 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
         {
             LazyColumn(state = listState,
                 modifier = Modifier.scrollbar(state = listState)) {
-                items(listTickets) { item ->
-                    val state= rememberDismissState(
+                items(listTickets.size) { item ->
+                    val state = rememberDismissState(
                         confirmStateChange = {
                             if (it==DismissValue.DismissedToStart){
-                                listTickets.remove(item)
+                                listTickets.removeAt(item)
                                 // Remove the receipt with this when the user is imported in this function
                                 // ticket.remove(item)
                             }
@@ -160,7 +140,7 @@ fun HomeTicketContent(paddingValues: PaddingValues) {
 
                         },
                         dismissContent = {
-                            TicketsCard(ticket = item)
+                            TicketsCard(ticket = listTickets[item])
                         },
                         directions=setOf(DismissDirection.EndToStart)
                     )

@@ -29,15 +29,14 @@ import es.dmoral.toasty.Toasty
 
 @Composable
 fun HomeLogin(
-    getAuth: () -> FirebaseAuth,
-    goToHome: () -> Unit,
-    SignUpClick: () -> Unit,
-    ForgotClick: () -> Unit
+    auth: UserProvider,
+    onClickGoHome: () -> Unit,
+    onClickSignUp: () -> Unit,
+    onClickForget: () -> Unit
 ) {
-    var user: User? = null
     val emailVal = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-    var context = androidx.compose.ui.platform.LocalContext.current
+    val context = androidx.compose.ui.platform.LocalContext.current
     val passwordVisibility = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -96,15 +95,15 @@ fun HomeLogin(
                         Toasty.error(context, "Adresse email invalide", Toast.LENGTH_SHORT, true).show()
                         return@Button
                     }
-                    getAuth().signInWithEmailAndPassword(emailVal.value, password.value)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Toasty.success(context, "Connexion réussie", Toast.LENGTH_SHORT, true).show()
-                                goToHome()
-                            } else {
-                                Toasty.error(context, "Connexion échouée", Toast.LENGTH_SHORT, true).show()
-                            }
+                    println("TEEEEEEST")
+                    auth.loginRemoteUser(emailVal.value, password.value) { error, _ ->
+                        if (error == null) {
+                            Toasty.success(context, "Connexion réussie", Toast.LENGTH_SHORT, true).show()
+                            onClickGoHome()
+                        } else {
+                            Toasty.error(context, "Connexion échouée", Toast.LENGTH_SHORT, true).show()
                         }
+                    }
                 },
                 modifier = Modifier.height(45.dp)
             ) {
@@ -123,7 +122,7 @@ fun HomeLogin(
                 color = MaterialTheme.colors.primary,
                 fontSize = MaterialTheme.typography.h6.fontSize,
                 modifier = Modifier
-                    .clickable { ForgotClick() }
+                    .clickable { onClickForget() }
             )
             Spacer(modifier = Modifier.padding(2.dp))
             Text(
@@ -135,7 +134,7 @@ fun HomeLogin(
                 color = MaterialTheme.colors.primary,
                 fontSize = MaterialTheme.typography.h6.fontSize,
                 modifier = Modifier
-                    .clickable { SignUpClick() }
+                    .clickable { onClickSignUp() }
             )
         }
     }

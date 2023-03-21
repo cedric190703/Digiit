@@ -3,8 +3,6 @@ package com.example.digiit.actiononelement
 import androidx.compose.ui.graphics.Color
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.user.User
-import com.example.digiit.home.listTickets
-import com.example.digiit.home.ticket
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import android.graphics.Bitmap
@@ -13,8 +11,7 @@ fun createTicket(type:String,
                  tag: String,
                  titre: String,
                  price: Int,
-                 dateTime: String,
-                 dateDate: String,
+                 date: LocalDateTime,
                  colorIcon: Color,
                  colorTag: Color,
                  colorText: Color,
@@ -24,7 +21,7 @@ fun createTicket(type:String,
                  user: User?
 ) {
     if(user != null) {
-        var ticket = user.createTicket()
+        val ticket = user.createTicket()
         ticket.type = TradeKinds.Food
         ticket.colorIcon = colorIcon
         ticket.colorTag = colorTag
@@ -34,11 +31,8 @@ fun createTicket(type:String,
         ticket.price = price.toFloat()
         ticket.title = titre
         ticket.rating = rating.toFloat()
-        ticket.type = getTagByName(type)
-        val dateString = "$dateDate $dateTime"
-        val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")
-        val dateTime = LocalDateTime.parse(dateString, formatter)
-        ticket.date = dateTime
+        ticket.type = TradeKinds.findByTitle(type)
+        ticket.date = date
         ticket.image = bitmap
         ticket.save {error ->
             if (error != null)
@@ -49,6 +43,7 @@ fun createTicket(type:String,
     }
 }
 
+/*
 fun editTicket(type:String,
                tag: String,
                titre: String,
@@ -77,12 +72,4 @@ fun editTicket(type:String,
     listTickets[idx].typeCommerce = getTagByName(type)
     listTickets[idx].tag = tag
 }
-
-fun getTagByName(type:String): TradeKinds
-{
-    for (tag in TradeKinds.values()) {
-        if (tag.title.equals(type, true))
-            return tag
-    }
-    return TradeKinds.Other
-}
+*/

@@ -7,15 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.digiit.data.UserProvider
 import com.example.digiit.data.user.User
 import com.example.digiit.home.*
 import com.example.digiit.navgraphs.Graph
 
 @Composable
-fun HomeNavGraph(
-    navController: NavHostController,
-    padding: PaddingValues
-    ) {
+fun HomeNavGraph(navController: NavHostController, padding: PaddingValues, auth: UserProvider) {
     NavHost(
         navController = navController,
         modifier = Modifier.padding(paddingValues = padding),
@@ -23,21 +21,16 @@ fun HomeNavGraph(
         startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route) {
-            HomeScreen(
-
-            )
+            HomeScreen(auth)
         }
         composable(route = BottomBarScreen.Wallet.route) {
-            WalletScreen(
-            )
+            WalletScreen()
         }
         composable(route = BottomBarScreen.Data.route) {
-            DataScreen(
-            )
+            DataScreen()
         }
         composable(route = BottomBarScreen.Menu.route) {
-            MenuScreen(
-            )
+            MenuScreen()
         }
     }
 }

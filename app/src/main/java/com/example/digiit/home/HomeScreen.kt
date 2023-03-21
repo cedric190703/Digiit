@@ -10,14 +10,16 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.digiit.data.UserProvider
 import com.example.digiit.navgraphs.HomeNavGraph
+import com.google.firebase.firestore.auth.User
 
 @Composable
-fun SetHomeScreen(navController: NavHostController = rememberNavController()) {
+fun SetHomeScreen(auth: UserProvider, navController: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {padding ->
-        HomeNavGraph(navController = navController, padding = padding)
+        HomeNavGraph(navController = navController, padding = padding, auth)
     }
 }
 

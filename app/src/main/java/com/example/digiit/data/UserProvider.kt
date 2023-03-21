@@ -12,12 +12,14 @@ import org.json.JSONObject
 import java.io.File
 
 
-typealias AuthCallback = (error: String?, user: RemoteUser?) -> Unit
+typealias AuthCallback = (error: Exception?, user: RemoteUser?) -> Unit
 
 
 class UserProvider(private val firebase: FirebaseApp) {
     private val auth = Firebase.auth(firebase)
     private val users = ArrayList<User>()
+
+    var user: User? = null
 
     fun loginRemoteUser(email: String, password: String, callback: AuthCallback) {
         auth.signInWithEmailAndPassword(email, password)
@@ -27,14 +29,6 @@ class UserProvider(private val firebase: FirebaseApp) {
     fun registerRemoteUser(email: String, password: String, callback: AuthCallback) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task -> onAuthResult(task, callback) }
-    }
-
-    fun createLocalUser() {
-
-    }
-
-    fun getLocalUser() {
-
     }
 
     fun getUsers() {
@@ -56,10 +50,19 @@ class UserProvider(private val firebase: FirebaseApp) {
     }
 
     private fun onAuthResult(task: Task<AuthResult>, callback: AuthCallback) {
+        println("HAAAAAAAAAAAAAAAAAAAAAA")
         if (task.isSuccessful && task.result.user != null) {
-            callback(task.exception.toString(), RemoteUser(firebase, task.result.user!!))
+            val remoteUser = RemoteUser(firebase, task.result.user!!)
+            user = remoteUser
+            callback(task.exception, remoteUser);
         } else {
-            callback(task.exception.toString(), null)
+            callback(task.exception, null)
+        }
+    }
+
+    fun sendPasswordResetEmail(email: String, callback: (error: Exception?) -> Unit) {
+        auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
+            callback(task.exception)
         }
     }
 }

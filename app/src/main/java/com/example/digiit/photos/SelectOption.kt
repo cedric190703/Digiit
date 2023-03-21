@@ -143,7 +143,7 @@ class TakePhoto : ComponentActivity() {
 }
 
 @Composable
-fun selectOption(setShowDialog: (Boolean) -> Unit, user: User?){
+fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?){
     var photoUri: Uri? by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri

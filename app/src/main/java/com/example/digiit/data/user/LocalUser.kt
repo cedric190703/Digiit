@@ -1,6 +1,7 @@
 package com.example.digiit.data.user
 
 import android.content.Context
+import android.graphics.Bitmap
 import com.example.digiit.data.ticket.LocalTicket
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.utils.BinaryInputStream
@@ -13,6 +14,7 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
     private var email = ""
 
     override var name = "unimplemented"
+    override var lastname = "unimplemented"
 
     override val local = true
 
@@ -40,6 +42,10 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
     }
 
     override fun createTicket(): Ticket {
+        TODO("Not yet implemented")
+    }
+
+    override fun loadProfilePicture(): Bitmap {
         TODO("Not yet implemented")
     }
 }

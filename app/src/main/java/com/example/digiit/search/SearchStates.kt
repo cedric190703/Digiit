@@ -5,20 +5,19 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
-import com.example.digiit.home.ticket
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import com.example.digiit.data.CommercialType
+import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.home.wallet
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun SearchTickets(items: List<ticket>,
-           filter: String,
-           order: String){
+fun SearchTickets(items: List<Ticket>,
+                  filter: String,
+                  order: String){
     var searchText by remember { mutableStateOf("") }
     val isVisible by remember {
         derivedStateOf {
@@ -30,7 +29,7 @@ fun SearchTickets(items: List<ticket>,
     // Filter on elements
     val filteredItems = if (searchText.isNotBlank()) {
         items.filter { ticket ->
-            ticket.titre.contains(searchText) || ticket.tag.contains(
+            ticket.title.contains(searchText) || ticket.tag.contains(
                 searchText
             )
         }
@@ -42,21 +41,21 @@ fun SearchTickets(items: List<ticket>,
     val sortedItems = if (order == "Croissant") {
         filteredItems.sortedWith(compareBy { ticket ->
             when (filter) {
-                "Enseigne" -> ticket.titre
-                "Date" -> LocalDateTime.parse(ticket.dateDate, formatter)
-                "Type" -> ticket.typeCommerce.title
-                "Amont" -> ticket.prix
-                else -> ticket.titre
+                "Enseigne" -> ticket.title
+                "Date" -> ticket.date
+                "Type" -> ticket.type.title
+                "Amont" -> ticket.price
+                else -> ticket.title
             }
         })
     } else {
         filteredItems.sortedWith(compareByDescending { ticket ->
             when (filter) {
-                "Enseigne" -> ticket.titre
-                "Date" -> LocalDateTime.parse(ticket.dateDate, formatter)
-                "Type" -> ticket.typeCommerce.title
-                "Amont" -> ticket.prix
-                else -> ticket.titre
+                "Enseigne" -> ticket.title
+                "Date" -> ticket.date
+                "Type" -> ticket.type.title
+                "Amont" -> ticket.price
+                else -> ticket.title
             }
         })
     }

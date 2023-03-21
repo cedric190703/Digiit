@@ -3,6 +3,8 @@ package com.example.digiit.data.ticket
 import android.app.Notification.Action
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import com.example.digiit.data.TradeKinds
 import java.time.LocalDateTime
 
@@ -23,6 +25,13 @@ abstract class Ticket(var type: TradeKinds = TradeKinds.Other,
 ) {
     var lastEdit: Long = -1
     var image: Bitmap? = null
+
+    fun getImageBitmapOrDefault(): ImageBitmap {
+        if (image == null) {
+            return ImageBitmap(1, 1)
+        }
+        return image!!.asImageBitmap();
+    }
 
     abstract fun reload(callback: ActionCallback)
 

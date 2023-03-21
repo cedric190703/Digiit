@@ -1,19 +1,22 @@
 package com.example.digiit.navgraphs
 
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.digiit.data.UserProvider
 import com.example.digiit.navigationlogin.AnimatedSplashScreen
 import com.example.digiit.showfeatures.Features
 import com.example.digiit.navigationlogin.CreateAccount
 import com.example.digiit.navigationlogin.HomeLogin
 import com.example.digiit.navigationlogin.LostPassword
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
+import es.dmoral.toasty.Toasty
 
 
-fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: FirebaseAuth) {
+fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: UserProvider, context: Context) {
     navigation(
         route = Graph.AUTHENTICATION,
         startDestination = AuthScreen.Splash.route
@@ -23,48 +26,44 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: Firebas
                 /*
                 Login functions
                 */
-                getAuth = { ->
-                    return@HomeLogin auth
-                },
-                goToHome = { ->
+                auth = auth,
+                onClickGoHome = { ->
                     navController.popBackStack()
                     navController.navigate(Graph.HOME)
                 },
-                SignUpClick = {
+                onClickSignUp = {
                     navController.navigate(AuthScreen.SignUp.route)
+                },
+                onClickForget = {
+                    navController.navigate(AuthScreen.Forgot.route)
                 }
-            ) {
-                navController.navigate(AuthScreen.Forgot.route)
-            }
+            )
         }
         composable(route = AuthScreen.SignUp.route) {
             CreateAccount (
-                onClick = { _mail : String, _password : String , _name : String->
+                onClickCreate = { _mail : String, _password : String, _name : String->
                         println("User does not exist try to create it")
                         //create user with email and password
-                        auth.createUserWithEmailAndPassword(_mail, _password).addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                println("User is created")
-                                navController.popBackStack()
-                                navController.navigate(Graph.HOME)
-                                auth.currentUser?.sendEmailVerification()
-                                auth.signInWithEmailAndPassword(_mail, _password)
-                                //set user name
+
+                        auth.registerRemoteUser(_mail, _password) { error, _ ->
+                            if (error == null) {
+                                /*auth.user?.sendEmailVerification()
+                                set user name
                                 auth.currentUser?.updateProfile(
                                     UserProfileChangeRequest.Builder()
                                         .setDisplayName(_name)
                                         .build()
-                                )
-
+                                )*/
+                                Toasty.success(context, "Enregisrement réussie", Toast.LENGTH_SHORT, true).show()
+                                navController.popBackStack()
+                                navController.navigate(Graph.HOME)
                             } else {
-                                println("User is not created")
-                                //print task.exception
-                                println(task.exception)
+                                Toasty.error(context, "Enregistremet échouée", Toast.LENGTH_SHORT, true).show()
                             }
                     }
                     navController.navigate(AuthScreen.Animation.route)
                 },
-                onLogin = {
+                onClickLogin = {
                     navController.navigate(AuthScreen.Login.route)
                 }
             )
@@ -75,11 +74,11 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: Firebas
                     navController.navigate(AuthScreen.Login.route)
                 },
                 sentMail = { _mail : String ->
-                    auth.sendPasswordResetEmail(_mail).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            println("Mail sent")
+                    auth.sendPasswordResetEmail(_mail) { error ->
+                        if (error == null) {
+                            Toasty.success(context, "Mail envoyé", Toast.LENGTH_SHORT, true).show()
                         } else {
-                            println("Mail not sent")
+                            Toasty.error(context, "Echec de l'envoie du mail", Toast.LENGTH_SHORT, true).show()
                         }
                     }
                     navController.navigate(AuthScreen.Login.route)

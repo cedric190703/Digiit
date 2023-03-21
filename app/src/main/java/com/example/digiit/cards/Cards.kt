@@ -14,16 +14,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.digiit.home.ticket
 import com.example.digiit.R
+import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.home.wallet
 import com.mahmoudalim.compose_rating_bar.RatingBarView
+import java.time.format.DateTimeFormatter
+
 
 @Composable
 fun TicketsCard(
-    ticket: ticket
+    ticket: Ticket
 ) {
-    val ratingVal = remember {mutableStateOf(ticket.rating)}
+    val ratingVal = remember {mutableStateOf(ticket.rating.toInt())}
     val showDialog = remember { mutableStateOf(false)}
     Card(
         elevation = 10.dp,
@@ -59,7 +61,7 @@ fun TicketsCard(
                         colors = ButtonDefaults.outlinedButtonColors(contentColor =  ticket.colorIcon)
                     ) {
                         Icon(modifier = Modifier.size(38.dp),
-                            painter = painterResource(ticket.typeCommerce.icon),
+                            painter = painterResource(ticket.type.icon),
                             contentDescription = "icon description")
                     }
                     Text(
@@ -75,20 +77,20 @@ fun TicketsCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = ticket.titre,
+                        text = ticket.title,
                         modifier = Modifier.padding(vertical = 12.dp),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = ticket.colorText)
-                    Text(text = ticket.dateDate)
-                    Text(text = ticket.dateTime)
+                    Text(text = ticket.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                    Text(text = ticket.date.format(DateTimeFormatter.ofPattern("HH:mm")))
                 }
                 Spacer(modifier = Modifier.padding(10.dp))
                 Column(modifier = Modifier
                     .width(83.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center) {
-                    Text(text = "${ticket.prix}$",
+                    Text(text = "${ticket.price}$",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = ticket.colorText)
@@ -209,7 +211,7 @@ fun WalletsCard(
                 }
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = "${wallet.walletType.title}",
+                    text = wallet.walletType.title,
                     color = wallet.colorText,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold)

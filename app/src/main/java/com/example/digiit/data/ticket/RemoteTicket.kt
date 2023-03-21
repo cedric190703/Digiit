@@ -3,6 +3,9 @@ package com.example.digiit.data.ticket
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.toArgb
 import com.example.digiit.data.TradeKinds
 import com.google.firebase.firestore.DocumentReference

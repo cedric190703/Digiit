@@ -79,5 +79,15 @@ enum class TradeKinds(
     Other(
         title = "Autre",
         icon = R.drawable.autre
-    )
+    );
+
+    companion object {
+        fun findByTitle(title: String): TradeKinds {
+            for (type in TradeKinds.values()) {
+                if (type.title.equals(title, true))
+                    return type
+            }
+            return TradeKinds.Other
+        }
+    }
 }
