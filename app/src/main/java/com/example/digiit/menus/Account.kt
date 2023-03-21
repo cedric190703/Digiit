@@ -1,6 +1,11 @@
 package com.example.digiit.menus
 
+import android.graphics.Bitmap
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,9 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,19 +28,24 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.digiit.R
+import com.example.digiit.photos.createBitmapFromUri
+import com.example.digiit.photos.rotateBitmap
 import com.google.firebase.auth.FirebaseAuth
 import es.dmoral.toasty.Toasty
 
 @Composable
 fun EditAccount(onDismiss: (Boolean) -> Unit) {
+    // photoUri for the file
+    var photoUri: Uri? by remember { mutableStateOf(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        photoUri = uri
+    }
+
     // Get real data from database
     // get current user
-
     val  user = FirebaseAuth.getInstance().currentUser
     val account = remember { Account(user?.displayName.toString(), "Prenom", user?.email.toString(), "46.69$") }
     // TODO : create a db to store other account data
-
-
 
     var name = remember { mutableStateOf(account.name) }
     var prenom = remember { mutableStateOf(account.prenom) }
@@ -90,7 +98,12 @@ fun EditAccount(onDismiss: (Boolean) -> Unit) {
                             .clip(CircleShape)
                     )
                     IconButton(
-                        onClick = { /* TODO */ },
+                        onClick = {
+                            launcher.launch(
+                                PickVisualMediaRequest(
+                                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        },
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .size(40.dp)
@@ -151,6 +164,13 @@ fun EditAccount(onDismiss: (Boolean) -> Unit) {
                     backgroundColor = MaterialTheme.colors.primary
                 )
             }
+        }
+        if (photoUri != null) {
+            val bitmapTmp: Bitmap =
+                createBitmapFromUri(context = LocalContext.current, uri = photoUri)
+            val bitmap = rotateBitmap(bitmapTmp)
+            // use the bitmap for the User here
+            // TODO
         }
     }
 }

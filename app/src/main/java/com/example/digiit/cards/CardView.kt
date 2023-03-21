@@ -417,7 +417,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                     onClick = {  },
                     icon = {
                         Icon(painter = painterResource(wallet.typeCommerce.icon),
-                            "Logo type ticket",
+                            "Logo type wallet",
                             modifier = Modifier
                                 .padding(5.dp)
                                 .size(35.dp),
@@ -425,6 +425,22 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                     }
                 )
                 Spacer(modifier = Modifier.padding(12.dp))
+                ExtendedFloatingActionButton(
+                    modifier = Modifier.height(65.dp),
+                    text = {  Text(text = wallet.walletType.title,
+                        fontSize = 17.sp, color = Color.White) },
+                    backgroundColor = Color.Transparent,
+                    onClick = {  },
+                    icon = {
+                        Icon(painter = painterResource(wallet.walletType.icon),
+                            "Logo commercial type wallet",
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .size(35.dp),
+                            tint = Color.White)
+                    }
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
                 Column(verticalArrangement = Arrangement.Center) {
                     Row(horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically) {
@@ -463,7 +479,27 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.padding(12.dp))
+                if(wallet.expiryDate != null){
+                    Row(horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = "Date expiration :     ",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.padding(20.dp))
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = wallet.expiryDate,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.padding(10.dp))
                 RatingBarView(
                     rating = ratingVal,
                     isRatingEditable = false,
@@ -505,10 +541,12 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                 if(showDialog.value)
                 {
                     // Delete Wallet
+                    // TODO
                 }
                 if(dialogModif.value)
                 {
                     // Edit Wallet
+                    // TODO
                 }
                 if(bigScreen.value)
                 {
@@ -591,7 +629,6 @@ fun CardViewBigWallet(
                     fontSize = 35.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.padding(6.dp))
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(65.dp),
                     text = {  Text(text = wallet.typeCommerce.title,
@@ -600,7 +637,23 @@ fun CardViewBigWallet(
                     onClick = {  },
                     icon = {
                         Icon(painter = painterResource(wallet.typeCommerce.icon),
-                            "Logo type ticket",
+                            "Logo type wallet",
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .size(35.dp),
+                            tint = Color.White)
+                    }
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                ExtendedFloatingActionButton(
+                    modifier = Modifier.height(65.dp),
+                    text = {  Text(text = wallet.walletType.title,
+                        fontSize = 17.sp, color = Color.White) },
+                    backgroundColor = Color.Transparent,
+                    onClick = {  },
+                    icon = {
+                        Icon(painter = painterResource(wallet.walletType.icon),
+                            "Logo commercial type wallet",
                             modifier = Modifier
                                 .padding(5.dp)
                                 .size(35.dp),
@@ -654,6 +707,27 @@ fun CardViewBigWallet(
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.padding(6.dp))
+                if(wallet.expiryDate != null){
+                    Row(horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = "Date expiration :     ",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.padding(20.dp))
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = wallet.expiryDate,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.padding(6.dp))
                 RatingBarView(
                     rating = ratingVal,
