@@ -192,7 +192,7 @@ fun WalletsCard(
             }
             if(showDialog.value)
             {
-                // CardViewSmall(setState = { showDialog.value = it }, wallet) for Wallets
+                CardViewSmallWallet(setState = { showDialog.value = it }, wallet)
             }
             Row(verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center) {
