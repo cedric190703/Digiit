@@ -10,7 +10,7 @@ import android.graphics.Bitmap
 fun createTicket(type:String,
                  tag: String,
                  titre: String,
-                 price: Int,
+                 price: Float,
                  date: LocalDateTime,
                  colorIcon: Color,
                  colorTag: Color,
