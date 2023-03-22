@@ -40,7 +40,7 @@ fun DataScreen(auth: UserProvider) {
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->
-            DataContent(padding)
+            DataContent(padding, auth)
         }, topBar = {
             TopAppBar(
                 title = {
@@ -87,7 +87,7 @@ var listGraphs = mutableStateListOf<Graph>()
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DataContent(paddingValues: PaddingValues) {
+fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,13 +105,13 @@ fun DataContent(paddingValues: PaddingValues) {
         )
         Spacer(modifier = Modifier.padding(4.dp))
         Text(
-            text = "name of the user",
+            text = auth.user?.name.toString(),
             style = MaterialTheme.typography.h5,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.padding(2.dp))
         Text(
-            text = "@username",
+            text = auth.user?.email.toString(),
             style = MaterialTheme.typography.subtitle1,
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
         )
