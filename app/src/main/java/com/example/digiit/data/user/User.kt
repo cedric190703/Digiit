@@ -14,6 +14,7 @@ abstract class User {
 
     abstract var name: String
     abstract var lastname: String
+    abstract var email: String
 
     abstract val local: Boolean
 
@@ -25,6 +26,8 @@ abstract class User {
         }
         return profilePicture!!.asImageBitmap();
     }
+
+    abstract fun save(callback: ActionCallback)
 
     abstract fun queryTickets(callback: ActionCallback)
 
@@ -44,4 +47,6 @@ abstract class User {
 
     abstract fun loadProfilePicture(callback: ActionCallback)
     abstract fun saveProfilePicture(callback: ActionCallback)
+
+    abstract fun logout(callback: ActionCallback)
 }

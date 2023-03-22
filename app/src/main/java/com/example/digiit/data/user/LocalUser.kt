@@ -13,13 +13,16 @@ import java.io.File
 class LocalUser(private val ctx: Context, private val userId: String): User() {
     private var userDataFolder: File = ctx.filesDir.resolve("locals").resolve(userId)
 
-    private var email = ""
-
+    override var email = ""
     override var name = "unimplemented"
     override var lastname = "unimplemented"
 
     override val local = true
     override var profilePicture: Bitmap? = null
+
+    override fun save(callback: ActionCallback) {
+        TODO("Not yet implemented")
+    }
 
     init {
         load()
@@ -63,4 +66,6 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
     override fun saveProfilePicture(callback: ActionCallback) {
         TODO("Not yet implemented")
     }
+
+    override fun logout(callback: ActionCallback) {}
 }

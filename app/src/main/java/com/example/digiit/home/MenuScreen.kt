@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.digiit.menus.Confidentiality
 import com.example.digiit.menus.EditAccount
 import com.example.digiit.R
+import com.example.digiit.data.UserProvider
 import com.example.digiit.menus.Help
 import com.example.digiit.menus.SettingsElement
 import com.google.firebase.auth.FirebaseAuth
@@ -29,13 +30,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Composable
-fun MenuScreen() {
+fun MenuScreen(auth: UserProvider) {
     Scaffold(
         backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->
-            MenuContent(padding)
+            MenuContent(padding, auth)
         }, topBar = {
             TopAppBar(
                 title = {
@@ -64,7 +65,7 @@ private val optionsList: ArrayList<OptionsData> = ArrayList()
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MenuContent(paddingValues: PaddingValues) {
+fun MenuContent(paddingValues: PaddingValues, auth: UserProvider) {
     val context = LocalContext.current.applicationContext
     var listPrepared by remember { mutableStateOf(false) }
     val showDialogAccount = remember { mutableStateOf(false) }
@@ -85,7 +86,7 @@ fun MenuContent(paddingValues: PaddingValues) {
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                UserDetails(context = context)
+                UserDetails(context = context, auth)
             }
             items(optionsList) { item ->
                 when(item.title)
@@ -112,7 +113,7 @@ fun MenuContent(paddingValues: PaddingValues) {
         {
             EditAccount(onDismiss = {
                 showDialogAccount.value = it
-            })
+            }, auth)
         }
         if(showConfidentialiteDialog.value)
         {
@@ -136,7 +137,7 @@ fun MenuContent(paddingValues: PaddingValues) {
 }
 
 @Composable
-private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getInstance()) {
+private fun UserDetails(context: Context, auth: UserProvider) {
     val showDialogAccount = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -159,7 +160,7 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
                     .padding(start = 16.dp)
             ) {
                 Text(
-                    text = if (auth.currentUser?.displayName.toString() != "null") auth.currentUser?.displayName.toString() else "No Name",
+                    text = if (auth.user != null) auth.user!!.name else "No Name",
                     style = TextStyle(
                         fontSize = 22.sp
                     ),
@@ -168,7 +169,7 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = auth.currentUser?.email.toString(),
+                    text = if (auth.user != null) auth.user!!.email else "No Email",
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = Color.Gray,
@@ -182,7 +183,7 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
                 modifier = Modifier
                     .weight(weight = 1f, fill = false),
                 onClick = {
-                    auth.signOut()
+                    auth.user?.logout {  }
                     //TODO : go to login screen
                 }) {
                 Icon(
@@ -196,7 +197,7 @@ private fun UserDetails(context: Context, auth: FirebaseAuth = FirebaseAuth.getI
             {
                 EditAccount(onDismiss = {
                     showDialogAccount.value = it
-                })
+                }, auth)
             }
         }
     }

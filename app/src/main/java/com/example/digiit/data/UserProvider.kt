@@ -47,11 +47,18 @@ class UserProvider(private val firebase: FirebaseApp) {
     }*/
 
     private fun onAuthResult(task: Task<AuthResult>, callback: AuthCallback) {
-        println("HAAAAAAAAAAAAAAAAAAAAAA")
         if (task.isSuccessful && task.result.user != null) {
             val remoteUser = RemoteUser(firebase, task.result.user!!)
             user = remoteUser
-            callback(task.exception, remoteUser);
+            remoteUser.load { err1 ->
+                if (err1 != null) callback(err1, remoteUser)
+                else remoteUser.queryTickets { err2 ->
+                    if (err2 != null) callback(err2, remoteUser)
+                    else remoteUser.queryWallets { err3 ->
+                        callback(err3, remoteUser)
+                    }
+                }
+            }
         } else {
             callback(task.exception, null)
         }

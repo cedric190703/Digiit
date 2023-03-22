@@ -28,28 +28,23 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.digiit.R
+import com.example.digiit.data.UserProvider
 import com.example.digiit.photos.createBitmapFromUri
 import com.example.digiit.photos.rotateBitmap
-import com.google.firebase.auth.FirebaseAuth
 import es.dmoral.toasty.Toasty
 
+
 @Composable
-fun EditAccount(onDismiss: (Boolean) -> Unit) {
+fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
     // photoUri for the file
     var photoUri: Uri? by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri
     }
 
-    // Get real data from database
-    // get current user
-    val  user = FirebaseAuth.getInstance().currentUser
-    val account = remember { Account(user?.displayName.toString(), "Prenom", user?.email.toString(), "46.69$") }
-    // TODO : create a db to store other account data
-
-    var name = remember { mutableStateOf(account.name) }
-    var prenom = remember { mutableStateOf(account.prenom) }
-    var email = remember { mutableStateOf(account.email) }
+    val name = remember { mutableStateOf(auth.user!!.name) }
+    val lastname = remember { mutableStateOf(auth.user!!.lastname) }
+    val email = remember { mutableStateOf(auth.user!!.email) }
     val ctx = LocalContext.current
     Dialog(
         onDismissRequest = { onDismiss(false) },
@@ -125,17 +120,17 @@ fun EditAccount(onDismiss: (Boolean) -> Unit) {
                 OutlinedTextField(
                     value = name.value,
                     onValueChange = { name.value = it },
-                    label = { Text(text = "${account.name}") })
+                    label = { Text(text = auth.user!!.name) })
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
-                    value = prenom.value,
-                    onValueChange = { prenom.value = it },
-                    label = { Text(text = "${account.prenom}") })
+                    value = lastname.value,
+                    onValueChange = { lastname.value = it },
+                    label = { Text(text = auth.user!!.lastname) })
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = email.value,
                     onValueChange = { email.value = it },
-                    label = { Text(text = "${account.email}") })
+                    label = { Text(text = auth.user!!.email) })
                 Spacer(modifier = Modifier.padding(8.dp))
                 Text(
                     text = "Argent dépensé ce mois-ci: ",
@@ -144,7 +139,7 @@ fun EditAccount(onDismiss: (Boolean) -> Unit) {
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "${account.payments}",
+                    text = "--.--",
                     style = MaterialTheme.typography.subtitle1,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
@@ -156,11 +151,18 @@ fun EditAccount(onDismiss: (Boolean) -> Unit) {
                         .padding(vertical = 18.dp, horizontal = 4.dp),
                     text = {  Text(text = "Modifier élement", fontSize = 18.sp) },
                     onClick = {
-                        account.email = email.value
-                        account.name = name.value
-                        account.prenom = prenom.value
+                        auth.user!!.email = email.value
+                        auth.user!!.name = name.value
+                        auth.user!!.lastname = lastname.value
+                        auth.user!!.save { err ->
+                            if (err != null) {
+                                Toasty.error(ctx, "Impossible de modifiées les paramètres de l'utilisateur", Toast.LENGTH_SHORT, true).show()
+                            } else {
+                                Toasty.success(ctx, "Les paramètres de l'utilisateur ont bien été modifiées", Toast.LENGTH_SHORT, true).show()
+                            }
+                        }
                         onDismiss(false)
-                        Toasty.success(ctx, "Les paramètres de l'utilisateur ont bien été modifiées", Toast.LENGTH_SHORT, true).show() },
+                    },
                     backgroundColor = MaterialTheme.colors.primary
                 )
             }
@@ -174,5 +176,3 @@ fun EditAccount(onDismiss: (Boolean) -> Unit) {
         }
     }
 }
-
-data class Account(var name: String, var prenom: String, var email: String, val payments: String)

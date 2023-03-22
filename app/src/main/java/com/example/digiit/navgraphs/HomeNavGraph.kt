@@ -30,7 +30,7 @@ fun HomeNavGraph(navController: NavHostController, padding: PaddingValues, auth:
             DataScreen()
         }
         composable(route = BottomBarScreen.Menu.route) {
-            MenuScreen()
+            MenuScreen(auth)
         }
     }
 }

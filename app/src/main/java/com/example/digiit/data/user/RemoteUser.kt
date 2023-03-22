@@ -2,6 +2,7 @@ package com.example.digiit.data.user
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.compose.ui.graphics.toArgb
 import com.example.digiit.data.ticket.RemoteTicket
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.RemoteWallet
@@ -9,15 +10,19 @@ import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.utils.ActionCallback
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
+import java.time.ZoneOffset
 import java.util.UUID
 
 
-class RemoteUser(app: FirebaseApp, private val user: FirebaseUser) : User() {
+class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) : User() {
     private val firestore = Firebase.firestore(app)
     private val storage = Firebase.storage(app)
 
@@ -25,14 +30,32 @@ class RemoteUser(app: FirebaseApp, private val user: FirebaseUser) : User() {
 
     private var logged = false
 
-    var email = ""
-
+    override var email = ""
     override var name = ""
     override var lastname = ""
 
     override val local = false
 
     override var profilePicture: Bitmap? = null
+
+    override fun save(callback: ActionCallback) {
+        val data = hashMapOf(
+            "lastname" to lastname,
+            "picture" to profilePictureId
+        )
+
+        document.set(data).addOnCompleteListener { task ->
+            callback(task.exception)
+        }
+
+        if (email != user.email)
+            user.updateEmail(email)
+
+        if (name != user.displayName) {
+            user.updateProfile(UserProfileChangeRequest.Builder().setDisplayName(name).build())
+        }
+    }
+
     private var profilePictureId = ""
     private var profilePictureRef: StorageReference? = null
 
@@ -125,6 +148,10 @@ class RemoteUser(app: FirebaseApp, private val user: FirebaseUser) : User() {
                 callback(task.exception)
             }
         }
+    }
+
+    override fun logout(callback: ActionCallback) {
+        Firebase.auth(app).signOut()
     }
 
     companion object {
