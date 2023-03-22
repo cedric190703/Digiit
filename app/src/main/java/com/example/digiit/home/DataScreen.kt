@@ -28,11 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
+import com.example.digiit.data.UserProvider
 import com.example.digiit.graphs.*
 import com.example.digiit.scrollbar.scrollbar
 
 @Composable
-fun DataScreen() {
+fun DataScreen(auth: UserProvider) {
     val showDialog = remember { mutableStateOf(false) }
     Scaffold(
         backgroundColor = Color.White,

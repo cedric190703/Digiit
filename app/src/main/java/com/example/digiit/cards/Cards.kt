@@ -16,13 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
 import com.example.digiit.data.ticket.Ticket
-import com.example.digiit.home.wallet
+import com.example.digiit.data.wallet.Wallet
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun TicketsCard(
+fun TicketCard(
     ticket: Ticket
 ) {
     val ratingVal = remember {mutableStateOf(ticket.rating.toInt())}
@@ -118,9 +118,8 @@ fun TicketsCard(
 
 @Composable
 fun WalletsCard(
-    wallet: wallet
+    wallet: Wallet
 ) {
-    val ratingVal = remember {mutableStateOf(wallet.rating)}
     val showDialog = remember { mutableStateOf(false)}
     Card(
         elevation = 10.dp,
@@ -156,7 +155,7 @@ fun WalletsCard(
                         colors = ButtonDefaults.outlinedButtonColors(contentColor =  wallet.colorIcon)
                     ) {
                         Icon(modifier = Modifier.size(38.dp),
-                            painter = painterResource(wallet.typeCommerce.icon),
+                            painter = painterResource(wallet.walletType.icon),
                             contentDescription = "icon description")
                     }
                     Text(
@@ -172,20 +171,20 @@ fun WalletsCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = wallet.titre,
+                        text = wallet.title,
                         modifier = Modifier.padding(vertical = 12.dp),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = wallet.colorText)
-                    Text(text = wallet.dateDate)
-                    Text(text = wallet.dateTime)
+                    Text(text = wallet.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                    Text(text = wallet.date.format(DateTimeFormatter.ofPattern("HH:mm")))
                 }
                 Spacer(modifier = Modifier.padding(10.dp))
                 Column(modifier = Modifier
                     .width(83.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center) {
-                    Text(text = "${wallet.prix}$",
+                    Text(text = "${wallet.price}$",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = wallet.colorText)
@@ -221,16 +220,6 @@ fun WalletsCard(
                 text = "${wallet.expiryDate}",
                 color = wallet.colorText,
                 fontSize = 20.sp)
-            RatingBarView(
-                rating = ratingVal,
-                isRatingEditable = false,
-                isViewAnimated = false,
-                ratedStarsColor = MaterialTheme.colors.primary,
-                starIcon = painterResource(id = R.drawable.full_star),
-                unRatedStarsColor = Color.LightGray,
-                starsPadding = 6.dp,
-                starSize = 35.dp
-            )
             Spacer(modifier = Modifier.padding(10.dp))
         }
     }

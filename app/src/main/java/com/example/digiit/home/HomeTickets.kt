@@ -1,6 +1,6 @@
 package com.example.digiit.home
 
-import com.example.digiit.cards.TicketsCard
+import com.example.digiit.cards.TicketCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -80,7 +80,7 @@ fun HomeScreen(auth: UserProvider) {
 @ExperimentalMaterialApi
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
-    val listTickets = auth.user?.getTickets().orEmpty().toMutableList()
+    val listTickets = auth.user!!.tickets
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -103,27 +103,35 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
         }
         else
         {
-            LazyColumn(state = listState,
-                modifier = Modifier.scrollbar(state = listState)) {
+            LazyColumn(state = listState, modifier = Modifier.scrollbar(state = listState)) {
+                println("Test : ${listTickets.size}")
                 items(listTickets.size) { item ->
-                    val state = rememberDismissState(
+                    val state = DismissState(
+                        initialValue = DismissValue.Default,
                         confirmStateChange = {
-                            if (it==DismissValue.DismissedToStart){
-                                listTickets.removeAt(item)
-                                // Remove the receipt with this when the user is imported in this function
-                                // ticket.remove(item)
+                            if (it == DismissValue.DismissedToStart) {
+                                listTickets[item].delete { err ->
+                                    if (err == null) {
+                                        // TODO : Toasty.success()
+                                        listTickets.removeAt(item)
+                                    } else {
+                                        // TODO : Toasty.error()
+                                    }
+                                }
                             }
                             true
                         }
                     )
+
                     SwipeToDismiss(
                         state = state,
                         background = {
-                            val color=when(state.dismissDirection){
+                            val color = if (kotlin.math.abs(state.direction) > 0.1) when(state.dismissDirection){
                                 DismissDirection.StartToEnd -> Color.Transparent
                                 DismissDirection.EndToStart -> Color.Red
                                 null -> Color.Transparent
-                            }
+                            } else Color.Transparent
+
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -133,16 +141,15 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
                                     contentDescription = null,
-                                    tint=Color.White,
+                                    tint = Color.White,
                                     modifier = Modifier.align(Alignment.CenterEnd)
                                 )
                             }
-
                         },
                         dismissContent = {
-                            TicketsCard(ticket = listTickets[item])
+                            TicketCard(ticket = listTickets[item])
                         },
-                        directions=setOf(DismissDirection.EndToStart)
+                        directions = setOf(DismissDirection.EndToStart)
                     )
                 }
             }

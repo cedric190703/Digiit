@@ -5,9 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.example.digiit.R
 import com.example.digiit.data.UserProvider
-import com.example.digiit.home.listWallets
 
 
 @Composable
@@ -44,7 +40,7 @@ fun SearchViewHomeTicket(auth: UserProvider) {
                 .padding(8.dp),
             tint = MaterialTheme.colors.primary
         )
-        SearchTickets(auth.user?.getTickets().orEmpty(),
+        SearchTickets(auth.user!!.tickets,
             filter = filterItem.value,
             order = filterOrder.value)
         Button(
@@ -141,10 +137,10 @@ fun SearchViewHomeTicket(auth: UserProvider) {
 }
 
 @Composable
-fun SearchViewHomeWallet() {
+fun SearchViewHomeWallet(auth: UserProvider) {
     val typeItem = remember { mutableStateOf("Tout") }
-    var filterItem = remember { mutableStateOf("Enseigne") }
-    var filterOrder = remember { mutableStateOf("Croissant") }
+    val filterItem = remember { mutableStateOf("Enseigne") }
+    val filterOrder = remember { mutableStateOf("Croissant") }
     var expanded by remember { mutableStateOf(false) }
     var expandedState by remember { mutableStateOf(false) }
     Row (modifier = Modifier
@@ -160,7 +156,7 @@ fun SearchViewHomeWallet() {
                 .padding(8.dp),
             tint = MaterialTheme.colors.primary
         )
-        SearchWallets(listWallets,
+        SearchWallets(auth.user!!.wallets,
             filter = filterItem.value,
             order = filterOrder.value,
             commercialType = typeItem.value)

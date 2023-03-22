@@ -24,10 +24,10 @@ fun HomeNavGraph(navController: NavHostController, padding: PaddingValues, auth:
             HomeScreen(auth)
         }
         composable(route = BottomBarScreen.Wallet.route) {
-            WalletScreen()
+            WalletScreen(auth)
         }
         composable(route = BottomBarScreen.Data.route) {
-            DataScreen()
+            DataScreen(auth)
         }
         composable(route = BottomBarScreen.Menu.route) {
             MenuScreen(auth)

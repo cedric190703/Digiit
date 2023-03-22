@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.digiit.R
 import com.example.digiit.data.ticket.Ticket
-import com.example.digiit.home.wallet
+import com.example.digiit.data.wallet.Wallet
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
 
@@ -368,8 +367,7 @@ fun CardViewBig(
 }
 
 @Composable
-fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
-    val ratingVal = remember { mutableStateOf(wallet.rating) }
+fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet) {
     val showDialog = remember { mutableStateOf(false) }
     val dialogModif = remember { mutableStateOf(false) }
     val bigScreen = remember { mutableStateOf(false) }
@@ -395,7 +393,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                 Spacer(modifier = Modifier.padding(12.dp))
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = "${wallet.prix}$",
+                    text = "${wallet.price}$",
                     color = Color.White,
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
@@ -403,7 +401,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                 Spacer(modifier = Modifier.padding(12.dp))
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = wallet.titre,
+                    text = wallet.title,
                     color = Color.White,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
@@ -411,12 +409,12 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                 Spacer(modifier = Modifier.padding(12.dp))
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(65.dp),
-                    text = {  Text(text = wallet.typeCommerce.title,
+                    text = {  Text(text = wallet.walletType.title,
                         fontSize = 17.sp, color = Color.White) },
                     backgroundColor = Color.Transparent,
                     onClick = {  },
                     icon = {
-                        Icon(painter = painterResource(wallet.typeCommerce.icon),
+                        Icon(painter = painterResource(wallet.walletType.icon),
                             "Logo type wallet",
                             modifier = Modifier
                                 .padding(5.dp)
@@ -454,7 +452,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                         Spacer(modifier = Modifier.padding(20.dp))
                         Text(
                             modifier = Modifier.padding(vertical = 5.dp),
-                            text = wallet.dateDate,
+                            text = wallet.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -472,43 +470,31 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
                         Spacer(modifier = Modifier.padding(20.dp))
                         Text(
                             modifier = Modifier.padding(vertical = 5.dp),
-                            text = wallet.dateTime,
+                            text = wallet.date.format(DateTimeFormatter.ofPattern("HH:mm")),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
-                if(wallet.expiryDate != null){
-                    Row(horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            modifier = Modifier.padding(vertical = 5.dp),
-                            text = "Date expiration :     ",
-                            color = Color.White,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.padding(20.dp))
-                        Text(
-                            modifier = Modifier.padding(vertical = 5.dp),
-                            text = wallet.expiryDate,
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                Row(horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 5.dp),
+                        text = "Date expiration :     ",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.padding(20.dp))
+                    Text(
+                        modifier = Modifier.padding(vertical = 5.dp),
+                        text = wallet.expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Spacer(modifier = Modifier.padding(10.dp))
-                RatingBarView(
-                    rating = ratingVal,
-                    isRatingEditable = false,
-                    isViewAnimated = false,
-                    ratedStarsColor = Color.White,
-                    starIcon = painterResource(id = R.drawable.full_star),
-                    unRatedStarsColor = Color.Gray,
-                    starsPadding = 10.dp
-                )
                 Spacer(modifier = Modifier.padding(12.dp))
                 ExtendedFloatingActionButton(
                     modifier = Modifier
@@ -566,10 +552,9 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: wallet) {
 @Composable
 fun CardViewBigWallet(
     setState: (Boolean) -> Unit,
-    wallet: wallet,
+    wallet: Wallet,
     setLittleDialog: (Boolean) -> Unit
 ) {
-    val ratingVal = remember { mutableStateOf(wallet.rating) }
     val showDialog = remember { mutableStateOf(false) }
     val dialogModif = remember { mutableStateOf(false) }
     Dialog(onDismissRequest = { setState(false) }) {
@@ -599,7 +584,7 @@ fun CardViewBigWallet(
                 }
                 Spacer(modifier = Modifier.padding(6.dp))
                 Image(
-                    bitmap = wallet.bitmap.asImageBitmap(),
+                    bitmap = wallet.getImageBitmapOrDefault(),
                     contentDescription = "photo taken",
                     modifier = Modifier
                         .padding(17.dp)
@@ -608,7 +593,7 @@ fun CardViewBigWallet(
                 Spacer(modifier = Modifier.padding(6.dp))
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = "${wallet.prix}$",
+                    text = "${wallet.price}$",
                     color = Color.White,
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
@@ -616,7 +601,7 @@ fun CardViewBigWallet(
                 Spacer(modifier = Modifier.padding(6.dp))
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    text = wallet.titre,
+                    text = wallet.title,
                     color = Color.White,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
@@ -631,12 +616,12 @@ fun CardViewBigWallet(
                 )
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(65.dp),
-                    text = {  Text(text = wallet.typeCommerce.title,
+                    text = {  Text(text = wallet.walletType.title,
                         fontSize = 17.sp, color = Color.White) },
                     backgroundColor = Color.Transparent,
                     onClick = {  },
                     icon = {
-                        Icon(painter = painterResource(wallet.typeCommerce.icon),
+                        Icon(painter = painterResource(wallet.walletType.icon),
                             "Logo type wallet",
                             modifier = Modifier
                                 .padding(5.dp)
@@ -674,7 +659,7 @@ fun CardViewBigWallet(
                         Spacer(modifier = Modifier.padding(20.dp))
                         Text(
                             modifier = Modifier.padding(vertical = 5.dp),
-                            text = wallet.dateDate,
+                            text = wallet.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -692,7 +677,7 @@ fun CardViewBigWallet(
                         Spacer(modifier = Modifier.padding(20.dp))
                         Text(
                             modifier = Modifier.padding(vertical = 5.dp),
-                            text = wallet.dateTime,
+                            text = wallet.date.format(DateTimeFormatter.ofPattern("HH:mm")),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -708,36 +693,24 @@ fun CardViewBigWallet(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.padding(6.dp))
-                if(wallet.expiryDate != null){
-                    Row(horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            modifier = Modifier.padding(vertical = 5.dp),
-                            text = "Date expiration :     ",
-                            color = Color.White,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.padding(20.dp))
-                        Text(
-                            modifier = Modifier.padding(vertical = 5.dp),
-                            text = wallet.expiryDate,
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                Row(horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 5.dp),
+                        text = "Date expiration :     ",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.padding(20.dp))
+                    Text(
+                        modifier = Modifier.padding(vertical = 5.dp),
+                        text = wallet.expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Spacer(modifier = Modifier.padding(6.dp))
-                RatingBarView(
-                    rating = ratingVal,
-                    isRatingEditable = false,
-                    isViewAnimated = false,
-                    ratedStarsColor = Color.White,
-                    starIcon = painterResource(id = R.drawable.full_star),
-                    unRatedStarsColor = Color.Gray,
-                    starsPadding = 10.dp
-                )
                 Spacer(modifier = Modifier.padding(6.dp))
                 Row() {
                     ExtendedFloatingActionButton(
@@ -759,11 +732,11 @@ fun CardViewBigWallet(
                 }
                 if(showDialog.value)
                 {
-                    // Delete Wallet
+                    // TODO : Delete Wallet
                 }
                 if(dialogModif.value)
                 {
-                    // Edit Wallet
+                    // TODO : Edit Wallet
                 }
             }
         }

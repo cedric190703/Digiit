@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.example.digiit.data.ticket.Ticket
-import com.example.digiit.home.wallet
+import com.example.digiit.data.wallet.Wallet
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -85,7 +85,7 @@ fun SearchTickets(items: List<Ticket>,
 }
 
 @Composable
-fun SearchWallets(items: List<wallet>,
+fun SearchWallets(items: List<Wallet>,
                   filter: String,
                   order: String,
                   commercialType: String){
@@ -100,7 +100,7 @@ fun SearchWallets(items: List<wallet>,
     // Filter on elements
     val filteredItems = if (searchText.isNotBlank()) {
         items.filter { wallet ->
-            wallet.titre.contains(searchText) ||
+            wallet.title.contains(searchText) ||
                     wallet.tag.contains(searchText) &&
                     if (wallet.walletType.title != "Tout") {
                         wallet.walletType.title == commercialType
@@ -116,21 +116,21 @@ fun SearchWallets(items: List<wallet>,
     val sortedItems = if (order == "Croissant") {
         filteredItems.sortedWith(compareBy { ticket ->
             when (filter) {
-                "Enseigne" -> ticket.titre
-                "Date" -> LocalDateTime.parse(ticket.dateDate, formatter)
-                "Type" -> ticket.typeCommerce.title
-                "Amont" -> ticket.prix
-                else -> ticket.titre
+                "Enseigne" -> ticket.title
+                "Date" -> ticket.date
+                "Type" -> ticket.walletType.title
+                "Amont" -> ticket.price
+                else -> ticket.title
             }
         })
     } else {
         filteredItems.sortedWith(compareByDescending { ticket ->
             when (filter) {
-                "Enseigne" -> ticket.titre
-                "Date" -> LocalDateTime.parse(ticket.dateDate, formatter)
-                "Type" -> ticket.typeCommerce.title
-                "Amont" -> ticket.prix
-                else -> ticket.titre
+                "Enseigne" -> ticket.title
+                "Date" -> ticket.date
+                "Type" -> ticket.walletType.title
+                "Amont" -> ticket.price
+                else -> ticket.title
             }
         })
     }

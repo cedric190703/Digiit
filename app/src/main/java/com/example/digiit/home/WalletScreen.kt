@@ -1,11 +1,10 @@
 package com.example.digiit.home
 
-import android.graphics.Bitmap
+import android.hardware.usb.UsbRequest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,30 +14,27 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.digiit.cards.TicketsCard
 import com.example.digiit.R
 import com.example.digiit.cards.WalletsCard
-import com.example.digiit.data.CommercialType
-import com.example.digiit.data.TradeKinds
+import com.example.digiit.data.UserProvider
+import com.example.digiit.data.user.User
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeWallet
 
-var listWallets = mutableStateListOf<wallet>()
 
 @Composable
-fun WalletScreen() {
+fun WalletScreen(auth: UserProvider) {
     Scaffold(
         backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->
-            WalletContent(padding)
+            WalletContent(padding, auth)
         }, topBar = {
             TopAppBar(
                 title = {
@@ -74,34 +70,16 @@ fun WalletScreen() {
     )
 }
 
-// Use only for the tests but at the end use the Wallet from the folder data
-data class wallet(
-    var typeCommerce: TradeKinds,
-    var tag: String,
-    var titre: String,
-    var prix: Int,
-    var dateTime: String,
-    var dateDate: String,
-    var colorIcon: Color,
-    var colorTag: Color,
-    var colorText: Color,
-    var rating: Int,
-    var comment: String,
-    var bitmap: Bitmap,
-    var expiryDate: String,
-    var walletType: CommercialType
-    )
-
-var listwallets = mutableStateListOf<wallet>()
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun WalletContent(paddingValues: PaddingValues) {
+fun WalletContent(paddingValues: PaddingValues, auth: UserProvider) {
+    var listWallets = auth.user!!.wallets
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()) {
-        SearchViewHomeWallet()
+        SearchViewHomeWallet(auth)
         if(listWallets.size == 0)
         {
             Spacer(modifier = Modifier.padding(20.dp))
@@ -121,10 +99,10 @@ fun WalletContent(paddingValues: PaddingValues) {
         {
             LazyColumn(state = listState,
                 modifier = Modifier.scrollbar(state = listState)) {
-                items(listwallets) { item ->
+                items(listWallets.size) { item ->
                     val state= rememberDismissState(
                         confirmStateChange = {
-                            if (it==DismissValue.DismissedToStart){
+                            if (it == DismissValue.DismissedToStart){
                                 // Remove the wallet with this when the user is imported in this function
                                 // Wallet to implement
                                 // wallet.remove(item)
@@ -156,7 +134,7 @@ fun WalletContent(paddingValues: PaddingValues) {
 
                         },
                         dismissContent = {
-                            WalletsCard(wallet = item)
+                            WalletsCard(wallet = listWallets[item])
                         },
                         directions=setOf(DismissDirection.EndToStart)
                     )

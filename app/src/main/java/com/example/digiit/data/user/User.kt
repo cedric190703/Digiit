@@ -9,8 +9,8 @@ import com.example.digiit.utils.ActionCallback
 
 
 abstract class User {
-    protected val tickets = ArrayList<Ticket>()
-    protected val wallets = ArrayList<Wallet>()
+    val tickets = ArrayList<Ticket>()
+    val wallets = ArrayList<Wallet>()
 
     abstract var name: String
     abstract var lastname: String
@@ -31,17 +31,9 @@ abstract class User {
 
     abstract fun queryTickets(callback: ActionCallback)
 
-    fun getTickets(): List<Ticket> {
-        return tickets
-    }
-
     abstract fun createTicket(): Ticket
 
     abstract fun queryWallets(callback: ActionCallback)
-
-    fun getWallets(): List<Wallet> {
-        return wallets
-    }
 
     abstract fun createWallet(): Wallet
 
