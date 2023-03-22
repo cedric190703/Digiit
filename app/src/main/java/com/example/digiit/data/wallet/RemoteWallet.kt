@@ -1,9 +1,10 @@
-package com.example.digiit.data.ticket
+package com.example.digiit.data.wallet
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.example.digiit.data.CommercialType
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.utils.ActionCallback
 import com.google.firebase.firestore.DocumentReference
@@ -13,26 +14,23 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.UUID
+import java.util.*
 
 
-class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) {
+class RemoteWallet(private val document: DocumentReference): Wallet() {
     private val storage = Firebase.storage(document.firestore.app)
     private var imageId = ""
     private var imageRef : StorageReference? = null
 
     fun load(item: DocumentSnapshot) {
-        file = File("remote/${item.id}/user.dat")
         lastEdit = item.getTimestamp("lastEdit")!!.seconds
         type = TradeKinds.valueOf(item.getString("type")!!)
         tag = item.getString("tag")!!
         title = item.getString("title")!!
         price = item.getDouble("price")!!.toFloat()
         date = LocalDateTime.ofEpochSecond(item.getLong("date")!!, 0, ZoneOffset.UTC)
-        rating = item.getDouble("rating")!!.toFloat()
         comment = item.getString("comment")!!
         imageId = item.getString("image").orEmpty()
         colorIcon = Color(item.getLong("colors.icon")!!)
@@ -41,6 +39,9 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
         if (imageId.isNotEmpty()) {
             imageRef = storage.getReference("images/$imageId")
         }
+        expiryDate = LocalDateTime.ofEpochSecond(item.getLong("expiry")!!, 0, ZoneOffset.UTC)
+        walletType = CommercialType.valueOf(item.getString("walletType")!!)
+        used = item.getBoolean("used")!!
     }
 
     override fun reload(callback: ActionCallback) {
@@ -69,7 +70,9 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
                 "tag" to colorTag.toArgb(),
                 "text" to colorText.toArgb()
             ),
-            "rating" to rating
+            "expiry" to expiryDate.toEpochSecond(ZoneOffset.UTC),
+            "walletType" to walletType.name,
+            "used" to used
         )
         document.set(data).addOnCompleteListener { task ->
             callback(task.exception)

@@ -1,45 +1,20 @@
 package com.example.digiit.data.ticket
 
-import android.app.Notification.Action
-import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import com.example.digiit.data.TradeKinds
+import com.example.digiit.data.card.Card
 import java.time.LocalDateTime
 
 
-typealias ActionCallback = (error: Exception?) -> Unit
-
-
-abstract class Ticket(var type: TradeKinds = TradeKinds.Other,
-                      var tag: String = "",
-                      var title: String = "",
-                      var price: Float = 0f,
-                      var date: LocalDateTime = LocalDateTime.now(),
-                      var rating: Float = 1f,
-                      var comment: String = "",
-                      var colorIcon: Color = Color.Black,
-                      var colorTag: Color = Color.Black,
-                      var colorText: Color = Color.Black
-) {
-    var lastEdit: Long = -1
-    var image: Bitmap? = null
-
-    fun getImageBitmapOrDefault(): ImageBitmap {
-        if (image == null) {
-            return ImageBitmap(1, 1)
-        }
-        return image!!.asImageBitmap();
-    }
-
-    abstract fun reload(callback: ActionCallback)
-
-    abstract fun save(callback: ActionCallback)
-
-    abstract fun delete(callback: ActionCallback)
-
-    abstract fun loadImage(callback: ActionCallback)
-
-    abstract fun saveImage(callback: ActionCallback)
-}
+abstract class Ticket(
+    type: TradeKinds = TradeKinds.Other,
+    tag: String = "",
+    title: String = "",
+    price: Float = 0f,
+    date: LocalDateTime = LocalDateTime.now(),
+    comment: String = "",
+    colorIcon: Color = Color.Black,
+    colorTag: Color = Color.Black,
+    colorText: Color = Color.Black,
+    var rating: Float = 0f
+) : Card(type, tag, title, price, date, comment, colorIcon, colorTag, colorText)

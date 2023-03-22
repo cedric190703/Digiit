@@ -21,5 +21,19 @@ enum class CommercialType(
     Contract(
         title = "Contrat de vente",
         icon = R.drawable.contract
-    )
+    ),
+    Unknown(
+        title = "Inconnue",
+        icon = R.drawable.wallet
+    );
+
+    companion object {
+        fun findByTitle(title: String): CommercialType {
+            for (type in CommercialType.values()) {
+                if (type.title.equals(title, true))
+                    return type
+            }
+            return CommercialType.Unknown
+        }
+    }
 }

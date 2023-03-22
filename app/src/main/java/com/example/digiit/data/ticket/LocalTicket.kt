@@ -1,9 +1,9 @@
 package com.example.digiit.data.ticket
 
-import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.example.digiit.data.TradeKinds
+import com.example.digiit.utils.ActionCallback
 import com.example.digiit.utils.BinaryInputStream
 import com.example.digiit.utils.BinaryOutputStream
 import java.io.File
