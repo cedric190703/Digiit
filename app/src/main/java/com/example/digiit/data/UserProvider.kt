@@ -3,6 +3,7 @@ package com.example.digiit.data
 import com.example.digiit.data.user.LocalUser
 import com.example.digiit.data.user.RemoteUser
 import com.example.digiit.data.user.User
+import com.example.digiit.utils.ActionCallback
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.AuthResult
@@ -31,11 +32,7 @@ class UserProvider(private val firebase: FirebaseApp) {
             .addOnCompleteListener { task -> onAuthResult(task, callback) }
     }
 
-    fun getUsers() {
-        val obj = JSONObject("")
-    }
-
-    fun load() {
+    /*fun load() {
         val file = firebase.applicationContext.filesDir.resolve("users.json")
         val jsonRoot = JSONObject(file.readText())
         val jsonUsers = jsonRoot.getJSONArray("users")
@@ -47,7 +44,7 @@ class UserProvider(private val firebase: FirebaseApp) {
                 //users.add(RemoteUser())
             }
         }
-    }
+    }*/
 
     private fun onAuthResult(task: Task<AuthResult>, callback: AuthCallback) {
         println("HAAAAAAAAAAAAAAAAAAAAAA")
@@ -60,7 +57,7 @@ class UserProvider(private val firebase: FirebaseApp) {
         }
     }
 
-    fun sendPasswordResetEmail(email: String, callback: (error: Exception?) -> Unit) {
+    fun sendPasswordResetEmail(email: String, callback: ActionCallback) {
         auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
             callback(task.exception)
         }

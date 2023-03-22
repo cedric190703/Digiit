@@ -1,6 +1,8 @@
 package com.example.digiit.data.user
 
 import android.graphics.Bitmap
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.utils.ActionCallback
@@ -16,6 +18,13 @@ abstract class User {
     abstract val local: Boolean
 
     abstract var profilePicture: Bitmap?
+
+    fun getImageBitmapOrDefault(): ImageBitmap {
+        if (profilePicture == null) {
+            return ImageBitmap(1, 1)
+        }
+        return profilePicture!!.asImageBitmap();
+    }
 
     abstract fun queryTickets(callback: ActionCallback)
 
