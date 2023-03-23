@@ -22,7 +22,7 @@ import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
-
+import com.example.digiit.ui.theme.Grad
 
 @Composable
 fun TicketCard(
@@ -49,9 +49,9 @@ fun TicketCard(
             .background(
                 brush = Brush.horizontalGradient(
                     colors = listOf(
-                        Color(0xFFCE93D8),
-                        Color(0xFFE67E22)
-                    )
+                        ticket.colorTag,
+                        Grad[ticket.colorTag],
+                    ) as List<Color>
                 )
 
             )
@@ -79,17 +79,8 @@ fun TicketCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    // ICON
-                    OutlinedButton(
-                        onClick = { },
-                        modifier = Modifier.size(50.dp),
-                        shape = CircleShape,
-                        border = BorderStroke(2.dp, ticket.colorIcon),
-                        contentPadding = PaddingValues(0.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = ticket.colorIcon)
-                    ) {
                         // ICON
-                        OutlinedButton(onClick = {  },
+                        OutlinedButton(onClick = { },
                             modifier= Modifier.size(50.dp),
                             shape = CircleShape,
                             border= BorderStroke(2.dp, ticket.colorIcon),
@@ -100,7 +91,6 @@ fun TicketCard(
                                 painter = painterResource(ticket.type.icon),
                                 contentDescription = "icon description")
                         }
-                    }
                     // Espace
                     Spacer(modifier = Modifier.width(10.dp))
 
