@@ -35,9 +35,10 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-
 @Composable
-fun EditTicket(ticket: Ticket, setShowDialog: (Boolean) -> Unit) {
+fun EditTicket(ticket: Ticket,
+               setShowDialog: (Boolean) -> Unit,
+            setView: (Boolean) -> Unit ){
     val ctx = LocalContext.current
     val ratingVal = ObservableMutableState(ticket.rating.toInt()) { ticket.rating = it.toFloat() }
 
@@ -203,7 +204,7 @@ fun EditTicket(ticket: Ticket, setShowDialog: (Boolean) -> Unit) {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
                             .height(85.dp)
-                            .padding(vertical = 18.dp, horizontal = 4.dp),
+                            .padding(vertical = 18.dp, horizontal = 2.dp),
                         text = {  Text(text = "Modifier élement", fontSize = 18.sp) },
                         onClick = {
                             if(ticket.title.isNotEmpty()) {
@@ -211,6 +212,7 @@ fun EditTicket(ticket: Ticket, setShowDialog: (Boolean) -> Unit) {
                                     if (error == null) {
                                         Toasty.success(ctx, "Le ticket a bien été modifié", Toast.LENGTH_SHORT, true).show()
                                         setShowDialog(false)
+                                        setView(false)
                                     } else {
                                         Toasty.error(ctx, "Erreur de sauvegarde du ticket", Toast.LENGTH_SHORT, true).show()
                                     }
@@ -224,7 +226,7 @@ fun EditTicket(ticket: Ticket, setShowDialog: (Boolean) -> Unit) {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
                             .height(85.dp)
-                            .padding(vertical = 18.dp, horizontal = 4.dp),
+                            .padding(vertical = 18.dp, horizontal = 2.dp),
                         text = {  Text(text = "Fermer", fontSize = 18.sp) },
                         onClick = { setShowDialog(false) },
                         backgroundColor = MaterialTheme.colors.primary

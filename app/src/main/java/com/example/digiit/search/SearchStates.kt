@@ -95,8 +95,6 @@ fun SearchWallets(items: List<Wallet>,
             searchText.isNotBlank()
         }
     }
-    val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")
-
     // Filter on elements
     val filteredItems = if (searchText.isNotBlank()) {
         items.filter { wallet ->
@@ -142,7 +140,7 @@ fun SearchWallets(items: List<Wallet>,
         label = { Text("Search") },
         modifier = Modifier
             .padding(10.dp)
-            .width(250.dp),
+            .width(185.dp),
         leadingIcon = { Icon(Icons.Filled.Search, "search icon") },
         trailingIcon = {
             if (isVisible) {

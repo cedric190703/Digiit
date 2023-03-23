@@ -291,7 +291,7 @@ fun DialogTicketInfo(
                             if(typeVal != "" && titrelVal.value != "") {
                             createTicket(typeVal, tagVal.value, titrelVal.value,
                                 prixVal.value.toFloat(), LocalDateTime.of(pickedDate, pickedTime),
-                                colorText.value, colorIcon.value, colorTag.value, rating.value, comment.value, bitmap, user)
+                                colorIcon.value, colorTag.value, colorText.value, rating.value, comment.value, bitmap, user)
                             setShowDialogPhoto(false)
                             Toasty.success(ctx, "Le ticket a bien été ajouté", Toast.LENGTH_SHORT, true).show()
                         } else {

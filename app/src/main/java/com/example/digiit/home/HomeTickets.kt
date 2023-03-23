@@ -20,16 +20,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
 import com.example.digiit.data.UserProvider
+import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.photos.SelectOption
+import com.example.digiit.photos.TypeScreen
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeTicket
-
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(auth: UserProvider) {
     val showDialog =  remember { mutableStateOf(false) }
-
     Scaffold(
         backgroundColor = Color.White,
         modifier = Modifier
@@ -71,16 +71,16 @@ fun HomeScreen(auth: UserProvider) {
             if(showDialog.value)
                 SelectOption(setShowDialog = {
                     showDialog.value = it
-                }, user = auth.user)
+                }, user = auth.user ,TypeScreen.Home)
         }
     )
 }
 
-
 @ExperimentalMaterialApi
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
-    val listTickets = auth.user!!.tickets
+    val listTickets = remember { auth.user!!.tickets.toMutableList() }
+    println("here -> $listTickets")
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,15 +88,18 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
         SearchViewHomeTicket(auth)
         if(listTickets.isEmpty())
         {
-            Spacer(modifier = Modifier.padding(20.dp))
+            Spacer(modifier = Modifier.padding(15.dp))
             Image(painter = painterResource(id = R.drawable.tickets_image),
-                contentDescription = "image for no data")
-            Column(modifier = Modifier.padding(16.dp)) {
+                contentDescription = "image for no data",
+                modifier = Modifier
+                    .width(380.dp)
+                    .height(270.dp))
+            Column(modifier = Modifier.padding(14.dp)) {
                 Text(
                     text = "Pas de tickets",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp
+                        fontSize = 30.sp
                     )
                 )
             }
@@ -110,16 +113,20 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
                         initialValue = DismissValue.Default,
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
-                                listTickets[item].delete { err ->
+                                val ticket = listTickets[item]
+                                listTickets.removeAt(item)
+                                ticket.delete { err ->
                                     if (err == null) {
                                         // TODO : Toasty.success()
-                                        listTickets.removeAt(item)
                                     } else {
                                         // TODO : Toasty.error()
+                                        listTickets.add(item, ticket)
                                     }
                                 }
+                                true
+                            } else {
+                                false
                             }
-                            true
                         }
                     )
 

@@ -142,8 +142,13 @@ class TakePhoto : ComponentActivity() {
     }
 }
 
+enum class TypeScreen {
+    Home, Wallet
+}
+
 @Composable
-fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?){
+fun SelectOption(setShowDialog: (Boolean) -> Unit,
+                 user: User?, typeScreen: TypeScreen){
     var photoUri: Uri? by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri
@@ -257,10 +262,14 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?){
                         val bitmap = rotateBitmap(bitmapTmp)
                         if(showDialogPhoto.value)
                         {
-                            DialogTicketInfo(setShowDialogPhoto = {
-                                showDialogPhoto.value = it
-                                setShowDialog(false)
-                            }, bitmap = bitmap, user = user)
+                            if(typeScreen == TypeScreen.Home) {
+                                DialogTicketInfo(setShowDialogPhoto = {
+                                    showDialogPhoto.value = it
+                                    setShowDialog(false)
+                                }, bitmap = bitmap, user = user)
+                            } else {
+                                // Dialog for Wallets
+                            }
                         }
                     }
                     if(stateTakePhoto.value)

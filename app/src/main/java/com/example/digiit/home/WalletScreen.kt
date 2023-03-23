@@ -1,6 +1,5 @@
 package com.example.digiit.home
 
-import android.hardware.usb.UsbRequest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,13 +21,14 @@ import androidx.compose.ui.unit.sp
 import com.example.digiit.R
 import com.example.digiit.cards.WalletsCard
 import com.example.digiit.data.UserProvider
-import com.example.digiit.data.user.User
+import com.example.digiit.photos.SelectOption
+import com.example.digiit.photos.TypeScreen
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeWallet
 
-
 @Composable
 fun WalletScreen(auth: UserProvider) {
+    val showDialog =  remember { mutableStateOf(false) }
     Scaffold(
         backgroundColor = Color.White,
         modifier = Modifier
@@ -57,7 +57,7 @@ fun WalletScreen(auth: UserProvider) {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {},
+                onClick = { showDialog.value = true },
                 Modifier.size(70.dp),
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = Color.White,
@@ -66,10 +66,13 @@ fun WalletScreen(auth: UserProvider) {
                     "add button",
                     modifier = Modifier.fillMaxSize(0.5F))
             }
+            if(showDialog.value)
+                SelectOption(setShowDialog = {
+                    showDialog.value = it
+                }, user = auth.user, TypeScreen.Wallet)
         }
     )
 }
-
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -82,15 +85,18 @@ fun WalletContent(paddingValues: PaddingValues, auth: UserProvider) {
         SearchViewHomeWallet(auth)
         if(listWallets.size == 0)
         {
-            Spacer(modifier = Modifier.padding(20.dp))
+            Spacer(modifier = Modifier.padding(15.dp))
             Image(painter = painterResource(id = R.drawable.wallet_image),
-                contentDescription = "image for no data")
-            Column(modifier = Modifier.padding(16.dp)) {
+                contentDescription = "image for no data",
+                modifier = Modifier
+                    .width(380.dp)
+                    .height(270.dp))
+            Column(modifier = Modifier.padding(14.dp)) {
                 Text(
                     text = "Pas d'éléments",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp
+                        fontSize = 30.sp
                     )
                 )
             }

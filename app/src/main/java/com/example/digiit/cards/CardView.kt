@@ -25,7 +25,6 @@ import com.example.digiit.data.wallet.Wallet
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
 
-
 @Composable
 fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
@@ -48,7 +47,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
                         IconButton(onClick = { setState(false) }) {
                             Icon(imageVector = Icons.Default.Close,
                                 contentDescription = "Close",
-                                tint = MaterialTheme.colors.primary,
+                                tint = Color.White,
                                 modifier = Modifier.size(38.dp))
                         }
                     }
@@ -173,6 +172,9 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
                         EditTicket(ticket = ticket,
                             setShowDialog = {
                                 dialogModif.value = it
+                            },
+                            setView = {
+                                setState(it)
                             })
                     }
                     if(bigScreen.value)
@@ -182,7 +184,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
                         },
                             ticket = ticket,
                         setLittleDialog = {
-                            setState(false)
+                            setState(it)
                         })
                     }
                 }
@@ -359,6 +361,10 @@ fun CardViewBig(
                     EditTicket(ticket = ticket,
                         setShowDialog = {
                             dialogModif.value = it
+                        },
+                        setView = {
+                            setState(it)
+                            setLittleDialog(it)
                         })
                 }
             }
