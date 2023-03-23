@@ -9,6 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,26 +31,38 @@ fun TicketCard(
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
     Card(
-        elevation = 5.dp,
-        border = BorderStroke(1.dp, ticket.colorIcon),
-        backgroundColor = if(ticket.title == "hello") Color(0xFFF1A45F) else Color(0xFFC5E1A5),
+        elevation = 0.dp,
+        //  border = BorderStroke(1.dp, ticket.colorIcon),
+        backgroundColor = Color.Transparent,
+        //backgroundColor = if(ticket.title == "hello") Color(0xFFF1A45F) else Color(0xFFC5E1A5),
         modifier = Modifier
             .padding(5.dp)
             .fillMaxWidth()
             .clickable { showDialog.value = true }
-            .border(
-                width = 3.dp,
-                color = if(ticket.title == "hello") Color(0xFFF1A45F) else Color(0xFFC5E1A5), //ticket.colorTag,
-                shape = RoundedCornerShape(10.dp)
-            )
+            /*.border(
+                width = 2.dp,
+                color = Color.Transparent, //if(ticket.title == "hello") Color(0xFFF1A45F) else Color(0xFFC5E1A5), //ticket.colorTag,
+                shape = RoundedCornerShape(0.dp)
+            )*/
             .clip(RoundedCornerShape(16.dp))
+                //gradient yellow to orange
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        Color(0xFFCE93D8),
+                        Color(0xFFE67E22)
+                    )
+                )
+
+            )
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.2.dp),
+                //.fillMaxWidth()
+                .fillMaxSize()
+                .padding(0.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(
                 modifier = Modifier
@@ -93,7 +107,7 @@ fun TicketCard(
                     // TITLE
                     Text(
                         text = ticket.title,
-                        modifier = Modifier.padding(vertical = 12.dp),
+                        modifier = Modifier.padding(vertical = 1.dp),
                         fontSize = 24.sp,
                         //fontWeight = FontWeight.Bold,
                         color =  Color.White)
