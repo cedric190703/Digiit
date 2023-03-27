@@ -38,6 +38,7 @@ fun HomeLogin(
     val password = remember { mutableStateOf("") }
     val context = androidx.compose.ui.platform.LocalContext.current
     val passwordVisibility = remember { mutableStateOf(false) }
+    val isLoading = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(30.dp))
@@ -81,13 +82,12 @@ fun HomeLogin(
                     IconButton(onClick = {
                         passwordVisibility.value = !passwordVisibility.value
                     }) {
-                        //Logo Icon eye for password
                     }
                 },
                 visualTransformation = if (passwordVisibility.value) VisualTransformation.None
                 else PasswordVisualTransformation()
             )
-            Spacer(modifier = Modifier.padding(21.dp))
+            Spacer(modifier = Modifier.padding(16.dp))
             Button(
                 onClick = {
                     //check if email address is correctly formatted
@@ -95,22 +95,31 @@ fun HomeLogin(
                         Toasty.error(context, "Adresse email invalide", Toast.LENGTH_SHORT, true).show()
                         return@Button
                     }
-                    println("TEEEEEEST")
+                    isLoading.value = true
                     auth.loginRemoteUser(emailVal.value, password.value) { error, _ ->
                         if (error == null) {
                             Toasty.success(context, "Connexion réussie", Toast.LENGTH_SHORT, true).show()
                             onClickGoHome()
                         } else {
+                            isLoading.value = false
                             Toasty.error(context, "Connexion échouée", Toast.LENGTH_SHORT, true).show()
                         }
                     }
                 },
-                modifier = Modifier.height(45.dp)
+                modifier = Modifier,
+                enabled = !isLoading.value
             ) {
-                Text(
-                    text = "Se connecter",
-                    fontSize = MaterialTheme.typography.h6.fontSize
-                )
+                if (isLoading.value) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                    )
+                } else {
+                    Text(
+                        text = "Se connecter",
+                        fontSize = MaterialTheme.typography.h6.fontSize
+                    )
+                }
             }
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
