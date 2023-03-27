@@ -19,13 +19,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.digiit.menus.Confidentiality
-import com.example.digiit.menus.EditAccount
 import com.example.digiit.R
 import com.example.digiit.data.UserProvider
-import com.example.digiit.menus.Help
-import com.example.digiit.menus.SettingsElement
-import com.google.firebase.auth.FirebaseAuth
+import com.example.digiit.menus.*
+import com.example.digiit.utils.getCurrentMonth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -61,6 +58,67 @@ fun MenuScreen(auth: UserProvider) {
     )
 }
 
+@Composable
+fun ColorChangingSlider(data: MutableState<Float>, maxValue: Float) {
+    if(data.value > maxValue) {
+        data.value = maxValue
+    }
+    val color = getSliderColor(data.value, maxValue)
+    Slider(
+        value = data.value,
+        onValueChange = {
+        },
+        valueRange = 0f..maxValue,
+        steps = 100,
+        colors = SliderDefaults.colors(
+            thumbColor = color,
+            activeTrackColor = color,
+            inactiveTrackColor = color,
+            activeTickColor = color,
+            inactiveTickColor = color
+        ),
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 2.dp)
+            .fillMaxWidth()
+    )
+    Text(
+        text = "Dépenses: $${data.value.toInt()} - $${maxValue.toInt()}  |  Mois : ${getCurrentMonth()}",
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp)
+    )
+}
+
+private fun getSliderColor(data: Float, maxValue: Float): Color {
+    val percentage = data / maxValue
+    val red = when {
+        percentage < 0.1f -> 0.0f
+        percentage < 0.2f -> 0.1f
+        percentage < 0.3f -> 0.2f
+        percentage < 0.4f -> 0.3f
+        percentage < 0.5f -> 0.4f
+        percentage < 0.6f -> 0.5f
+        percentage < 0.7f -> 0.6f
+        percentage < 0.8f -> 0.7f
+        percentage < 0.9f -> 0.8f
+        else -> 0.9f
+    }
+    val green = when {
+        percentage < 0.2f -> 0.9f
+        percentage < 0.2f -> 0.8f
+        percentage < 0.3f -> 0.7f
+        percentage < 0.4f -> 0.6f
+        percentage < 0.5f -> 0.5f
+        percentage < 0.6f -> 0.4f
+        percentage < 0.7f -> 0.3f
+        percentage < 0.8f -> 0.2f
+        percentage < 0.9f -> 0.1f
+        percentage < 0.9f -> 0.1f
+        else -> 0.0f
+    }
+    val blue = 0.0f
+    return Color(red, green, blue)
+}
+
 private val optionsList: ArrayList<OptionsData> = ArrayList()
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -72,6 +130,7 @@ fun MenuContent(paddingValues: PaddingValues, auth: UserProvider) {
     val showConfidentialiteDialog = remember { mutableStateOf(false) }
     val showDialogHelp = remember { mutableStateOf(false) }
     val showDialogSettings = remember { mutableStateOf(false) }
+    val showDialogBilan = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         withContext(Dispatchers.Default) {
             optionsList.clear()
@@ -104,7 +163,7 @@ fun MenuContent(paddingValues: PaddingValues, auth: UserProvider) {
                         showDialogSettings.value = it
                     })
                     else -> OptionsItemStyle(item = item, context = context, onClick = {
-                        //nothing
+                        showDialogBilan.value = it
                     })
                 }
             }
@@ -133,73 +192,90 @@ fun MenuContent(paddingValues: PaddingValues, auth: UserProvider) {
                 showDialogSettings.value = it
             })
         }
+        if(showDialogBilan.value)
+        {
+            // Change the two values here with the User data
+            // TODO
+            Bilan(onDismiss = {
+                showDialogBilan.value = it
+            }, dataOnMonth = 123f, maxValueData = 1000f)
+        }
     }
 }
 
 @Composable
 private fun UserDetails(context: Context, auth: UserProvider) {
     val showDialogAccount = remember { mutableStateOf(false) }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(painter = painterResource(id = R.drawable.profile),
-            contentDescription = "logo profile",
-            modifier = Modifier.size(60.dp),
-            tint = MaterialTheme.colors.primary)
+    Column(verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(weight = 3f, fill = false)
-                    .padding(start = 16.dp)
+            Icon(painter = painterResource(id = R.drawable.profile),
+                contentDescription = "logo profile",
+                modifier = Modifier.size(60.dp),
+                tint = MaterialTheme.colors.primary)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = if (auth.user != null) auth.user!!.name else "No Name",
-                    style = TextStyle(
-                        fontSize = 22.sp
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = if (auth.user != null) auth.user!!.email else "No Email",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = Color.Gray,
-                        letterSpacing = (0.8).sp
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            IconButton(
-                modifier = Modifier
-                    .weight(weight = 1f, fill = false),
-                onClick = {
-                    auth.user?.logout {  }
-                    //TODO : go to login screen
-                }) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(id = R.drawable.logout),
-                    contentDescription = "Deconnexion",
-                    tint = MaterialTheme.colors.primary
-                )
-            }
-            if(showDialogAccount.value)
-            {
-                EditAccount(onDismiss = {
-                    showDialogAccount.value = it
-                }, auth)
+                Column(
+                    modifier = Modifier
+                        .weight(weight = 3f, fill = false)
+                        .padding(start = 16.dp)
+                ) {
+                    Text(
+                        text = if (auth.user != null) auth.user!!.name else "No Name",
+                        style = TextStyle(
+                            fontSize = 22.sp
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = if (auth.user != null) auth.user!!.email else "No Email",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            color = Color.Gray,
+                            letterSpacing = (0.8).sp
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                IconButton(
+                    modifier = Modifier
+                        .weight(weight = 1f, fill = false),
+                    onClick = {
+                        auth.user?.logout {  }
+                        //TODO : go to login screen
+                    }) {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(id = R.drawable.logout),
+                        contentDescription = "Deconnexion",
+                        tint = MaterialTheme.colors.primary
+                    )
+                }
+                if(showDialogAccount.value)
+                {
+                    EditAccount(onDismiss = {
+                        showDialogAccount.value = it
+                    }, auth)
+                }
             }
         }
+        // Change by the real data from the current month
+        // TODO
+        var data = remember {
+            mutableStateOf(123f)
+        }
+        ColorChangingSlider(data = data, 1000.0f)
     }
 }
 
@@ -278,6 +354,14 @@ private fun prepareOptionsData() {
 
     optionsList.add(
         OptionsData(
+            icon = R.drawable.add_chart,
+            title = "Bilan",
+            subTitle = "Regardez votre bilan"
+        )
+    )
+
+    optionsList.add(
+        OptionsData(
             icon = R.drawable.safety,
             title = "Confidentialité",
             subTitle = "Gérez votre confidentialité"
@@ -290,14 +374,6 @@ private fun prepareOptionsData() {
             icon = R.drawable.settings,
             title = "Réglages",
             subTitle = "Les réglages"
-        )
-    )
-
-    optionsList.add(
-        OptionsData(
-            icon = R.drawable.folders,
-            title = "Vos dossiers",
-            subTitle = "Regardez vos dossiers"
         )
     )
 

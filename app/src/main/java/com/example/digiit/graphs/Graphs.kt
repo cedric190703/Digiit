@@ -107,12 +107,10 @@ fun BarChart() {
 @Composable
 fun LineChart() {
     val dataPoints = listOf(
-        Pair("January", 25f),
-        Pair("February", 30f),
-        Pair("March", 15f),
-        Pair("April", 50f),
-        Pair("May", 40f),
-        Pair("June", 20f)
+        Pair("Décembre", 12f),
+        Pair("Janvier", 25f),
+        Pair("Février", 30f),
+        Pair("Mars", 15f)
     )
 
     val lineEntries = dataPoints.mapIndexed { index, data ->
@@ -191,12 +189,10 @@ fun LineChart() {
 @Composable
 fun CubicLineChart() {
     val dataPoints = listOf(
-        Pair("January", 25f),
-        Pair("February", 30f),
-        Pair("March", 15f),
-        Pair("April", 50f),
-        Pair("May", 40f),
-        Pair("June", 20f)
+        Pair("Tickets", 25f),
+        Pair("Facture", 30f),
+        Pair("Bons", 15f),
+        Pair("Fidélités", 50f),
     )
 
     val lineEntries = dataPoints.mapIndexed { index, data ->
@@ -385,12 +381,10 @@ fun GroupedBarChart() {
 @Composable
 fun PieChart() {
     val dataPoints = listOf(
-        Pair("January", 25f),
-        Pair("February", 30f),
-        Pair("March", 15f),
-        Pair("April", 50f),
-        Pair("May", 40f),
-        Pair("June", 20f)
+        Pair("Commerce", 25f),
+        Pair("Sport", 30f),
+        Pair("Alimentations", 15f),
+        Pair("Culture", 50f),
     )
 
     val pieEntries = dataPoints.mapIndexed { _, data ->
@@ -432,7 +426,7 @@ fun PieChart() {
 
                         legend.apply {
                             isEnabled = true
-                            textSize = 18f
+                            textSize = 12f
                             textColor = Color.BLACK
                             typeface = Typeface.DEFAULT_BOLD
                             verticalAlignment = Legend.LegendVerticalAlignment.CENTER

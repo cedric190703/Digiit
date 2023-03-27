@@ -41,11 +41,6 @@ fun TicketCard(
             .padding(5.dp)
             .fillMaxWidth()
             .clickable { showDialog.value = true }
-            /*.border(
-                width = 2.dp,
-                color = Color.Transparent, //if(ticket.title == "hello") Color(0xFFF1A45F) else Color(0xFFC5E1A5), //ticket.colorTag,
-                shape = RoundedCornerShape(0.dp)
-            )*/
             .clip(RoundedCornerShape(16.dp))
             .background(
                 brush = Brush.horizontalGradient(

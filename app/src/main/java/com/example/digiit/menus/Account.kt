@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -33,7 +35,6 @@ import com.example.digiit.photos.createBitmapFromUri
 import com.example.digiit.photos.rotateBitmap
 import es.dmoral.toasty.Toasty
 
-
 @Composable
 fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
     // photoUri for the file
@@ -41,11 +42,13 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri
     }
-
     val name = remember { mutableStateOf(auth.user!!.name) }
     val lastname = remember { mutableStateOf(auth.user!!.lastname) }
     val email = remember { mutableStateOf(auth.user!!.email) }
     val ctx = LocalContext.current
+    // Change this value to have the real maxValueSlider
+    // TODO
+    val maxValueSlider = remember { mutableStateOf("1000") }
     Dialog(
         onDismissRequest = { onDismiss(false) },
         properties = DialogProperties(
@@ -120,30 +123,24 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                 OutlinedTextField(
                     value = name.value,
                     onValueChange = { name.value = it },
-                    label = { Text(text = auth.user!!.name) })
+                    label = { Text(text = "Prénom") })
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = lastname.value,
                     onValueChange = { lastname.value = it },
-                    label = { Text(text = auth.user!!.lastname) })
+                    label = { Text(text = "Nom") })
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = email.value,
                     onValueChange = { email.value = it },
-                    label = { Text(text = auth.user!!.email) })
+                    label = { Text(text = "Mail") })
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text(
-                    text = "Argent dépensé ce mois-ci: ",
-                    style = MaterialTheme.typography.subtitle1,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                Text(
-                    text = "--.--",
-                    style = MaterialTheme.typography.subtitle1,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                OutlinedTextField(
+                    value = maxValueSlider.value,
+                    onValueChange = { maxValueSlider.value = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    label = { Text(text = "Montant maximum pour ce mois") },
+                    placeholder = { "Montant maximum pour ce mois" }
                 )
                 ExtendedFloatingActionButton(
                     modifier = Modifier
