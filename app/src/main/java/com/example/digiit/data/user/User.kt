@@ -1,6 +1,7 @@
 package com.example.digiit.data.user
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import com.example.digiit.data.ticket.Ticket
@@ -10,8 +11,8 @@ import java.time.LocalDateTime
 
 
 abstract class User {
-    val tickets = ArrayList<Ticket>()
-    val wallets = ArrayList<Wallet>()
+    val tickets = SnapshotStateList<Ticket>()
+    val wallets = SnapshotStateList<Wallet>()
 
     abstract var name: String
     abstract var lastname: String

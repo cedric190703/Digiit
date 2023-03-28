@@ -3,6 +3,7 @@ package com.example.digiit.navigationlogin
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -21,36 +22,38 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun AnimatedSplashScreen(navController : NavHostController) {
-    var startAnimation by remember { mutableStateOf(false)}
+    var startAnimation = remember { mutableStateOf(false)}
     val anim = animateFloatAsState(
         targetValue = if(startAnimation) 1f else 0f,
         animationSpec = tween(
-            durationMillis = 2000
+            durationMillis = 1500
         )
     )
     LaunchedEffect(key1 = true)
     {
         startAnimation = true
-        delay(2500)
+        delay(1500)
         navController.navigate(AuthScreen.Login.route)
     }
-    Splash(anim = anim.value)
+    Splash(anim = anim)
 }
 
 @Composable
-fun Splash(anim: Float) {
+fun Splash(anim: State<Float>) {
     Box(modifier = Modifier
         .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Column() {
+        Column(Modifier.clickable {
+            anim.value = 1f
+        }) {
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "logo application",
                 modifier = Modifier
                     .width(240.dp)
                     .height(250.dp)
-                    .alpha(alpha = anim)
+                    .alpha(alpha = anim.value)
             )
             Text(
                 text = "Digiit",
@@ -59,7 +62,7 @@ fun Splash(anim: Float) {
                 fontSize = MaterialTheme.typography.h1.fontSize,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .alpha(alpha = anim)
+                    .alpha(alpha = anim.value)
             )
         }
     }
