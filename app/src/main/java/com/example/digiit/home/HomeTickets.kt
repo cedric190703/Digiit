@@ -1,10 +1,12 @@
 package com.example.digiit.home
 
+import android.annotation.SuppressLint
 import com.example.digiit.cards.TicketCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -76,17 +78,21 @@ fun HomeScreen(auth: UserProvider) {
     )
 }
 
+@SuppressLint("UnrememberedMutableState")
 @ExperimentalMaterialApi
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
-    val listTickets = remember { auth.user!!.tickets.toMutableList() }
-    println("here -> $listTickets")
+    val userTickets = auth.user!!.tickets
+    val mutableTickets = remember { mutableStateListOf<Ticket>() }
+    if (mutableTickets.size == 0) mutableTickets.addAll(userTickets)
+    //val tickets = auth.user!!.tickets
+    //println("here -> $listTickets")
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth()) {
         SearchViewHomeTicket(auth)
-        if(listTickets.isEmpty())
+        if(mutableTickets.isEmpty())
         {
             Spacer(modifier = Modifier.padding(15.dp))
             Image(painter = painterResource(id = R.drawable.tickets_image),
@@ -107,20 +113,20 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
         else
         {
             LazyColumn(state = listState, modifier = Modifier.scrollbar(state = listState)) {
-                println("Test : ${listTickets.size}")
-                items(listTickets.size) { item ->
+                //println("Test : ${listTickets.size}")
+                itemsIndexed(mutableTickets) { _: Int, ticket: Ticket ->
                     val state = DismissState(
                         initialValue = DismissValue.Default,
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
-                                val ticket = listTickets[item]
-                                listTickets.removeAt(item)
+                                mutableTickets.remove(ticket)
                                 ticket.delete { err ->
                                     if (err == null) {
                                         // TODO : Toasty.success()
+                                        userTickets.remove(ticket)
                                     } else {
                                         // TODO : Toasty.error()
-                                        listTickets.add(item, ticket)
+                                        mutableTickets.add(ticket)
                                     }
                                 }
                                 true
@@ -154,7 +160,7 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
                             }
                         },
                         dismissContent = {
-                            TicketCard(ticket = listTickets[item])
+                            TicketCard(ticket = ticket)
                         },
                         directions = setOf(DismissDirection.EndToStart)
                     )
