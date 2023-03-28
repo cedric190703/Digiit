@@ -1,6 +1,7 @@
 package com.example.digiit.home
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import com.example.digiit.cards.TicketCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +29,7 @@ import com.example.digiit.photos.SelectOption
 import com.example.digiit.photos.TypeScreen
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeTicket
+import es.dmoral.toasty.Toasty
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -82,6 +85,7 @@ fun HomeScreen(auth: UserProvider) {
 @ExperimentalMaterialApi
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
+    val context = LocalContext.current.applicationContext
     val userTickets = auth.user!!.tickets
     val mutableTickets = remember { mutableStateListOf<Ticket>() }
     if (mutableTickets.size == 0) mutableTickets.addAll(userTickets)
@@ -122,10 +126,9 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
                                 mutableTickets.remove(ticket)
                                 ticket.delete { err ->
                                     if (err == null) {
-                                        // TODO : Toasty.success()
                                         userTickets.remove(ticket)
+                                        Toasty.success(context, "Ticket supprimé", Toast.LENGTH_SHORT).show()
                                     } else {
-                                        // TODO : Toasty.error()
                                         mutableTickets.add(ticket)
                                     }
                                 }
@@ -160,7 +163,7 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
                             }
                         },
                         dismissContent = {
-                            TicketCard(ticket = ticket)
+                            TicketCard(ticket = ticket, userTickets = userTickets)
                         },
                         directions = setOf(DismissDirection.EndToStart)
                     )

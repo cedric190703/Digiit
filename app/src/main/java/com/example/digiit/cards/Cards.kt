@@ -29,7 +29,8 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun TicketCard(
-    ticket: Ticket
+    ticket: Ticket,
+    userTickets: ArrayList<Ticket>
 ) {
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
@@ -168,7 +169,7 @@ fun TicketCard(
     }
     if(showDialog.value)
     {
-        CardViewSmall(setState = { showDialog.value = it }, ticket)
+        CardViewSmall(setState = { showDialog.value = it }, ticket, userTickets)
     }
 }
 

@@ -26,7 +26,9 @@ import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
+fun CardViewSmall(setState: (Boolean) -> Unit,
+                  ticket: Ticket,
+                  userTickets: ArrayList<Ticket>) {
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
     val dialogModif = remember { mutableStateOf(false) }
@@ -38,7 +40,9 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
             color = ticket.colorIcon) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -165,6 +169,10 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
                     {
                         DialogDelete(ticket, onDismiss = {
                             showDialog.value = it
+                        }, userTickets = userTickets, setSmallDialog = {
+                            // Nothing
+                            setState(it)
+                        }, setBigScreen = {
                         })
                     }
                     if(dialogModif.value)
@@ -185,7 +193,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
                             ticket = ticket,
                         setLittleDialog = {
                             setState(it)
-                        })
+                        }, userTickets = userTickets)
                     }
                 }
             }
@@ -196,7 +204,8 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
 fun CardViewBig(
     setState: (Boolean) -> Unit,
     ticket: Ticket,
-    setLittleDialog: (Boolean) -> Unit
+    setLittleDialog: (Boolean) -> Unit,
+    userTickets: ArrayList<Ticket>
     ) {
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
@@ -354,6 +363,10 @@ fun CardViewBig(
                 {
                     DialogDelete(ticket, onDismiss = {
                         showDialog.value = it
+                    }, userTickets = userTickets, setSmallDialog = {
+                        setLittleDialog(it)
+                    }, setBigScreen = {
+                        setState(it)
                     })
                 }
                 if(dialogModif.value)

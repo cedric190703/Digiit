@@ -109,4 +109,10 @@ dependencies {
 
     // For graphs
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // For okHttp
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+
+    // For JSON
+    implementation 'com.google.code.gson:gson:2.8.8'
 }
