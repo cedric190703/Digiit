@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -26,6 +27,8 @@ import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.ui.theme.Grad
 import com.mahmoudalim.compose_rating_bar.RatingBarView
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -177,19 +180,168 @@ fun WalletsCard(
 ) {
     val showDialog = remember { mutableStateOf(false)}
     Card(
-        elevation = 10.dp,
-        border = BorderStroke(1.dp, wallet.colorIcon),
+        elevation = 0.dp,
+        //border = BorderStroke(1.dp, wallet.colorIcon),
+        backgroundColor = Color.Transparent,
         modifier = Modifier
             .padding(5.dp)
             .fillMaxWidth()
             .clickable { showDialog.value = true }
-            .border(
-                width = 3.dp,
-                color = Color.Red,
-                shape = RoundedCornerShape(16.dp)
-            )
             .clip(RoundedCornerShape(16.dp))
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = if(LocalDateTime.now() > wallet.expiryDate)
+                            listOf(
+                                Color(0xFFEF5350),
+                                Color(0xFFE57373),
+                            ) as List<Color>
+                        else
+                            if(wallet.used)
+                                listOf(
+                                    Color(0xFF9E9797),
+                                    Color(0xFF5A5656),
+                                ) as List<Color>
+                            else
+                            listOf(
+                                Color(0xFF80CBC4),
+                                Color(0xFFC5E1A5),
+                            ) as List<Color>
+                )
+
+            )
     ) {
+        //parent column
+        Column() {
+
+
+            // Main Row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                // new column with Wallet kind inside
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(0.4f)
+                        .padding(5.dp)
+                        .width(84.dp),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    // ROW PRICE
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        // PRICE
+                        Text(
+                            text = "$${wallet.price}",
+                            // pading but only top and left
+                            modifier = Modifier.padding(vertical = 12.dp, horizontal = 5.dp),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                    // ROW DATE
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(2.5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        // DATE
+                        Text(
+                            text = "Expire le \n" + wallet.expiryDate.format(
+                                DateTimeFormatter.ofPattern(
+                                    "dd/MM/yyyy à HH:mm"
+                                )
+                            ),
+                            color = Color.White,
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(7.0f)
+                        .padding(5.dp)
+                        .width(84.dp),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        // WALLET KIND
+                        Text(
+                            text = wallet.walletType.title,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            fontSize = 22.sp,
+                            //fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        // ICON
+                        Icon(
+                            painter = painterResource(id = wallet.walletType.icon),
+                            contentDescription = null,
+                            tint = wallet.colorIcon,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .padding(5.dp)
+                        )
+                    }
+                    // new row with title inside
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(7.dp),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        // Tags
+                        Text(
+                            text = "#${wallet.tag}",
+                            modifier = Modifier.padding(vertical = 1.dp),
+                            fontSize = 19.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
+
+
+            }
+            Divider()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                // WALLET TITLE
+                Text(
+                    text = wallet.title,
+                    modifier = Modifier.padding(vertical = 1.dp),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+        }
+    }
+    /*{
         Column(horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
             Row(modifier = Modifier
@@ -272,10 +424,13 @@ fun WalletsCard(
             }
             Text(
                 modifier = Modifier.padding(vertical = 5.dp),
-                text = "${wallet.expiryDate}",
+                text = wallet.expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm")),
+                        //text = "${wallet.expiryDate}",
                 color = wallet.colorText,
                 fontSize = 20.sp)
             Spacer(modifier = Modifier.padding(10.dp))
         }
-    }
+    }*/
 }
+
+//TODO : tags, couleur, expiration
