@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.digiit.R
 import com.example.digiit.data.UserProvider
 import com.example.digiit.menus.*
+import com.example.digiit.utils.CustomProgressBar
 import com.example.digiit.utils.getCurrentMonth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -64,25 +65,9 @@ fun ColorChangingSlider(data: MutableState<Float>, maxValue: Float) {
         data.value = maxValue
     }
     val color = getSliderColor(data.value, maxValue)
-    Slider(
-        value = data.value,
-        onValueChange = {
-        },
-        valueRange = 0f..maxValue,
-        steps = 100,
-        colors = SliderDefaults.colors(
-            thumbColor = color,
-            activeTrackColor = color,
-            inactiveTrackColor = color,
-            activeTickColor = color,
-            inactiveTickColor = color
-        ),
-        modifier = Modifier
-            .padding(horizontal = 12.dp, vertical = 2.dp)
-            .fillMaxWidth()
-    )
+    CustomProgressBar(progress = data.value,maxValue = maxValue,color = color)
     Text(
-        text = "Dépenses: $${data.value.toInt()} - $${maxValue.toInt()}  |  Mois : ${getCurrentMonth()}",
+        text = "Dépenses $${data.value.toInt()} - $${maxValue.toInt()}  |  Mois : ${getCurrentMonth()}",
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
     )
