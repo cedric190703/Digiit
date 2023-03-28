@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.digiit.data.UserProvider
 import com.example.digiit.data.ticket.Ticket
 import es.dmoral.toasty.Toasty
 
@@ -31,10 +32,10 @@ import es.dmoral.toasty.Toasty
 //Toasty.warning(ctx, "This is a Warning toast.", Toast.LENGTH_SHORT, true).show()
 //Toasty.normal(ctx, "This is a Normal toast.").show()
 
-
 @Composable
 fun DialogDelete(
     ticket: Ticket,
+    auth: UserProvider,
     cornerRadius: Dp = 12.dp,
     deleteButtonColor: Color = Color(0xFFD10303),
     cancelButtonColor: Color = Color(0xFF0A46AD),
@@ -50,7 +51,9 @@ fun DialogDelete(
     buttonTextStyle: TextStyle = TextStyle(
         fontSize = 16.sp
     ),
-    onDismiss: (Boolean) -> Unit
+    onDismiss: (Boolean) -> Unit,
+    setSmallDialog: (Boolean) -> Unit,
+    setBigScreen: (Boolean) -> Unit
 ) {
     val context = LocalContext.current.applicationContext
 
@@ -146,7 +149,10 @@ fun DialogDelete(
                                 onDismiss(false)
                                 ticket.delete { error ->
                                     if (error == null) {
+                                        auth.user!!.tickets.remove(ticket)
                                         Toasty.success(context, "Ticket supprimé", Toast.LENGTH_SHORT).show()
+                                        setSmallDialog(false)
+                                        setBigScreen(false)
                                     } else {
                                         Toasty.error(context, "Echec de la suppression", Toast.LENGTH_SHORT).show()
                                     }

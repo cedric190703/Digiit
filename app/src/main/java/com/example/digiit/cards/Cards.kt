@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
+import com.example.digiit.data.UserProvider
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.ui.theme.Grad
@@ -28,9 +29,7 @@ import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun TicketCard(
-    ticket: Ticket
-) {
+fun TicketCard(ticket: Ticket, auth: UserProvider) {
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
     Card(
@@ -44,10 +43,10 @@ fun TicketCard(
             .clip(RoundedCornerShape(16.dp))
             .background(
                 brush = Brush.horizontalGradient(
-                    colors = listOf(
+                    colors = listOf<Color>(
                         ticket.colorTag,
-                        Grad[ticket.colorTag],
-                    ) as List<Color>
+                        Grad[ticket.colorTag]!!,
+                    )
                 )
 
             )
@@ -168,7 +167,7 @@ fun TicketCard(
     }
     if(showDialog.value)
     {
-        CardViewSmall(setState = { showDialog.value = it }, ticket)
+        CardViewSmall(setState = { showDialog.value = it }, ticket, auth)
     }
 }
 

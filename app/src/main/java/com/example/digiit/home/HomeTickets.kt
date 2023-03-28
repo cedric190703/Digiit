@@ -1,6 +1,7 @@
 package com.example.digiit.home
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import com.example.digiit.cards.TicketCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +29,7 @@ import com.example.digiit.photos.SelectOption
 import com.example.digiit.photos.TypeScreen
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeTicket
+import es.dmoral.toasty.Toasty
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -82,11 +85,8 @@ fun HomeScreen(auth: UserProvider) {
 @ExperimentalMaterialApi
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
+    val context = LocalContext.current.applicationContext
     val userTickets = auth.user!!.tickets
-    //val mutableTickets = remember { mutableStateListOf<Ticket>() }
-    //if (mutableTickets.size == 0) mutableTickets.addAll(userTickets)
-    //val tickets = auth.user!!.tickets
-    //println("here -> $listTickets")
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -113,7 +113,6 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
         else
         {
             LazyColumn(state = listState, modifier = Modifier.scrollbar(state = listState)) {
-                //println("Test : ${listTickets.size}")
                 itemsIndexed(userTickets) { _: Int, ticket: Ticket ->
                     val state = DismissState(
                         initialValue = DismissValue.Default,
@@ -122,9 +121,9 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
                                 userTickets.remove(ticket)
                                 ticket.delete { err ->
                                     if (err == null) {
-                                        // TODO : Toasty.success()
+                                        Toasty.success(context, "Ticket supprimé", Toast.LENGTH_SHORT).show()
                                     } else {
-                                        // TODO : Toasty.error()
+                                        Toasty.error(context, "Error lors de la suppression du ticket", Toast.LENGTH_SHORT).show()
                                         userTickets.add(ticket)
                                     }
                                 }
@@ -159,7 +158,7 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
                             }
                         },
                         dismissContent = {
-                            TicketCard(ticket = ticket)
+                            TicketCard(ticket, auth)
                         },
                         directions = setOf(DismissDirection.EndToStart)
                     )

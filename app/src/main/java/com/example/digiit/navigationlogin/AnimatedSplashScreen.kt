@@ -18,35 +18,36 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.digiit.navgraphs.AuthScreen
 import com.example.digiit.R
-import kotlinx.coroutines.delay
 
-@Composable
-fun AnimatedSplashScreen(navController : NavHostController) {
-    var startAnimation = remember { mutableStateOf(false)}
-    val anim = animateFloatAsState(
-        targetValue = if(startAnimation) 1f else 0f,
-        animationSpec = tween(
-            durationMillis = 1500
-        )
-    )
-    LaunchedEffect(key1 = true)
-    {
-        startAnimation = true
-        delay(1500)
-        navController.navigate(AuthScreen.Login.route)
-    }
-    Splash(anim = anim)
+fun skipSplashScreen(navController : NavHostController) {
+    navController.navigate(AuthScreen.Login.route)
 }
 
 @Composable
-fun Splash(anim: State<Float>) {
+fun AnimatedSplashScreen(navController : NavHostController) {
+    val startAnimation = remember { mutableStateOf(false) }
+    val anim = animateFloatAsState(
+        targetValue = if(startAnimation.value) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 1500
+        ),
+        finishedListener = { skipSplashScreen(navController) }
+    )
+    LaunchedEffect(0) {
+        startAnimation.value = true
+    }
+    Splash(anim = anim) { skipSplashScreen(navController) }
+}
+
+@Composable
+fun Splash(anim: State<Float>, skip: () -> Unit) {
     Box(modifier = Modifier
-        .fillMaxSize(),
+        .fillMaxSize().clickable {
+            skip()
+        },
         contentAlignment = Alignment.Center
     ) {
-        Column(Modifier.clickable {
-            anim.value = 1f
-        }) {
+        Column() {
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "logo application",

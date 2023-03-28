@@ -20,13 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.digiit.R
+import com.example.digiit.data.UserProvider
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
+fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket, auth: UserProvider) {
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
     val dialogModif = remember { mutableStateOf(false) }
@@ -38,7 +39,9 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
             color = ticket.colorIcon) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -165,6 +168,10 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
                     {
                         DialogDelete(ticket, onDismiss = {
                             showDialog.value = it
+                        }, auth = auth, setSmallDialog = {
+                            // Nothing
+                            setState(it)
+                        }, setBigScreen = {
                         })
                     }
                     if(dialogModif.value)
@@ -185,7 +192,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
                             ticket = ticket,
                         setLittleDialog = {
                             setState(it)
-                        })
+                        }, auth = auth)
                     }
                 }
             }
@@ -196,7 +203,8 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket) {
 fun CardViewBig(
     setState: (Boolean) -> Unit,
     ticket: Ticket,
-    setLittleDialog: (Boolean) -> Unit
+    setLittleDialog: (Boolean) -> Unit,
+    auth: UserProvider
     ) {
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
@@ -354,6 +362,10 @@ fun CardViewBig(
                 {
                     DialogDelete(ticket, onDismiss = {
                         showDialog.value = it
+                    }, auth = auth, setSmallDialog = {
+                        setLittleDialog(it)
+                    }, setBigScreen = {
+                        setState(it)
                     })
                 }
                 if(dialogModif.value)
