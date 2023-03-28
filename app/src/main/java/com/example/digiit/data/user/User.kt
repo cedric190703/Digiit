@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.utils.ActionCallback
+import java.time.LocalDateTime
 
 
 abstract class User {
@@ -36,6 +37,8 @@ abstract class User {
     abstract fun queryWallets(callback: ActionCallback)
 
     abstract fun createWallet(): Wallet
+
+    abstract fun getSpending(after: LocalDateTime?, before: LocalDateTime?, callback: (error: Exception?, spending: Float) -> Unit)
 
     abstract fun loadProfilePicture(callback: ActionCallback)
     abstract fun saveProfilePicture(callback: ActionCallback)

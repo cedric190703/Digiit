@@ -8,6 +8,7 @@ import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.utils.ActionCallback
 import com.example.digiit.utils.BinaryInputStream
 import java.io.File
+import java.time.LocalDateTime
 
 
 class LocalUser(private val ctx: Context, private val userId: String): User() {
@@ -56,6 +57,14 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
     }
 
     override fun createWallet(): Wallet {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSpending(
+        after: LocalDateTime?,
+        before: LocalDateTime?,
+        callback: (error: Exception?, spending: Float) -> Unit
+    ) {
         TODO("Not yet implemented")
     }
 

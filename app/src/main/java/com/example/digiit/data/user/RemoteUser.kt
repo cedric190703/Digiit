@@ -18,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
+import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.UUID
 
@@ -104,9 +105,9 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
         query.get().addOnCompleteListener {task ->
             if (task.isSuccessful) {
                 for (item in task.result.documents) {
-                    val ticket = RemoteTicket(item.reference)
-                    ticket.load(item)
-                    tickets.add(ticket)
+                    val wallet = RemoteWallet(item.reference)
+                    wallet.load(item)
+                    wallets.add(wallet)
                 }
                 callback(null)
             } else {
@@ -120,6 +121,20 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
         val wallet = RemoteWallet(collection.document(UUID.randomUUID().toString()))
         wallets.add(wallet)
         return wallet
+    }
+
+    override fun getSpending(
+        after: LocalDateTime?,
+        before: LocalDateTime?,
+        callback: (error: Exception?, spending: Float) -> Unit
+    ) {
+        var spending = 0f
+        for (ticket in tickets) {
+            if ((after == null || after <= ticket.date) && (before == null || ticket.date <= before)) {
+                spending += ticket.price;
+            }
+        }
+        callback(null, spending);
     }
 
     override fun loadProfilePicture(callback: ActionCallback) {
