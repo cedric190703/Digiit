@@ -35,6 +35,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.ui.graphics.asImageBitmap
 import com.example.digiit.data.user.User
+import com.example.digiit.getAPIResponse.ApiResponse
 import com.example.digiit.ui.theme.Primary
 import com.vanpra.composematerialdialogs.color.colorChooser
 import java.time.LocalDateTime
@@ -42,10 +43,12 @@ import java.time.LocalDateTime
 @Composable
 fun DialogTicketInfo(
     user: User?, bitmap: Bitmap,
-    setShowDialogPhoto: (Boolean) -> Unit) {
+    setShowDialogPhoto: (Boolean) -> Unit,
+    apiResponse: ApiResponse?
+) {
     val items = TradeKinds.values().map { tag -> tag.title }
-    val titrelVal = remember { mutableStateOf("") }
-    val prixVal = remember {mutableStateOf("")}
+    val titrelVal = remember { mutableStateOf(if (apiResponse?.title != null) apiResponse.title else "") }
+    val prixVal = remember { mutableStateOf(if (apiResponse?.total != null) apiResponse.total else "") }
     val idxTag = remember{ mutableStateOf(0)}
     val tagVal = remember { mutableStateOf(items[idxTag.value]) }
     val rating = remember { mutableStateOf(5)}

@@ -87,7 +87,7 @@ fun HomeLogin(
                 visualTransformation = if (passwordVisibility.value) VisualTransformation.None
                 else PasswordVisualTransformation()
             )
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.padding(14.dp))
             Button(
                 onClick = {
                     //check if email address is correctly formatted

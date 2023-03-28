@@ -46,7 +46,15 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.os.Environment
 import com.example.digiit.data.user.User
+import com.example.digiit.getAPIResponse.ApiResponse
+import com.example.digiit.getAPIResponse.getApiResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.FileOutputStream
 
 fun createBitmapFromUri(context: Context, uri: Uri?): Bitmap {
     val inputStream = uri?.let { context.contentResolver.openInputStream(it) }
@@ -155,6 +163,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
     }
     val showDialogPhoto = remember { mutableStateOf(false) }
     val stateTakePhoto = remember { mutableStateOf(false)}
+    val OCRshowDialog = remember { mutableStateOf(false) }
     val takePhotoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
@@ -200,7 +209,10 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                     )
                     Spacer(modifier = Modifier.height(25.dp))
                     ExtendedFloatingActionButton(
-                        modifier = Modifier.height(85.dp).fillMaxWidth().padding(horizontal = 5.dp),
+                        modifier = Modifier
+                            .height(85.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 5.dp),
                         text = {  Text(text = "Sélectionner une photo",
                             fontSize = 17.sp, fontWeight = FontWeight.Bold
                         ) },
@@ -222,7 +234,10 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                     )
                     Spacer(modifier = Modifier.padding(12.dp))
                     ExtendedFloatingActionButton(
-                        modifier = Modifier.height(85.dp).fillMaxWidth().padding(horizontal = 5.dp),
+                        modifier = Modifier
+                            .height(85.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 5.dp),
                         text = {  Text(text = "Prendre une photo",
                             fontSize = 17.sp) },
                         onClick = {
@@ -240,11 +255,14 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                     )
                     Spacer(modifier = Modifier.padding(12.dp))
                     ExtendedFloatingActionButton(
-                        modifier = Modifier.height(85.dp).fillMaxWidth().padding(horizontal = 5.dp),
+                        modifier = Modifier
+                            .height(85.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 5.dp),
                         text = {  Text(text = "Sélectionner un fichier",
                             fontSize = 17.sp) },
                         onClick = {
-                            pickFileLauncher.launch("application/pdf,text/plain,image/jpeg,image/png,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                            pickFileLauncher.launch("application/pdf,image/jpeg,image/png")
                             showDialogPhoto.value = true
                                   },
                         backgroundColor = MaterialTheme.colors.primary,
@@ -257,27 +275,115 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                 tint = Color.White)
                         }
                     )
+                    if(typeScreen == TypeScreen.Home) {
+                        Spacer(modifier = Modifier.padding(12.dp))
+                        ExtendedFloatingActionButton(
+                            modifier = Modifier
+                                .height(85.dp)
+                                .fillMaxWidth()
+                                .padding(horizontal = 5.dp),
+                            text = {  Text(text = "Détection du ticket",
+                                fontSize = 17.sp) },
+                            onClick = {
+                                launcher.launch(
+                                    PickVisualMediaRequest(
+                                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly))
+                                showDialogPhoto.value = true
+                                OCRshowDialog.value = true
+                            },
+                            backgroundColor = MaterialTheme.colors.primary,
+                            icon = {
+                                Icon(painter = painterResource(id = R.drawable.ocr_scanner),
+                                    "Logo select a file",
+                                    modifier = Modifier
+                                        .padding(5.dp)
+                                        .size(35.dp),
+                                    tint = Color.White)
+                            }
+                        )
+                    }
+
+                    // Define a boolean state to control the visibility of the dialog
+                    var showDialogLoader = remember { mutableStateOf(false) }
+
+                    // Show the dialog when `showDialog` is true
+                    if (showDialogLoader.value) {
+                        AlertDialog(
+                            onDismissRequest = { },
+                            title = { Text("Loading") },
+                            text = { Box(Modifier.size(70.dp),
+                                contentAlignment = Alignment.Center) { CircularProgressIndicator() } },
+                            buttons = {}
+                        )
+                    }
                     if (photoUri != null) {
-                        val bitmapTmp: Bitmap = createBitmapFromUri(context = LocalContext.current, uri = photoUri)
-                        val bitmap = rotateBitmap(bitmapTmp)
-                        if(showDialogPhoto.value)
-                        {
-                            if(typeScreen == TypeScreen.Home) {
-                                DialogTicketInfo(setShowDialogPhoto = {
-                                    showDialogPhoto.value = it
-                                    setShowDialog(false)
-                                }, bitmap = bitmap, user = user)
+                        val bitmap: Bitmap =
+                            createBitmapFromUri(context = LocalContext.current, uri = photoUri)
+                        if (showDialogPhoto.value) {
+                            if (OCRshowDialog.value) {
+                                val fileName = "myImage.jpg"
+                                val context = LocalContext.current
+
+                                val file = File(context.getExternalFilesDir(null), fileName)
+                                val outputStream = FileOutputStream(file)
+
+                                // Compress the bitmap and save it to the file
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+
+                                // Close the stream
+                                outputStream.close()
+                                val apiUrl = "https://ocr-3szz.onrender.com/"
+
+                                // Store the API response in a State variable
+                                var apiResponse by remember { mutableStateOf<ApiResponse?>(null) }
+
+                                // Use LaunchedEffect to call getApiResponse asynchronously
+                                LaunchedEffect(apiUrl, file) {
+                                    showDialogLoader.value = true
+                                    try {
+                                        apiResponse = withContext(Dispatchers.IO) {
+                                            getApiResponse(imageFile = file, apiUrl = apiUrl)
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.d("Error", "API error")
+                                    } finally {
+                                        showDialogLoader.value = false
+                                    }
+                                }
+                                // Call DialogTicketInfo if apiResponse is not null
+                                apiResponse?.let { apiResponse ->
+                                    DialogTicketInfo(
+                                        setShowDialogPhoto = {
+                                            showDialogPhoto.value = it
+                                            setShowDialog(false)
+                                        },
+                                        bitmap = bitmap,
+                                        user = user,
+                                        apiResponse = apiResponse
+                                    )
+                                }
                             } else {
-                                // Dialog for Wallets
+                                DialogTicketInfo(
+                                    setShowDialogPhoto = {
+                                        showDialogPhoto.value = it
+                                        setShowDialog(false)
+                                    },
+                                    bitmap = bitmap,
+                                    user = user,
+                                    apiResponse = null
+                                )
                             }
                         }
                     }
-                    if(stateTakePhoto.value)
-                    {
-                        takePhotoLauncher.launch(Intent(LocalContext.current, TakePhoto::class.java))
+                    if (stateTakePhoto.value) {
+                        takePhotoLauncher.launch(
+                            Intent(
+                                LocalContext.current,
+                                TakePhoto::class.java
+                            )
+                        )
                         stateTakePhoto.value = false
                     }
-
                 }
             }
         }
