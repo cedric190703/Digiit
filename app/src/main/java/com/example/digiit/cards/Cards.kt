@@ -141,12 +141,13 @@ fun TicketCard(ticket: Ticket, auth: UserProvider) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     // TAG
-                    Text(
+                    Tag(ticket.tag)
+                   /* Text(
                         modifier = Modifier.padding(vertical = 5.dp),
                         text = "#${ticket.tag}",
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
-                        fontSize = 16.sp)
+                        fontSize = 16.sp)*/
                 }
             }
             // new column with price inside
@@ -190,18 +191,18 @@ fun WalletsCard(
             .clip(RoundedCornerShape(16.dp))
             .background(
                 brush = Brush.horizontalGradient(
-                    colors = if(LocalDateTime.now() > wallet.expiryDate)
+                    colors = if (LocalDateTime.now() > wallet.expiryDate)
+                        listOf(
+                            Color(0xFFEF5350),
+                            Color(0xFFE57373),
+                        ) as List<Color>
+                    else
+                        if (wallet.used)
                             listOf(
-                                Color(0xFFEF5350),
-                                Color(0xFFE57373),
+                                Color(0xFF9E9797),
+                                Color(0xFF5A5656),
                             ) as List<Color>
                         else
-                            if(wallet.used)
-                                listOf(
-                                    Color(0xFF9E9797),
-                                    Color(0xFF5A5656),
-                                ) as List<Color>
-                            else
                             listOf(
                                 Color(0xFF80CBC4),
                                 Color(0xFFC5E1A5),
@@ -310,13 +311,14 @@ fun WalletsCard(
                         horizontalArrangement = Arrangement.End
                     ) {
                         // Tags
-                        Text(
+                        Tag(wallet.tag)
+                        /*Text(
                             text = "#${wallet.tag}",
                             modifier = Modifier.padding(vertical = 1.dp),
                             fontSize = 19.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
-                        )
+                        )*/
                     }
                 }
 
@@ -341,96 +343,6 @@ fun WalletsCard(
             }
         }
     }
-    /*{
-        Column(horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically){
-                Column(modifier = Modifier
-                    .padding(5.dp)
-                    .width(84.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    OutlinedButton(onClick = {  },
-                        modifier= Modifier.size(50.dp),
-                        shape = CircleShape,
-                        border= BorderStroke(2.dp, wallet.colorIcon),
-                        contentPadding = PaddingValues(0.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor =  wallet.colorIcon)
-                    ) {
-                        Icon(modifier = Modifier.size(38.dp),
-                            painter = painterResource(wallet.walletType.icon),
-                            contentDescription = "icon description")
-                    }
-                    Text(
-                        modifier = Modifier.padding(vertical = 5.dp),
-                        text = "#${wallet.tag}",
-                        color = wallet.colorTag,
-                        fontSize = 20.sp)
-                        //fontWeight = FontWeight.Bold)
-                }
-                Spacer(modifier = Modifier.padding(1.dp))
-                Column(modifier = Modifier
-                    .width(111.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = wallet.title,
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = wallet.colorText)
-                    Text(text = wallet.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-                    Text(text = wallet.date.format(DateTimeFormatter.ofPattern("HH:mm")))
-                }
-                Spacer(modifier = Modifier.padding(10.dp))
-                Column(modifier = Modifier
-                    .width(83.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center) {
-                    Text(text = "${wallet.price}$",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = wallet.colorText)
-                }
-                Spacer(modifier = Modifier.padding(8.dp))
-            }
-            if(showDialog.value)
-            {
-                CardViewSmallWallet(setState = { showDialog.value = it }, wallet)
-            }
-            Row(verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center) {
-                OutlinedButton(onClick = {  },
-                    modifier= Modifier.size(50.dp),
-                    shape = CircleShape,
-                    border= BorderStroke(2.dp, wallet.colorIcon),
-                    contentPadding = PaddingValues(0.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor =  wallet.colorIcon)
-                ) {
-                    Icon(modifier = Modifier.size(38.dp),
-                        painter = painterResource(wallet.walletType.icon),
-                        contentDescription = "icon description")
-                }
-                Text(
-                    modifier = Modifier.padding(vertical = 5.dp),
-                    text = wallet.walletType.title,
-                    color = wallet.colorText,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold)
-            }
-            Text(
-                modifier = Modifier.padding(vertical = 5.dp),
-                text = wallet.expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm")),
-                        //text = "${wallet.expiryDate}",
-                color = wallet.colorText,
-                fontSize = 20.sp)
-            Spacer(modifier = Modifier.padding(10.dp))
-        }
-    }*/
 }
 
-//TODO : tags, couleur, expiration
+//TODO : couleur
