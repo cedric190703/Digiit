@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun Tag(t: String) {
+    if (t.isNullOrEmpty()) return
     Card(
         modifier = Modifier
             .padding(2.dp)
