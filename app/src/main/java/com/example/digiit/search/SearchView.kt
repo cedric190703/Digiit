@@ -20,12 +20,12 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.digiit.R
 import com.example.digiit.data.UserProvider
 
-
 @Composable
 fun SearchViewHomeTicket(auth: UserProvider) {
     val filterItem = remember { mutableStateOf("Enseigne") }
     val filterOrder = remember { mutableStateOf("Croissant") }
     var expanded by remember { mutableStateOf(false) }
+    val userTickets = auth.user!!.tickets
 
     Row (modifier = Modifier
         .padding(top = 10.dp, bottom = 20.dp)

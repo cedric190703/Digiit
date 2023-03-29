@@ -32,13 +32,13 @@ fun CreateAccount(
 
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background),
         contentAlignment = Alignment.BottomCenter)
     {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(30.dp))
-                .background(Color.White)
                 .width(2000.dp)
                 .verticalScroll(rememberScrollState())
                 .padding(8.dp),
@@ -68,7 +68,8 @@ fun CreateAccount(
             Text(
                 text = "Créer un compte",
                 style = TextStyle(
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.onBackground
                 ),
                 fontSize = MaterialTheme.typography.h4.fontSize
             )
@@ -82,7 +83,7 @@ fun CreateAccount(
                 OutlinedTextField(
                     value = prenomVal.value,
                     onValueChange = { prenomVal.value = it },
-                    label = { Text(text = "Prénom") },
+                    label = { Text(text = "Prénom") }
                 )
                 OutlinedTextField(
                     value = emailVal.value,

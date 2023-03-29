@@ -24,7 +24,6 @@ fun SearchTickets(items: List<Ticket>,
             searchText.isNotBlank()
         }
     }
-    val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")
 
     // Filter on elements
     val filteredItems = if (searchText.isNotBlank()) {

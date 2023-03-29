@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,13 +30,13 @@ fun LostPassword(
 
     Box(
         modifier = Modifier
+            .background(MaterialTheme.colors.background)
             .fillMaxSize(),
         contentAlignment = Alignment.BottomCenter)
     {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(30.dp))
-                .background(Color.White)
                 .width(2000.dp)
                 .verticalScroll(rememberScrollState())
                 .padding(8.dp),

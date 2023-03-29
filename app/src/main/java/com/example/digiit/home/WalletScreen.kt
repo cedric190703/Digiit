@@ -30,7 +30,6 @@ import com.example.digiit.search.SearchViewHomeWallet
 fun WalletScreen(auth: UserProvider) {
     val showDialog =  remember { mutableStateOf(false) }
     Scaffold(
-        backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->

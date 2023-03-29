@@ -36,7 +36,6 @@ import com.example.digiit.scrollbar.scrollbar
 fun DataScreen(auth: UserProvider) {
     val showDialog = remember { mutableStateOf(false) }
     Scaffold(
-        backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->

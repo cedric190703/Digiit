@@ -30,7 +30,7 @@ fun DialogGraph(setShowDialog: (Boolean) -> Unit) {
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
-            color = Color.White
+            color = MaterialTheme.colors.background
         ) {
             Box(
                 contentAlignment = Alignment.Center

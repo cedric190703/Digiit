@@ -1,6 +1,5 @@
 package com.example.digiit.home
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import com.example.digiit.cards.TicketCard
 import androidx.compose.foundation.Image
@@ -36,7 +35,6 @@ import es.dmoral.toasty.Toasty
 fun HomeScreen(auth: UserProvider) {
     val showDialog =  remember { mutableStateOf(false) }
     Scaffold(
-        backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->

@@ -32,7 +32,6 @@ import java.time.temporal.TemporalAdjusters
 @Composable
 fun MenuScreen(auth: UserProvider) {
     Scaffold(
-        backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->
@@ -75,15 +74,7 @@ fun ColorChangingSlider(data: MutableState<Float>, maxValue: Float) {
 private fun getSliderColor(data: Float, maxValue: Float): Color {
     val percentage = data / maxValue
     val red = when {
-        percentage < 0.1f -> 0.0f
-        percentage < 0.2f -> 0.1f
-        percentage < 0.3f -> 0.2f
-        percentage < 0.4f -> 0.3f
-        percentage < 0.5f -> 0.4f
-        percentage < 0.6f -> 0.5f
-        percentage < 0.7f -> 0.6f
-        percentage < 0.8f -> 0.7f
-        percentage < 0.9f -> 0.8f
+        percentage <= 1.0f -> percentage-0.1f
         else -> 0.9f
     }
     val green = when {

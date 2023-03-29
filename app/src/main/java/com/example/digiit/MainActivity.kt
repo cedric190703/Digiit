@@ -8,8 +8,6 @@ import com.example.digiit.data.UserProvider
 import com.example.digiit.navgraphs.RootNavigationGraph
 import com.example.digiit.ui.theme.DigiitTheme
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

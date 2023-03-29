@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,7 +31,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.digiit.R
 import com.example.digiit.data.UserProvider
 import com.example.digiit.photos.createBitmapFromUri
-import com.example.digiit.photos.rotateBitmap
 import es.dmoral.toasty.Toasty
 
 @Composable
@@ -165,9 +163,7 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
             }
         }
         if (photoUri != null) {
-            val bitmapTmp: Bitmap =
-                createBitmapFromUri(context = LocalContext.current, uri = photoUri)
-            val bitmap = rotateBitmap(bitmapTmp)
+            val bitmapTmp: Bitmap = createBitmapFromUri(context = LocalContext.current, uri = photoUri)
             // use the bitmap for the User here
             // TODO
         }

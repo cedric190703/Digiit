@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.digiit.data.UserProvider
 import com.example.digiit.home.SetHomeScreen
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun RootNavigationGraph(navController: NavHostController, auth: UserProvider) {

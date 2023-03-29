@@ -60,12 +60,6 @@ fun createBitmapFromUri(context: Context, uri: Uri?): Bitmap {
     return BitmapFactory.decodeStream(inputStream)
 }
 
-fun rotateBitmap(bitmap: Bitmap): Bitmap {
-    val matrix = Matrix()
-    matrix.postRotate(90f)
-    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-}
-
 class TakePhoto : ComponentActivity() {
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
@@ -182,7 +176,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
-            color = Color.White
+            color = MaterialTheme.colors.background,
         ) {
             Box(
                 contentAlignment = Alignment.Center
