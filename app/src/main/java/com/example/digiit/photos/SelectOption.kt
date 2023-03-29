@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import com.example.digiit.R
-import com.example.digiit.ticketinfo.DialogTicketInfo
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -46,14 +45,11 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.os.Environment
-import com.example.digiit.cards.EditTicket
+import com.example.digiit.cards.EditCard
 import com.example.digiit.data.user.User
 import com.example.digiit.getAPIResponse.ApiResponse
 import com.example.digiit.getAPIResponse.getApiResponse
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.FileOutputStream
 
@@ -360,7 +356,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                 }
                             }
 
-                            EditTicket(ticket, {
+                            EditCard(ticket, {
                                 showDialogPhoto.value = it
                                 setShowDialog(false)
                             }, {
