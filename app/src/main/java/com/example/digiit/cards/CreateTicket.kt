@@ -34,8 +34,10 @@ import java.time.format.DateTimeFormatter
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.ui.graphics.asImageBitmap
+import com.example.digiit.data.CommercialType
 import com.example.digiit.data.user.User
 import com.example.digiit.getAPIResponse.ApiResponse
+import com.example.digiit.photos.TypeScreen
 import com.example.digiit.ui.theme.Primary
 import com.vanpra.composematerialdialogs.color.colorChooser
 import java.time.LocalDateTime
@@ -44,16 +46,17 @@ import java.time.LocalDateTime
 fun DialogTicketInfo(
     user: User?, bitmap: Bitmap,
     setShowDialogPhoto: (Boolean) -> Unit,
-    apiResponse: ApiResponse?
+    apiResponse: ApiResponse?,
+    typeScreen: TypeScreen
 ) {
     val items = TradeKinds.values().map { tag -> tag.title }
+    val itemsDoc = CommercialType.values().map { doc -> doc.title }
     val titrelVal = remember { mutableStateOf(if (apiResponse?.title != null) apiResponse.title else "") }
     val prixVal = remember { mutableStateOf(if (apiResponse?.total != null) apiResponse.total else "") }
     val idxTag = remember{ mutableStateOf(0)}
+    val idxDoc = remember{ mutableStateOf(0)}
     val tagVal = remember { mutableStateOf(items[idxTag.value]) }
     val rating = remember { mutableStateOf(5)}
-    val colorTextIdx = remember{ mutableStateOf(18) }
-    val colorText = remember { mutableStateOf(Primary[colorTextIdx.value]) }
     val colorIconIdx = remember{ mutableStateOf(5) }
     val colorIcon = remember { mutableStateOf(Primary[colorIconIdx.value]) }
     val colorTagIdx = remember{ mutableStateOf(5) }
@@ -61,12 +64,35 @@ fun DialogTicketInfo(
     val comment = remember { mutableStateOf("") }
     var typeVal by remember {
         mutableStateOf(TradeKinds.Food.title) }
+    var docTypeVal by remember {
+        mutableStateOf(CommercialType.Loyalty.title) }
     val typeState = rememberMaterialDialogState()
+    val typeStateDocs = rememberMaterialDialogState()
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
     var pickedTime by remember {
         mutableStateOf(LocalTime.now())
+    }
+    var pickedDateExpiration by remember {
+        mutableStateOf(LocalDate.now())
+    }
+    var pickedTimeExpiration by remember {
+        mutableStateOf(LocalTime.now())
+    }
+    val formattedDateExpiration by remember {
+        derivedStateOf {
+            DateTimeFormatter
+                .ofPattern("MMM dd yyyy")
+                .format(pickedDateExpiration)
+        }
+    }
+    val formattedTimeExpiration by remember {
+        derivedStateOf {
+            DateTimeFormatter
+                .ofPattern("hh:mm")
+                .format(pickedTimeExpiration)
+        }
     }
     val formattedDate by remember {
         derivedStateOf {
@@ -84,7 +110,8 @@ fun DialogTicketInfo(
     }
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
-    val colorTextDialog = rememberMaterialDialogState()
+    val dateDialogStateExpiration = rememberMaterialDialogState()
+    val timeDialogStateExpiration = rememberMaterialDialogState()
     val colorIconDialog = rememberMaterialDialogState()
     val colorTagDialog = rememberMaterialDialogState()
     val ctx = LocalContext.current
@@ -135,7 +162,7 @@ fun DialogTicketInfo(
                     .padding(4.dp), onClick = {
                     typeState.show()
                 }) {
-                    Text(text = "Sélectionner un type de produit", fontSize = 18.sp)
+                    Text(text = "Sélectionner un type de produit :", fontSize = 18.sp)
                 }
                 Card(
                     elevation = 10.dp,
@@ -160,7 +187,7 @@ fun DialogTicketInfo(
                 Button(onClick = {
                     dateDialogState.show()
                 }) {
-                    Text(text = "Sélectionner une date", fontSize = 18.sp)
+                    Text(text = "Sélectionner une date :", fontSize = 18.sp)
                 }
                 Card(
                     elevation = 10.dp,
@@ -173,7 +200,7 @@ fun DialogTicketInfo(
                 Button(onClick = {
                     timeDialogState.show()
                 }) {
-                    Text(text = "Sélectionner une heure", fontSize = 18.sp)
+                    Text(text = "Sélectionner une heure :", fontSize = 18.sp)
                 }
                 Card(
                     elevation = 10.dp,
@@ -191,7 +218,7 @@ fun DialogTicketInfo(
                 ) {
                     datepicker(
                         initialDate = pickedDate,
-                        title = "Sélectionner une date",
+                        title = "Sélectionner une date :",
                     ) {
                         pickedDate = it
                     }
@@ -205,7 +232,7 @@ fun DialogTicketInfo(
                 ) {
                     timepicker(
                         initialTime = pickedTime,
-                        title = "Sélectionner l'heure"
+                        title = "Sélectionner l'heure :"
                     ) {
                         pickedTime = it
                     }
@@ -229,29 +256,96 @@ fun DialogTicketInfo(
                     label = { Text(text = "Commentaire") },
                     placeholder = { "Commentaire du ticket" }
                 )
-                Spacer(modifier = Modifier.padding(13.dp))
-                Button(modifier = Modifier.padding(horizontal = 12.dp) ,onClick = {
-                    colorTextDialog.show()
-                }) {
-                    Text(text = "Sélectionner une couleur pour le texte:", fontSize = 18.sp)
-                }
-                MaterialDialog(
-                    dialogState = colorTextDialog,
-                    buttons = {
+                if(typeScreen == TypeScreen.Wallet) {
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    Button(modifier = Modifier.padding(12.dp),
+                        onClick = {
+                        dateDialogStateExpiration.show()
+                    }) {
+                        Text(text = "Sélectionner une date d'expiration :", fontSize = 18.sp)
+                    }
+                    Card(
+                        elevation = 10.dp,
+                        border = BorderStroke(2.dp, MaterialTheme.colors.primary),
+                        modifier = Modifier.padding(12.dp)
+                    ) {
+                        Text(modifier = Modifier.padding(12.dp),text = formattedDateExpiration, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(modifier = Modifier.padding(18.dp),
+                        onClick = {
+                        timeDialogStateExpiration.show()
+                    }) {
+                        Text(text = "Sélectionner une heure d'expiration :", fontSize = 18.sp)
+                    }
+                    Card(
+                        elevation = 10.dp,
+                        border = BorderStroke(2.dp, MaterialTheme.colors.primary),
+                        modifier = Modifier.padding(12.dp)
+                    ) {
+                        Text(modifier = Modifier.padding(12.dp),text = formattedTimeExpiration, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    }
+                    MaterialDialog(
+                        dialogState = dateDialogStateExpiration,
+                        buttons = {
+                            positiveButton(text = "Ok")
+                            negativeButton(text = "Fermer")
+                        }
+                    ) {
+                        datepicker(
+                            initialDate = pickedDateExpiration,
+                            title = "Sélectionner une date d'expiration :",
+                        ) {
+                            pickedDateExpiration = it
+                        }
+                    }
+                    MaterialDialog(
+                        dialogState = timeDialogStateExpiration,
+                        buttons = {
+                            positiveButton(text = "Ok")
+                            negativeButton(text = "Fermer")
+                        }
+                    ) {
+                        timepicker(
+                            initialTime = pickedTime,
+                            title = "Sélectionner l'heure"
+                        ) {
+                            pickedTime = it
+                        }
+                    }
+                    Spacer(modifier = Modifier.padding(12.dp))
+                    Button(modifier = Modifier
+                        .width(250.dp)
+                        .padding(4.dp), onClick = {
+                        typeStateDocs.show()
+                    }) {
+                        Text(text = "Sélectionner un type de document :", fontSize = 18.sp)
+                    }
+                    Card(
+                        elevation = 10.dp,
+                        border = BorderStroke(2.dp, MaterialTheme.colors.primary),
+                        modifier = Modifier.padding(10.dp)
+                    ) {
+                        Text(text = docTypeVal, modifier = Modifier.padding(13.dp))
+                    }
+                    MaterialDialog(dialogState = typeStateDocs, buttons = {
                         positiveButton(text = "Ok")
                         negativeButton(text = "Fermer")
-                    }
-                ) {
-                    colorChooser(colors = Primary, initialSelection = colorTextIdx.value) {
-                        colorText.value = it
-                        colorTextIdx.value = Primary.indexOf(colorText.value)
+                    }) {
+                        listItemsSingleChoice(
+                            list = itemsDoc,
+                            initialSelection = idxDoc.value
+                        ) {
+                            docTypeVal = itemsDoc[it]
+                            idxDoc.value = itemsDoc.indexOf(docTypeVal)
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.padding(13.dp))
-                Button(modifier = Modifier.padding(horizontal = 12.dp) ,onClick = {
+                Button(modifier = Modifier.padding(horizontal = 18.dp) ,onClick = {
                     colorIconDialog.show()
                 }) {
-                    Text(text = "Sélectionner une couleur pour l'icone:", fontSize = 18.sp)
+                    Text(text = "Sélectionner une couleur pour l'icone", fontSize = 18.sp)
                 }
                 MaterialDialog(
                     dialogState = colorIconDialog,
@@ -265,11 +359,11 @@ fun DialogTicketInfo(
                         colorIconIdx.value = Primary.indexOf(colorIcon.value)
                     }
                 }
-                Spacer(modifier = Modifier.padding(13.dp))
+                Spacer(modifier = Modifier.padding(12.dp))
                 Button(modifier = Modifier.padding(horizontal = 12.dp) ,onClick = {
                     colorTagDialog.show()
                 }) {
-                    Text(text = "Sélectionner une couleur pour le tag:", fontSize = 18.sp)
+                    Text(text = "Sélectionner une couleur pour le tag", fontSize = 18.sp)
                 }
                 MaterialDialog(
                     dialogState = colorTagDialog,
@@ -294,7 +388,7 @@ fun DialogTicketInfo(
                             if(typeVal != "" && titrelVal.value != "") {
                             createTicket(typeVal, tagVal.value, titrelVal.value,
                                 prixVal.value.toFloat(), LocalDateTime.of(pickedDate, pickedTime),
-                                colorIcon.value, colorTag.value, colorText.value, rating.value, comment.value, bitmap, user)
+                                colorIcon.value, colorTag.value, rating.value, comment.value, bitmap, user)
                             setShowDialogPhoto(false)
                             Toasty.success(ctx, "Le ticket a bien été ajouté", Toast.LENGTH_SHORT, true).show()
                         } else {

@@ -14,7 +14,6 @@ fun createTicket(type:String,
                  date: LocalDateTime,
                  colorIcon: Color,
                  colorTag: Color,
-                 colorText: Color,
                  rating: Int,
                  comment: String,
                  bitmap: Bitmap,
@@ -25,7 +24,6 @@ fun createTicket(type:String,
         ticket.type = TradeKinds.Food
         ticket.colorIcon = colorIcon
         ticket.colorTag = colorTag
-        ticket.colorText = colorText
         ticket.comment = comment
         ticket.tag = tag
         ticket.price = price.toFloat()

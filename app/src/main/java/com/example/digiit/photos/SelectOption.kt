@@ -359,7 +359,8 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                         },
                                         bitmap = bitmap,
                                         user = user,
-                                        apiResponse = apiResponse
+                                        apiResponse = apiResponse,
+                                        typeScreen = typeScreen
                                     )
                                 }
                             } else {
@@ -370,7 +371,8 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                     },
                                     bitmap = bitmap,
                                     user = user,
-                                    apiResponse = null
+                                    apiResponse = null,
+                                    typeScreen = typeScreen
                                 )
                             }
                         }
