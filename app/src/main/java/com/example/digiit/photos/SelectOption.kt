@@ -46,6 +46,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import com.example.digiit.cards.EditCard
+import com.example.digiit.data.card.Card
 import com.example.digiit.data.user.User
 import com.example.digiit.getAPIResponse.ApiResponse
 import com.example.digiit.getAPIResponse.getApiResponse
@@ -316,8 +317,9 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                     if (photoUri != null) {
                         if (showDialogPhoto.value) {
                             val bitmap: Bitmap = createBitmapFromUri(context = LocalContext.current, uri = photoUri)
-                            val ticket = user!!.createTicket()
-                            ticket.image = bitmap
+
+                            val card: Card = if (typeScreen == TypeScreen.Wallet) user!!.createWallet() else user!!.createTicket()
+                            card.image = bitmap
 
                             if (OCRshowDialog.value) {
                                 val fileName = "myImage.jpg"
@@ -351,12 +353,12 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                 }
                                 // Call DialogTicketInfo if apiResponse is not null
                                 apiResponse?.let { apiResponse ->
-                                    ticket.title = apiResponse.title.orEmpty()
-                                    ticket.price = if (apiResponse.total != null) apiResponse.total.toFloat() else 0f
+                                    card.title = apiResponse.title.orEmpty()
+                                    card.price = if (apiResponse.total != null) apiResponse.total.toFloat() else 0f
                                 }
                             }
 
-                            EditCard(ticket, {
+                            EditCard(card, {
                                 showDialogPhoto.value = it
                                 setShowDialog(false)
                             }, {

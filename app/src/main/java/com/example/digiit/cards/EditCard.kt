@@ -26,7 +26,6 @@ import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.card.Card
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
-import com.example.digiit.photos.TypeScreen
 import com.example.digiit.utils.ObservableMutableState
 import com.example.digiit.widgets.ColorChooser
 import com.mahmoudalim.compose_rating_bar.RatingBarView
