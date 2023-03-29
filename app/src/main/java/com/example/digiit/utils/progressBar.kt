@@ -16,11 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -35,8 +37,9 @@ fun CustomProgressBar(
     animationDelayMillis: Int = 200,
     animationEasing: Easing = LinearOutSlowInEasing
 ) {
+    val newProgress = if (progress > maxValue) maxValue else progress
     val size by animateFloatAsState(
-        targetValue = progress / maxValue,
+        targetValue = newProgress / maxValue,
         animationSpec = tween(
             durationMillis = animationDurationMillis,
             delayMillis = animationDelayMillis,
@@ -84,8 +87,8 @@ fun CustomProgressBar(
                     text = "${(progress / maxValue * 100).toInt()}%",
                     style = TextStyle(fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.primary),
-                    modifier = Modifier.padding(start = 4.dp)
+                        color = if(progress / maxValue  < 0.6f) MaterialTheme.colors.primary else Color.White),
+                    modifier = Modifier.padding(horizontal = 8.dp).wrapContentSize(Alignment.Center).fillMaxSize().wrapContentSize(Alignment.Center)
                 )
             }
         }

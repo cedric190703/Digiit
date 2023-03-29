@@ -41,23 +41,24 @@ fun ColorChooser(text: String, color: MutableState<Color>) {
         }
     }
 
-    Row(horizontalArrangement = Arrangement.Start) {
+    Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth()) {
         Button(modifier = Modifier
             .padding(horizontal = 12.dp)
-            .weight(1f, true), onClick = {
+            .weight(1f), onClick = {
             colorDialog.show()
         }) {
             Text(text = text, fontSize = 18.sp)
         }
 
-        Box(
-            Modifier
-                .size(55.dp)
-                .clip(CircleShape)
-                .background(colorValue.value)
-                .border(1.dp, MaterialTheme.colors.onBackground, CircleShape)
-                .padding(0.dp, 0.dp, 12.dp, 0.dp),
-            contentAlignment = Alignment.Center
-        ) {}
+        Box(Modifier.padding(end = 12.dp)) {
+            Box(
+                Modifier
+                    .size(55.dp)
+                    .clip(CircleShape)
+                    .background(colorValue.value)
+                    .border(1.dp, MaterialTheme.colors.onBackground, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {}
+        }
     }
 }

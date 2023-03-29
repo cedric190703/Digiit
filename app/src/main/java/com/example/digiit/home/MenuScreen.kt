@@ -26,6 +26,8 @@ import com.example.digiit.utils.CustomProgressBar
 import com.example.digiit.utils.getCurrentMonth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.temporal.TemporalAdjusters
 
 @Composable
 fun MenuScreen(auth: UserProvider) {
@@ -61,9 +63,6 @@ fun MenuScreen(auth: UserProvider) {
 
 @Composable
 fun ColorChangingSlider(data: MutableState<Float>, maxValue: Float) {
-    if(data.value > maxValue) {
-        data.value = maxValue
-    }
     val color = getSliderColor(data.value, maxValue)
     CustomProgressBar(progress = data.value,maxValue = maxValue,color = color)
     Text(
@@ -255,10 +254,20 @@ private fun UserDetails(context: Context, auth: UserProvider) {
                 }
             }
         }
-        // Change by the real data from the current month
-        // TODO
+
+        val a = LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+        val b = LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(999999999)
+        var s = 0f
+        auth.user!!.getSpending(a, b) { error, spending ->
+            if (error != null) {
+                println("Une erreur est survenue : ${error.message}")
+            } else {
+                s = spending
+            }
+        }
+
         var data = remember {
-            mutableStateOf(123f)
+            mutableStateOf(s)
         }
         ColorChangingSlider(data = data, 1000.0f)
     }

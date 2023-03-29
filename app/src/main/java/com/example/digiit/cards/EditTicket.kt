@@ -44,7 +44,6 @@ fun EditTicket(ticket: Ticket, setShowDialog: (Boolean) -> Unit, setView: (Boole
 
     val ratingVal = ObservableMutableState(ticket.rating.toInt()) { ticket.rating = it.toFloat() }
 
-    val colorText = ObservableMutableState(ticket.colorText) { ticket.colorTag  = it }
     val colorIcon = ObservableMutableState(ticket.colorIcon) { ticket.colorIcon = it }
     val colorTag  = ObservableMutableState(ticket.colorTag)  { ticket.colorTag  = it }
 
@@ -228,9 +227,6 @@ fun EditTicket(ticket: Ticket, setShowDialog: (Boolean) -> Unit, setView: (Boole
                 )
 
                 Spacer(modifier = Modifier.padding(13.dp))
-                ColorChooser("Couleur du text", colorText)
-
-                Spacer(modifier = Modifier.padding(13.dp))
                 ColorChooser("Couleur de l'icone", colorIcon)
 
                 Spacer(modifier = Modifier.padding(13.dp))
@@ -253,7 +249,6 @@ fun EditTicket(ticket: Ticket, setShowDialog: (Boolean) -> Unit, setView: (Boole
                             ticket.rating = rating.toFloat()
                             ticket.colorIcon = colorIcon.value
                             ticket.colorTag = colorTag.value
-                            ticket.colorText = colorText.value
 
                             if(ticket.isValid()) {
                                 ticket.save { error ->

@@ -34,10 +34,10 @@ fun getApiResponse(imageFile: File, apiUrl: String): ApiResponse {
         .url(apiUrl)
         .post(requestBody)
         .build()
-
+    Log.d("ImageFile", "$imageFile")
     val response: Response = client.newCall(request).execute()
     val responseBody = response.body?.string() ?: ""
-
+    Log.d("ResponseBody", "$responseBody")
     val jsonObject = JSONObject(responseBody)
     val title = if (jsonObject.getString("title") == "null") "" else jsonObject.getString("title")
     val time = if (jsonObject.getString("time") == "null") "" else jsonObject.getString("time")
