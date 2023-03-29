@@ -47,6 +47,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.os.Environment
+import com.example.digiit.cards.EditTicket
 import com.example.digiit.data.user.User
 import com.example.digiit.getAPIResponse.ApiResponse
 import com.example.digiit.getAPIResponse.getApiResponse
@@ -317,9 +318,11 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                         )
                     }
                     if (photoUri != null) {
-                        val bitmap: Bitmap =
-                            createBitmapFromUri(context = LocalContext.current, uri = photoUri)
                         if (showDialogPhoto.value) {
+                            val bitmap: Bitmap = createBitmapFromUri(context = LocalContext.current, uri = photoUri)
+                            val ticket = user!!.createTicket()
+                            ticket.image = bitmap
+
                             if (OCRshowDialog.value) {
                                 val fileName = "myImage.jpg"
                                 val context = LocalContext.current
@@ -352,27 +355,18 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                 }
                                 // Call DialogTicketInfo if apiResponse is not null
                                 apiResponse?.let { apiResponse ->
-                                    DialogTicketInfo(
-                                        setShowDialogPhoto = {
-                                            showDialogPhoto.value = it
-                                            setShowDialog(false)
-                                        },
-                                        bitmap = bitmap,
-                                        user = user,
-                                        apiResponse = apiResponse
-                                    )
+                                    ticket.title = apiResponse.title.orEmpty()
+                                    ticket.price = if (apiResponse.total != null) apiResponse.total.toFloat() else 0f
                                 }
-                            } else {
-                                DialogTicketInfo(
-                                    setShowDialogPhoto = {
-                                        showDialogPhoto.value = it
-                                        setShowDialog(false)
-                                    },
-                                    bitmap = bitmap,
-                                    user = user,
-                                    apiResponse = null
-                                )
                             }
+
+                            EditTicket(ticket, {
+                                showDialogPhoto.value = it
+                                setShowDialog(false)
+                            }, {
+                                showDialogPhoto.value = it
+                                setShowDialog(false)
+                            }, false)
                         }
                     }
                     if (stateTakePhoto.value) {

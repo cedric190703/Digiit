@@ -176,13 +176,13 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket, auth: UserProvide
                     }
                     if(dialogModif.value)
                     {
-                        EditTicket(ticket = ticket,
+                        EditTicket(ticket,
                             setShowDialog = {
                                 dialogModif.value = it
                             },
                             setView = {
                                 setState(it)
-                            })
+                            }, true)
                     }
                     if(bigScreen.value)
                     {
@@ -370,7 +370,7 @@ fun CardViewBig(
                 }
                 if(dialogModif.value)
                 {
-                    EditTicket(ticket = ticket,
+                    EditTicket(ticket,
                         setShowDialog = {
                             dialogModif.value = it
                         },

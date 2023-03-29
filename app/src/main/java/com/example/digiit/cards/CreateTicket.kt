@@ -284,12 +284,12 @@ fun DialogTicketInfo(
                     }
                 }
                 Spacer(modifier = Modifier.padding(13.dp))
-                Row() {
+                Row(horizontalArrangement = Arrangement.SpaceAround) {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
                             .height(85.dp)
                             .padding(vertical = 18.dp, horizontal = 5.dp),
-                        text = {  Text(text = "Ajouter élement", fontSize = 18.sp) },
+                        text = {  Text(text = "Ajouter", fontSize = 18.sp) },
                         onClick = {
                             if(typeVal != "" && titrelVal.value != "") {
                             createTicket(typeVal, tagVal.value, titrelVal.value,

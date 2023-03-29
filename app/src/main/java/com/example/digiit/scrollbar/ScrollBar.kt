@@ -3,9 +3,9 @@ package com.example.digiit.scrollbar
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-@Composable
 fun Modifier.scrollbar(
     state: LazyListState,
     alignEnd: Boolean = true,
@@ -30,7 +29,7 @@ fun Modifier.scrollbar(
     fadeInAnimationDurationMs: Int = 150,
     fadeOutAnimationDurationMs: Int = 500,
     fadeOutAnimationDelayMs: Int = 1000,
-): Modifier {
+): Modifier = composed {
     val targetAlpha =
         if (state.isScrollInProgress) {
             visibleAlpha
@@ -56,7 +55,7 @@ fun Modifier.scrollbar(
         animationSpec =
         tween(delayMillis = animationDelayMs, durationMillis = animationDurationMs))
 
-    return drawWithContent {
+    drawWithContent {
         drawContent()
         state.layoutInfo.visibleItemsInfo.firstOrNull()?.let { firstVisibleItem ->
             if (state.isScrollInProgress || alpha > 0f) {
@@ -72,7 +71,7 @@ fun Modifier.scrollbar(
                     (viewportSize / estimatedFullListSize) * viewportOffsetInFullListSpace + padding.toPx()
                 val knobSize =
                     fixedKnobRatio?.let { it * viewportSize }
-                        ?: (viewportSize * viewportSize) / estimatedFullListSize
+                        ?: ((viewportSize * viewportSize) / estimatedFullListSize)
 
                 drawRoundRect(
                     color = trackColor,

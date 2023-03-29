@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,9 +47,9 @@ fun TicketCard(ticket: Ticket, auth: UserProvider) {
             .clip(RoundedCornerShape(16.dp))
             .background(
                 brush = Brush.horizontalGradient(
-                    colors = listOf<Color>(
+                    colors = listOf(
                         ticket.colorTag,
-                        Grad[ticket.colorTag]!!,
+                        Grad.getOrDefault(ticket.colorTag, Color.Black),
                     )
                 )
 

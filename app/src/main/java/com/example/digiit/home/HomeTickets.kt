@@ -81,7 +81,6 @@ fun HomeScreen(auth: UserProvider) {
     )
 }
 
-@SuppressLint("UnrememberedMutableState")
 @ExperimentalMaterialApi
 @Composable
 fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {

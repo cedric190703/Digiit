@@ -9,7 +9,7 @@ val Primary = listOf(
     Color(0xFF4CAF50), Color(0xFF8BC34A), Color(0xFFCDDC39),
     Color(0xFFFFEB3B), Color(0xFFFFC107), Color(0xFFFF9800),
     Color(0xFFFF5722), Color(0xFF795548), Color(0xFF9E9E9E),
-    Color(0xFF607D8B), Color(0xF000000),
+    Color(0xFF607D8B), Color(0xFF000000),
 )
 
 val Grad = mapOf(
@@ -31,6 +31,6 @@ val Grad = mapOf(
     Color(0xFFFF5722) to Color(0xFFFFE082),
     Color(0xFF795548) to Color(0xFF9E9E9E),
     Color(0xFF9E9E9E) to Color(0xFF607D8B),
-    Color(0xFF607D8B) to Color(0xF000000),
-    Color(0xF000000) to Color(0xFFFFAB91),
+    Color(0xFF607D8B) to Color(0xFF000000),
+    Color(0xFF000000) to Color(0xFFFFAB91),
 )

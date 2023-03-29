@@ -23,7 +23,9 @@ import androidx.compose.ui.window.Dialog
 import com.example.digiit.R
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.ticket.Ticket
+import com.example.digiit.ui.theme.Primary
 import com.example.digiit.utils.ObservableMutableState
+import com.example.digiit.widgets.ColorChooser
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -32,15 +34,27 @@ import com.vanpra.composematerialdialogs.listItemsSingleChoice
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import es.dmoral.toasty.Toasty
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun EditTicket(ticket: Ticket,
-               setShowDialog: (Boolean) -> Unit,
-            setView: (Boolean) -> Unit ){
+fun EditTicket(ticket: Ticket, setShowDialog: (Boolean) -> Unit, setView: (Boolean) -> Unit, edit: Boolean = true){
     val ctx = LocalContext.current
+
     val ratingVal = ObservableMutableState(ticket.rating.toInt()) { ticket.rating = it.toFloat() }
+
+    val colorText = ObservableMutableState(ticket.colorText) { ticket.colorTag  = it }
+    val colorIcon = ObservableMutableState(ticket.colorIcon) { ticket.colorIcon = it }
+    val colorTag  = ObservableMutableState(ticket.colorTag)  { ticket.colorTag  = it }
+
+    var title by remember { mutableStateOf(ticket.title) }
+    var price by remember { mutableStateOf(ticket.price) }
+    var tag by remember{ mutableStateOf(ticket.tag)}
+    var rating by remember { mutableStateOf(ticket.rating.toInt())}
+    var comment by remember { mutableStateOf(ticket.comment) }
+    var type by remember { mutableStateOf(ticket.type) }
+    var date by remember { mutableStateOf(ticket.date) }
 
     val typeState = rememberMaterialDialogState()
     val dateDialogState = rememberMaterialDialogState()
@@ -68,28 +82,31 @@ fun EditTicket(ticket: Ticket,
                         .size(350.dp)
                 )
                 OutlinedTextField(
-                    value = ticket.title,
-                    onValueChange = { ticket.title = it },
+                    value = title,
+                    onValueChange = { title = it },
                     label = { Text(text = "Titre") },
                     placeholder = { "Titre du ticket" }
                 )
+
                 Spacer(modifier = Modifier.padding(13.dp))
                 OutlinedTextField(
-                    value = ticket.price.toString(),
-                    onValueChange = { ticket.price = it.toFloat() },
+                    value = price.toString(),
+                    onValueChange = { price = it.toFloat() },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Prix") },
                     placeholder = { "Prix du ticket" }
                 )
+
                 Spacer(modifier = Modifier.padding(18.dp))
                 Row() {
                     OutlinedTextField(
-                        value = ticket.tag,
-                        onValueChange = { ticket.tag = it },
+                        value = tag,
+                        onValueChange = { tag = it },
                         label = { Text(text = "Tag") },
                         placeholder = { "Tag du ticket" }
                     )
                 }
+
                 Spacer(modifier = Modifier.padding(12.dp))
                 Button(modifier = Modifier
                     .width(250.dp)
@@ -98,13 +115,15 @@ fun EditTicket(ticket: Ticket,
                 }) {
                     Text(text = "Sélectionner un type de produit", fontSize = 18.sp)
                 }
+
                 Card(
                     elevation = 10.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Text(text = ticket.type.title, modifier = Modifier.padding(13.dp))
+                    Text(text = type.title, modifier = Modifier.padding(13.dp))
                 }
+
                 MaterialDialog(dialogState = typeState, buttons = {
                     positiveButton(text = "Ok")
                     negativeButton(text = "Fermer")
@@ -114,9 +133,10 @@ fun EditTicket(ticket: Ticket,
                         list = items,
                         disabledIndices = setOf(1)
                     ) {
-                        ticket.type = TradeKinds.findByTitle(items[it])
+                        type = TradeKinds.findByTitle(items[it])
                     }
                 }
+
                 Spacer(modifier = Modifier.padding(5.dp))
                 Button(onClick = {
                     dateDialogState.show()
@@ -130,17 +150,19 @@ fun EditTicket(ticket: Ticket,
                 ) {
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = ticket.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                        text = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
                     timeDialogState.show()
                 }) {
                     Text(text = "Sélectionner une heure", fontSize = 18.sp)
                 }
+
                 Card(
                     elevation = 10.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.primary),
@@ -148,11 +170,12 @@ fun EditTicket(ticket: Ticket,
                 ) {
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = ticket.date.format(DateTimeFormatter.ofPattern("HH:mm")),
+                        text = date.format(DateTimeFormatter.ofPattern("HH:mm")),
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 MaterialDialog(
                     dialogState = dateDialogState,
                     buttons = {
@@ -164,9 +187,10 @@ fun EditTicket(ticket: Ticket,
                         initialDate = LocalDate.now(),
                         title = "Sélectionner une date",
                     ) {
-                        ticket.date.adjustInto(it)
+                        date = date.withDayOfYear(it.dayOfYear).withYear(it.year)
                     }
                 }
+
                 MaterialDialog(
                     dialogState = timeDialogState,
                     buttons = {
@@ -178,9 +202,10 @@ fun EditTicket(ticket: Ticket,
                         initialTime = LocalTime.NOON,
                         title = "Sélectionner l'heure"
                     ) {
-                        ticket.date.adjustInto(it)
+                        date = date.withHour(it.hour).withMinute(it.minute).withSecond(it.second)
                     }
                 }
+
                 Spacer(modifier = Modifier.padding(13.dp))
                 Text(text = "Noter ce ticket", fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 RatingBarView(
@@ -192,22 +217,45 @@ fun EditTicket(ticket: Ticket,
                     unRatedStarsColor = Color.LightGray,
                     starsPadding = 12.dp
                 )
+
                 Spacer(modifier = Modifier.padding(13.dp))
                 OutlinedTextField(
-                    value = ticket.comment,
+                    value = comment,
                     modifier = Modifier.height(95.dp),
-                    onValueChange = { ticket.comment = it },
+                    onValueChange = { comment = it },
                     label = { Text(text = "Commentaire") },
                     placeholder = { "Commentaire du ticket" }
                 )
+
+                Spacer(modifier = Modifier.padding(13.dp))
+                ColorChooser("Couleur du text", colorText)
+
+                Spacer(modifier = Modifier.padding(13.dp))
+                ColorChooser("Couleur de l'icone", colorIcon)
+
+                Spacer(modifier = Modifier.padding(13.dp))
+                ColorChooser("Couleur du tag", colorTag)
+
+                Spacer(modifier = Modifier.padding(13.dp))
                 Row() {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
                             .height(85.dp)
                             .padding(vertical = 18.dp, horizontal = 2.dp),
-                        text = {  Text(text = "Modifier élement", fontSize = 18.sp) },
+                        text = {  Text(text = if (edit) "Modifier" else "Ajouter", fontSize = 18.sp) },
                         onClick = {
-                            if(ticket.title.isNotEmpty()) {
+                            ticket.title = title
+                            ticket.type = type
+                            ticket.price = price
+                            ticket.tag = tag
+                            ticket.date = date
+                            ticket.comment = comment
+                            ticket.rating = rating.toFloat()
+                            ticket.colorIcon = colorIcon.value
+                            ticket.colorTag = colorTag.value
+                            ticket.colorText = colorText.value
+
+                            if(ticket.isValid()) {
                                 ticket.save { error ->
                                     if (error == null) {
                                         Toasty.success(ctx, "Le ticket a bien été modifié", Toast.LENGTH_SHORT, true).show()
@@ -218,7 +266,7 @@ fun EditTicket(ticket: Ticket,
                                     }
                                 }
                             } else {
-                                Toasty.error(ctx, "Des champs n'ont pas été remplis", Toast.LENGTH_SHORT, true).show()
+                                Toasty.error(ctx, "Des champs n'ont pas été remplis correctement", Toast.LENGTH_SHORT, true).show()
                             }
                         },
                         backgroundColor = MaterialTheme.colors.primary
