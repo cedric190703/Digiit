@@ -37,7 +37,6 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
         imageId = item.getString("image").orEmpty()
         colorIcon = Color(item.getLong("colors.icon")!!)
         colorTag = Color(item.getLong("colors.tag")!!)
-        colorText = Color(item.getLong("colors.text")!!)
         if (imageId.isNotEmpty()) {
             imageRef = storage.getReference("images/$imageId")
         }
@@ -67,7 +66,6 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
             "colors" to hashMapOf(
                 "icon" to colorIcon.toArgb(),
                 "tag" to colorTag.toArgb(),
-                "text" to colorText.toArgb()
             ),
             "rating" to rating
         )

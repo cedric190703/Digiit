@@ -35,7 +35,6 @@ class RemoteWallet(private val document: DocumentReference): Wallet() {
         imageId = item.getString("image").orEmpty()
         colorIcon = Color(item.getLong("colors.icon")!!)
         colorTag = Color(item.getLong("colors.tag")!!)
-        colorText = Color(item.getLong("colors.text")!!)
         if (imageId.isNotEmpty()) {
             imageRef = storage.getReference("images/$imageId")
         }
@@ -67,8 +66,7 @@ class RemoteWallet(private val document: DocumentReference): Wallet() {
             "image" to imageId,
             "colors" to hashMapOf(
                 "icon" to colorIcon.toArgb(),
-                "tag" to colorTag.toArgb(),
-                "text" to colorText.toArgb()
+                "tag" to colorTag.toArgb()
             ),
             "expiry" to expiryDate.toEpochSecond(ZoneOffset.UTC),
             "walletType" to walletType.name,

@@ -15,9 +15,8 @@ abstract class Card(var type: TradeKinds = TradeKinds.Other,
                     var price: Float = 0f,
                     var date: LocalDateTime = LocalDateTime.now(),
                     var comment: String = "",
-                    var colorIcon: Color = Color.Black,
-                    var colorTag: Color = Color.Black,
-                    var colorText: Color = Color.Black
+                    var colorIcon: Color = Color.Blue,
+                    var colorTag: Color = Color.Red
 ) {
     var lastEdit: Long = -1
     var image: Bitmap? = null

@@ -140,12 +140,6 @@ fun TicketCard(ticket: Ticket, auth: UserProvider) {
                 ) {
                     // TAG
                     Tag(ticket.tag)
-                   /* Text(
-                        modifier = Modifier.padding(vertical = 5.dp),
-                        text = "#${ticket.tag}",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontSize = 16.sp)*/
                 }
             }
             // new column with price inside

@@ -52,6 +52,7 @@ import com.example.digiit.getAPIResponse.ApiResponse
 import com.example.digiit.getAPIResponse.getApiResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 
 fun createBitmapFromUri(context: Context, uri: Uri?): Bitmap {
@@ -317,19 +318,23 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                     if (photoUri != null) {
                         if (showDialogPhoto.value) {
                             val bitmap: Bitmap = createBitmapFromUri(context = LocalContext.current, uri = photoUri)
-
+                            val callFunc = remember { mutableStateOf(false)}
                             val card: Card = if (typeScreen == TypeScreen.Wallet) user!!.createWallet() else user!!.createTicket()
                             card.image = bitmap
 
                             if (OCRshowDialog.value) {
-                                val fileName = "myImage.jpg"
                                 val context = LocalContext.current
 
-                                val file = File(context.getExternalFilesDir(null), fileName)
-                                val outputStream = FileOutputStream(file)
-
-                                // Compress the bitmap and save it to the file
+                                // Convert bitmap to byte array
+                                val outputStream = ByteArrayOutputStream()
                                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                                val byteArray = outputStream.toByteArray()
+
+                                // Create file from byte array
+                                val file = File(context.cacheDir, "image.jpg")
+                                val fileOutputStream = FileOutputStream(file)
+                                fileOutputStream.write(byteArray)
+                                fileOutputStream.close()
 
                                 // Close the stream
                                 outputStream.close()
@@ -349,24 +354,43 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                         Log.d("Error", "API error")
                                     } finally {
                                         showDialogLoader.value = false
+
+                                        // Call EditCard when apiResponse is not null
+                                        apiResponse?.let { apiResponse ->
+                                            if(apiResponse.status == "success") {
+                                                card.title = apiResponse.title.orEmpty()
+                                                // For now
+                                                // DONT TOUCH
+                                                card.price = 0f
+                                                callFunc.value = true
+                                            } else {
+                                                card.title = ""
+                                                card.price = 0f
+                                            }
+                                        }
                                     }
                                 }
-                                // Call DialogTicketInfo if apiResponse is not null
-                                apiResponse?.let { apiResponse ->
-                                    card.title = apiResponse.title.orEmpty()
-                                    card.price = if (apiResponse.total != null) apiResponse.total.toFloat() else 0f
+                                if(callFunc.value) {
+                                    EditCard(card, {
+                                        showDialogPhoto.value = it
+                                        setShowDialog(false)
+                                    }, {
+                                        showDialogPhoto.value = it
+                                        setShowDialog(false)
+                                    }, false)
                                 }
+                            } else {
+                                EditCard(card, {
+                                    showDialogPhoto.value = it
+                                    setShowDialog(false)
+                                }, {
+                                    showDialogPhoto.value = it
+                                    setShowDialog(false)
+                                }, false)
                             }
-
-                            EditCard(card, {
-                                showDialogPhoto.value = it
-                                setShowDialog(false)
-                            }, {
-                                showDialogPhoto.value = it
-                                setShowDialog(false)
-                            }, false)
                         }
                     }
+
                     if (stateTakePhoto.value) {
                         takePhotoLauncher.launch(
                             Intent(

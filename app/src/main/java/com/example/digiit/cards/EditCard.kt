@@ -129,7 +129,9 @@ fun EditCard(
                     .padding(4.dp),
                     onClick = { typeState.show() }
                 ) {
-                    Text(text = "Type de produit", fontSize = 18.sp)
+                    Text(text = "Type de produit",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold)
                 }
 
                 Card(
@@ -157,7 +159,7 @@ fun EditCard(
                 Button(onClick = {
                     dateDialogState.show()
                 }) {
-                    Text(text = "Sélectionner une date", fontSize = 18.sp)
+                    Text(text = "Sélectionner une date :", fontSize = 18.sp)
                 }
 
                 Card(
@@ -177,7 +179,7 @@ fun EditCard(
                 Button(onClick = {
                     timeDialogState.show()
                 }) {
-                    Text(text = "Sélectionner une heure", fontSize = 18.sp)
+                    Text(text = "Sélectionner une heure :", fontSize = 18.sp)
                 }
 
                 Card(
@@ -202,7 +204,7 @@ fun EditCard(
                 ) {
                     datepicker(
                         initialDate = LocalDate.now(),
-                        title = "Sélectionner une date",
+                        title = "Sélectionner une date :",
                     ) {
                         date = date.withDayOfYear(it.dayOfYear).withYear(it.year)
                     }
@@ -217,7 +219,7 @@ fun EditCard(
                 ) {
                     timepicker(
                         initialTime = LocalTime.NOON,
-                        title = "Sélectionner l'heure"
+                        title = "Sélectionner l'heure :"
                     ) {
                         date = date.withHour(it.hour).withMinute(it.minute).withSecond(it.second)
                     }
@@ -288,7 +290,7 @@ fun EditCard(
                     ) {
                         datepicker(
                             initialDate = LocalDate.now(),
-                            title = "Sélectionner une date d'expiration",
+                            title = "Sélectionner une date d'expiration :",
                         ) {
                             expiry!!.value = expiry.value.withDayOfYear(it.dayOfYear).withYear(it.year)
                         }
@@ -303,7 +305,7 @@ fun EditCard(
                     ) {
                         timepicker(
                             initialTime = LocalTime.NOON,
-                            title = "Sélectionner l'heure d'expiration"
+                            title = "Sélectionner l'heure d'expiration :"
                         ) {
                             expiry!!.value = expiry.value.withHour(it.hour).withMinute(it.minute).withSecond(it.second)
                         }
@@ -315,7 +317,9 @@ fun EditCard(
                         .padding(4.dp), onClick = {
                         typeStateDocs!!.show()
                     }) {
-                        Text(text = "Sélectionner un type de document :", fontSize = 18.sp)
+                        Text(text = "Sélectionner un type de document :",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold)
                     }
 
                     Card(

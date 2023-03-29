@@ -20,4 +20,4 @@ abstract class Wallet(
     var expiryDate: LocalDateTime = LocalDateTime.now().plusDays(7),
     var walletType: CommercialType = CommercialType.Unknown,
     var used: Boolean = false
-): Card(type, tag, title, price, date, comment, colorIcon, colorTag, colorText)
+): Card(type, tag, title, price, date, comment, colorIcon, colorTag)
