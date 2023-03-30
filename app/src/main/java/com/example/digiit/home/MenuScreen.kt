@@ -169,11 +169,22 @@ fun MenuContent(paddingValues: PaddingValues, auth: UserProvider) {
         }
         if(showDialogBilan.value)
         {
-            // Change the two values here with the User data
-            // TODO
+            // TODO max value
+
+            val a = LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+            val b = LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(999999999)
+            var s = 0f
+            auth.user!!.getSpending(a, b) { error, spending ->
+                if (error != null) {
+                    println("Une erreur est survenue : ${error.message}")
+                } else {
+                    s = spending
+                }
+            }
+
             Bilan(onDismiss = {
                 showDialogBilan.value = it
-            }, dataOnMonth = 123f, maxValueData = 1000f)
+            }, dataOnMonth = s, maxValueData = 1000f)
         }
     }
 }
