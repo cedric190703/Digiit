@@ -60,7 +60,8 @@ fun HomeLogin(
             Text(
                 text = "Se connecter",
                 style = TextStyle(
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.onBackground
                 ),
                 fontSize = MaterialTheme.typography.h4.fontSize
             )

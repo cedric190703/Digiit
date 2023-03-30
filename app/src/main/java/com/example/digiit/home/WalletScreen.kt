@@ -38,7 +38,7 @@ fun WalletScreen(auth: UserProvider) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Wallet",
+                        text = "Portefeuille",
                         color = Color.White
                     )
                 },
