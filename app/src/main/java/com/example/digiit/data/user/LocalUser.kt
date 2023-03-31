@@ -2,6 +2,7 @@ package com.example.digiit.data.user
 
 import android.content.Context
 import android.graphics.Bitmap
+import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.ticket.LocalTicket
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
@@ -65,6 +66,14 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
         before: LocalDateTime?,
         callback: (error: Exception?, spending: Float) -> Unit
     ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSpeedingIn(
+        kind: TradeKinds,
+        after: LocalDateTime?,
+        before: LocalDateTime?
+    ): Float {
         TODO("Not yet implemented")
     }
 

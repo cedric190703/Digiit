@@ -3,6 +3,7 @@ package com.example.digiit.data.user
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.toArgb
+import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.ticket.RemoteTicket
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.RemoteWallet
@@ -135,6 +136,20 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
             }
         }
         callback(null, spending);
+    }
+
+    override fun getSpeedingIn(
+        kind: TradeKinds,
+        after: LocalDateTime?,
+        before: LocalDateTime?
+    ): Float {
+        var result = 0f;
+        for (ticket in tickets) {
+            if ((ticket.type != null && ticket.type == kind) && (after == null || after <= ticket.date) && (before == null || ticket.date <= before)) {
+                result += ticket.price;
+            }
+        }
+        return result
     }
 
     override fun loadProfilePicture(callback: ActionCallback) {

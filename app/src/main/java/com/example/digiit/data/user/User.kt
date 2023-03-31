@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.example.digiit.data.CommercialType
+import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.utils.ActionCallback
@@ -40,7 +42,7 @@ abstract class User {
     abstract fun createWallet(): Wallet
 
     abstract fun getSpending(after: LocalDateTime?, before: LocalDateTime?, callback: (error: Exception?, spending: Float) -> Unit)
-
+    abstract fun getSpeedingIn(kind : TradeKinds, after: LocalDateTime?, before: LocalDateTime?) : Float
     abstract fun loadProfilePicture(callback: ActionCallback)
     abstract fun saveProfilePicture(callback: ActionCallback)
 

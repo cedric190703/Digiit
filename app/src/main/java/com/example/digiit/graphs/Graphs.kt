@@ -19,6 +19,8 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import androidx.compose.ui.unit.dp
+import com.example.digiit.data.TradeKinds
+import com.example.digiit.data.UserProvider
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -40,6 +42,7 @@ import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
+import java.time.LocalDateTime
 
 @Composable
 fun BarChart() {
@@ -379,16 +382,21 @@ fun GroupedBarChart() {
 }
 
 @Composable
-fun PieChart() {
-    val dataPoints = listOf(
+//PieChar With 5 most used kinds between two date
+fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+
+    val dataPoints = top5.sortedByDescending { it.second }.take(5)
+
+    /*val dataPoints = listOf(
         Pair("Commerce", 25f),
         Pair("Sport", 30f),
         Pair("Alimentations", 15f),
         Pair("Culture", 50f),
-    )
+    )*/
 
     val pieEntries = dataPoints.mapIndexed { _, data ->
-        PieEntry(data.second, data.first)
+        PieEntry(data.second, data.first.title)
     }
 
     Card(

@@ -14,15 +14,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.digiit.data.UserProvider
 import com.example.digiit.graphs.CubicLineChart
 import com.example.digiit.graphs.LineChart
 import com.example.digiit.graphs.PieChart
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.utils.getCurrentMonth
+import java.time.LocalDateTime
 
 @Composable
 fun Bilan(onDismiss: (Boolean) -> Unit,
-    dataOnMonth: Float, maxValueData: Float) {
+          auth : UserProvider, maxValueData: Float, start : LocalDateTime, end : LocalDateTime ) {
     val listState = rememberLazyListState()
     Dialog(
         onDismissRequest = { onDismiss(false) },
@@ -73,8 +75,18 @@ fun Bilan(onDismiss: (Boolean) -> Unit,
                                 fontSize = 18.sp
                             )
                             Spacer(modifier = Modifier.padding(8.dp))
+
+                            var s = 0f
+                            auth.user!!.getSpending(start, end) { error, spending ->
+                                if (error != null) {
+                                    println("Une erreur est survenue : ${error.message}")
+                                } else {
+                                    s = spending
+                                }
+                            }
+
                             Text(
-                                text = "$${dataOnMonth.toInt()}",
+                                text = "$$s",
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 24.sp
@@ -116,7 +128,7 @@ fun Bilan(onDismiss: (Boolean) -> Unit,
                 item {
                     Text(text = "Dépenses des 4 secteurs les plus importants :",
                         modifier = Modifier.padding(start = 18.dp, top = 12.dp))
-                    PieChart()
+                    PieChart(auth, start, end)
                 }
                 item {
                     Text(text = "Dépenses des 4 derniers mois :")
