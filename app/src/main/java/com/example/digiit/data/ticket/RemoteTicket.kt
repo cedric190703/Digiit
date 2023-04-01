@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.example.digiit.data.TradeKinds
+import com.example.digiit.data.user.RemoteUser
 import com.example.digiit.utils.ActionCallback
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -19,7 +20,7 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 
-class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) {
+class RemoteTicket(private val user: RemoteUser, private var saved: Boolean, private val document: DocumentReference) : LocalTicket(null) {
     private val storage = Firebase.storage(document.firestore.app)
     private var imageId = ""
     private var imageRef : StorageReference? = null
@@ -70,6 +71,10 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
             "rating" to rating
         )
         document.set(data).addOnCompleteListener { task ->
+            if (task.isSuccessful && !saved) {
+                saved = true
+                user.tickets.add(this)
+            }
             callback(task.exception)
         }
     }
@@ -113,7 +118,7 @@ class RemoteTicket(private val document: DocumentReference) : LocalTicket(null) 
             image!!.compress(Bitmap.CompressFormat.JPEG, 80, bytes)
             if (imageRef == null) {
                 // If there is no already saved image then create a new id
-                imageId = UUID.randomUUID().toString();
+                imageId = UUID.randomUUID().toString()
                 imageRef = storage.getReference("images/$imageId")
             }
             imageRef!!.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->

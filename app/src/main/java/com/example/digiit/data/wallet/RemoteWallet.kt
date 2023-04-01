@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.example.digiit.data.CommercialType
 import com.example.digiit.data.TradeKinds
+import com.example.digiit.data.user.RemoteUser
 import com.example.digiit.utils.ActionCallback
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -19,7 +20,7 @@ import java.time.ZoneOffset
 import java.util.*
 
 
-class RemoteWallet(private val document: DocumentReference): Wallet() {
+class RemoteWallet(private val user: RemoteUser, private var saved: Boolean, private val document: DocumentReference): Wallet() {
     private val storage = Firebase.storage(document.firestore.app)
     private var imageId = ""
     private var imageRef : StorageReference? = null
@@ -73,6 +74,10 @@ class RemoteWallet(private val document: DocumentReference): Wallet() {
             "used" to used
         )
         document.set(data).addOnCompleteListener { task ->
+            if (task.isSuccessful && !saved) {
+                saved = true
+                user.wallets.add(this)
+            }
             callback(task.exception)
         }
     }
@@ -116,7 +121,7 @@ class RemoteWallet(private val document: DocumentReference): Wallet() {
             image!!.compress(Bitmap.CompressFormat.JPEG, 80, bytes)
             if (imageRef == null) {
                 // If there is no already saved image then create a new id
-                imageId = UUID.randomUUID().toString();
+                imageId = UUID.randomUUID().toString()
                 imageRef = storage.getReference("images/$imageId")
             }
             imageRef!!.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->

@@ -70,7 +70,7 @@ fun EditCard(
     val timeDialogState = rememberMaterialDialogState()
 
     val typeStateDocs = if (wallet != null) rememberMaterialDialogState() else null
-    var walletType = if (wallet != null) remember { mutableStateOf(wallet.walletType) } else null
+    val walletType = if (wallet != null) remember { mutableStateOf(wallet.walletType) } else null
 
     val expiryDateDialogState = if (wallet != null) rememberMaterialDialogState() else null
     val expiryTimeDialogState = if (wallet != null) rememberMaterialDialogState() else null
@@ -339,7 +339,7 @@ fun EditCard(
                             list = items,
                             initialSelection = walletType!!.value.ordinal
                         ) {
-                            walletType!!.value = CommercialType.findByTitle(items[it])
+                            walletType.value = CommercialType.findByTitle(items[it])
                         }
                     }
                 }

@@ -77,7 +77,7 @@ fun Bilan(onDismiss: (Boolean) -> Unit,
                             Spacer(modifier = Modifier.padding(8.dp))
 
                             var s = 0f
-                            auth.user!!.getSpending(start, end) { error, spending ->
+                            auth.user!!.getSpending(null, start, end) { error, spending ->
                                 if (error != null) {
                                     println("Une erreur est survenue : ${error.message}")
                                 } else {

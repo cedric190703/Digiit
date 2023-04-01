@@ -14,6 +14,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import androidx.compose.material.Card
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -21,6 +23,7 @@ import com.github.mikephil.charting.data.PieEntry
 import androidx.compose.ui.unit.dp
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.UserProvider
+import com.example.digiit.data.user.User
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -40,9 +43,12 @@ import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDateTime
+import kotlin.coroutines.resumeWithException
 
 @Composable
 fun BarChart() {
@@ -381,12 +387,27 @@ fun GroupedBarChart() {
     }
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX): List<Pair<TradeKinds, Float>> {
+    val result = ArrayList<Pair<TradeKinds, Float>>()
+    for (kind in TradeKinds.values()) {
+        result.add(Pair(kind, suspendCancellableCoroutine { continuation ->
+            user.getSpending(kind, after, before) { error, amount ->
+                if (error != null) {
+                    continuation.resumeWithException(error)
+                } else {
+                    continuation.resume(amount, null)
+                }
+            }
+        }))
+    }
+    return result.sortedByDescending { it.second }
+}
+
 @Composable
 //PieChar With 5 most used kinds between two date
 fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
-
-    val dataPoints = top5.sortedByDescending { it.second }.take(5)
+    val coroutineScope = rememberCoroutineScope()
 
     /*val dataPoints = listOf(
         Pair("Commerce", 25f),
@@ -394,10 +415,6 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
         Pair("Alimentations", 15f),
         Pair("Culture", 50f),
     )*/
-
-    val pieEntries = dataPoints.mapIndexed { _, data ->
-        PieEntry(data.second, data.first.title)
-    }
 
     Card(
         modifier = Modifier
@@ -428,10 +445,6 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                         setEntryLabelTextSize(14f)
                         setEntryLabelTypeface(Typeface.DEFAULT_BOLD)
 
-                        val pieDataSet = PieDataSet(pieEntries, "")
-                        pieDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
-
-
                         legend.apply {
                             isEnabled = true
                             textSize = 12f
@@ -449,13 +462,21 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                     }
                 },
                 update = { chart ->
-                    val pieDataSet = PieDataSet(pieEntries, "")
-                    pieDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+                    coroutineScope.launch {
+                        val top5 = getTopKinds(auth.user!!, after, before).take(5)
+                        val dataPoints = top5.reversed().take(5)
+                        val pieEntries = dataPoints.map { data ->
+                            PieEntry(data.second, data.first.title)
+                        }
 
-                    val pieData = PieData(pieDataSet)
-                    chart.data = pieData
-                    chart.data.setValueTextSize(13f)
-                    chart.notifyDataSetChanged()
+                        val pieDataSet = PieDataSet(pieEntries, "")
+                        pieDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+
+                        val pieData = PieData(pieDataSet)
+                        chart.data = pieData
+                        chart.data.setValueTextSize(13f)
+                        chart.notifyDataSetChanged()
+                    }
                 }
             )
         }

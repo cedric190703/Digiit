@@ -44,7 +44,6 @@ import java.util.concurrent.Executors
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import com.example.digiit.cards.EditCard
 import com.example.digiit.data.card.Card
 import com.example.digiit.data.user.User

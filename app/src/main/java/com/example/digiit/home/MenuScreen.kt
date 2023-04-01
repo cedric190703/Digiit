@@ -28,6 +28,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.temporal.TemporalAdjusters
+import kotlin.math.max
+import kotlin.math.min
+
 
 @Composable
 fun MenuScreen(auth: UserProvider) {
@@ -73,23 +76,8 @@ fun ColorChangingSlider(data: MutableState<Float>, maxValue: Float) {
 
 private fun getSliderColor(data: Float, maxValue: Float): Color {
     val percentage = data / maxValue
-    val red = when {
-        percentage <= 1.0f -> percentage-0.1f
-        else -> 0.9f
-    }
-    val green = when {
-        percentage < 0.2f -> 0.9f
-        percentage < 0.2f -> 0.8f
-        percentage < 0.3f -> 0.7f
-        percentage < 0.4f -> 0.6f
-        percentage < 0.5f -> 0.5f
-        percentage < 0.6f -> 0.4f
-        percentage < 0.7f -> 0.3f
-        percentage < 0.8f -> 0.2f
-        percentage < 0.9f -> 0.1f
-        percentage < 0.9f -> 0.1f
-        else -> 0.0f
-    }
+    val red = min(max(0.0f, percentage), 1.0f)
+    val green = min(max(0.0f, 1.0f - percentage), 1.0f)
     val blue = 0.0f
     return Color(red, green, blue)
 }
@@ -252,7 +240,7 @@ private fun UserDetails(context: Context, auth: UserProvider) {
         val a = LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0).withNano(0)
         val b = LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(999999999)
         var s = 0f
-        auth.user!!.getSpending(a, b) { error, spending ->
+        auth.user!!.getSpending(null, a, b) { error, spending ->
             if (error != null) {
                 println("Une erreur est survenue : ${error.message}")
             } else {
@@ -260,7 +248,7 @@ private fun UserDetails(context: Context, auth: UserProvider) {
             }
         }
 
-        var data = remember {
+        val data = remember {
             mutableStateOf(s)
         }
         ColorChangingSlider(data = data, 1000.0f)

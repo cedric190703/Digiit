@@ -62,18 +62,11 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
     }
 
     override fun getSpending(
+        kind: TradeKinds?,
         after: LocalDateTime?,
         before: LocalDateTime?,
         callback: (error: Exception?, spending: Float) -> Unit
     ) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getSpeedingIn(
-        kind: TradeKinds,
-        after: LocalDateTime?,
-        before: LocalDateTime?
-    ): Float {
         TODO("Not yet implemented")
     }
 
