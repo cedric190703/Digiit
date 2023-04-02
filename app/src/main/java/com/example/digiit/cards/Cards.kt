@@ -169,7 +169,8 @@ fun TicketCard(ticket: Ticket, auth: UserProvider) {
 
 @Composable
 fun WalletsCard(
-    wallet: Wallet
+    wallet: Wallet,
+    auth: UserProvider
 ) {
     val showDialog = remember { mutableStateOf(false)}
     Card(
@@ -335,6 +336,8 @@ fun WalletsCard(
             }
         }
     }
+    if(showDialog.value)
+    {
+        CardViewSmallWallet(setState = { showDialog.value = it }, wallet, auth)
+    }
 }
-
-//TODO : couleur

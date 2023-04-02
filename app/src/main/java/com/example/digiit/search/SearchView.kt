@@ -349,9 +349,7 @@ fun getMenuItemForWallet(): ArrayList<MenuItemData> {
     val listItems = ArrayList<MenuItemData>()
     listItems.add(MenuItemData(text = "Tout", icon = R.drawable.all, Color(0xFFCA7800), Color.White))
     listItems.add(MenuItemData(text = "Carte fidélité", icon = R.drawable.wallet, Color.White, Color(0xFFCA7800)))
-    listItems.add(MenuItemData(text = "Facture", icon = R.drawable.money, Color.White, Color(0xFFCA7800)))
     listItems.add(MenuItemData(text = "Bon commande", icon = R.drawable.shop, Color.White, Color(0xFFCA7800)))
-    listItems.add(MenuItemData(text = "Contrat vente", icon = R.drawable.contract, Color.White, Color(0xFFCA7800)))
 
     return listItems
 }

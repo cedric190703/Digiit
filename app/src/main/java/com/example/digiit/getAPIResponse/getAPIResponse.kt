@@ -9,6 +9,7 @@ import okhttp3.*
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 data class ApiResponse(
     val status: String,
@@ -20,7 +21,11 @@ data class ApiResponse(
 )
 
 fun getApiResponse(imageFile: File, apiUrl: String): ApiResponse {
-    val client = OkHttpClient()
+    val client = OkHttpClient.Builder()
+        .connectTimeout(60, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(60, TimeUnit.SECONDS)
+        .build()
 
     try {
         val file = File(imageFile.toURI())
@@ -32,7 +37,7 @@ fun getApiResponse(imageFile: File, apiUrl: String): ApiResponse {
 
         val request = Request.Builder()
             .url(apiUrl)
-            .post(requestBody)
+            .method("POST", requestBody)
             .header("Content-Type", "multipart/form-data") // Add this line
             .build()
 
@@ -60,7 +65,6 @@ fun getApiResponse(imageFile: File, apiUrl: String): ApiResponse {
         // Put the API response into string
         val responseBody = response.body?.string() ?: ""
 
-        // Put the
         val jsonObject = JSONObject(responseBody)
         Log.d("JSON Object from the API", "$jsonObject")
 

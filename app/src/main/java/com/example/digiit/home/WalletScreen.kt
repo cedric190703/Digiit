@@ -139,7 +139,7 @@ fun WalletContent(paddingValues: PaddingValues, auth: UserProvider) {
 
                         },
                         dismissContent = {
-                            WalletsCard(wallet = listWallets[item])
+                            WalletsCard(wallet = listWallets[item], auth = auth)
                         },
                         directions=setOf(DismissDirection.EndToStart)
                     )

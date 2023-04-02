@@ -69,7 +69,13 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
     ) {
         TODO("Not yet implemented")
     }
-
+    override fun getSpeedingIn(
+        kind: TradeKinds,
+        after: LocalDateTime?,
+        before: LocalDateTime?
+    ): Float {
+        TODO("Not yet implemented")
+    }
     override fun loadProfilePicture(callback: ActionCallback) {
         TODO("Not yet implemented")
     }

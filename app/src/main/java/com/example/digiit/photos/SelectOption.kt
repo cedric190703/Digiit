@@ -44,13 +44,16 @@ import java.util.concurrent.Executors
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import com.example.digiit.cards.EditCard
 import com.example.digiit.data.card.Card
 import com.example.digiit.data.user.User
 import com.example.digiit.getAPIResponse.ApiResponse
 import com.example.digiit.getAPIResponse.getApiResponse
+import com.example.digiit.utils.LottieLoadingAnimation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 
@@ -302,12 +305,17 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                     if (showDialogLoader.value) {
                         AlertDialog(
                             onDismissRequest = { },
-                            title = { Text("Loading") },
-                            text = { Box(Modifier.size(70.dp),
-                                contentAlignment = Alignment.Center) { CircularProgressIndicator() } },
+                            title = {
+                                Text(
+                                    text = "Loading")
+                            },
+                            text = {
+                                LottieLoadingAnimation()
+                            },
                             buttons = {}
                         )
                     }
+
                     if (photoUri != null) {
                         if (showDialogPhoto.value) {
                             val bitmap: Bitmap = createBitmapFromUri(context = LocalContext.current, uri = photoUri)
@@ -340,21 +348,30 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                 LaunchedEffect(apiUrl, file) {
                                     showDialogLoader.value = true
                                     try {
-                                        apiResponse = withContext(Dispatchers.IO) {
-                                            getApiResponse(imageFile = file, apiUrl = apiUrl)
+                                        apiResponse = withContext(Dispatchers.Default) {
+                                            withTimeoutOrNull(60000L) {
+                                                getApiResponse(imageFile = file, apiUrl = apiUrl)
+                                            } ?: ApiResponse(
+                                                status = "error",
+                                                message = "Timeout reached",
+                                                title = "",
+                                                time = "",
+                                                date = "",
+                                                total = ""
+                                            )
                                         }
+
                                     } catch (e: Exception) {
                                         Log.d("Error", "API error")
                                     } finally {
                                         showDialogLoader.value = false
-
+                                        OCRshowDialog.value = false
                                         // Call EditCard when apiResponse is not null
                                         apiResponse?.let { apiResponse ->
                                             if(apiResponse.status == "success") {
+                                                Log.d("results", "${apiResponse.title} | ${apiResponse.total}")
                                                 card.title = apiResponse.title.orEmpty()
-                                                // For now
-                                                // DONT TOUCH
-                                                card.price = 0f
+                                                card.price = apiResponse.total?.toFloat() ?: 0f
                                                 callFunc.value = true
                                             } else {
                                                 card.title = ""

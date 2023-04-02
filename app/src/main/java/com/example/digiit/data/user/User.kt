@@ -7,10 +7,10 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import com.example.digiit.R
-import com.example.digiit.data.CommercialType
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
+import com.example.digiit.graphs.TypeGraph
 import com.example.digiit.utils.ActionCallback
 import java.time.LocalDateTime
 
@@ -18,6 +18,7 @@ import java.time.LocalDateTime
 abstract class User {
     val tickets = SnapshotStateList<Ticket>()
     val wallets = SnapshotStateList<Wallet>()
+    val listGraphs = SnapshotStateList<TypeGraph>()
 
     abstract var name: String
     abstract var lastname: String
@@ -53,6 +54,7 @@ abstract class User {
 
     abstract fun getSpending(kind: TradeKinds?, after: LocalDateTime?, before: LocalDateTime?, callback: (error: Exception?, spending: Float) -> Unit)
 
+    abstract fun getSpeedingIn(kind : TradeKinds, after: LocalDateTime?, before: LocalDateTime?) : Float
     abstract fun loadProfilePicture(callback: ActionCallback)
     abstract fun saveProfilePicture(callback: ActionCallback)
 

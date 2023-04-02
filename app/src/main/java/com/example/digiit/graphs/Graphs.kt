@@ -6,60 +6,254 @@ import android.view.ViewGroup
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.formatter.ValueFormatter
 import androidx.compose.material.Card
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.UserProvider
 import com.example.digiit.data.user.User
-import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.*
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.charts.HorizontalBarChart
-import com.github.mikephil.charting.charts.BubbleChart
-import com.github.mikephil.charting.data.BubbleData
-import com.github.mikephil.charting.data.BubbleDataSet
-import com.github.mikephil.charting.data.BubbleEntry
-import com.github.mikephil.charting.charts.RadarChart
-import com.github.mikephil.charting.data.RadarData
-import com.github.mikephil.charting.data.RadarDataSet
-import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import kotlin.coroutines.resumeWithException
 
+val top5Color = listOf(Color.rgb(85, 216, 254), Color.rgb(255, 131, 115), Color.rgb(255, 218, 131), Color.rgb(163, 160, 251), Color.rgb(90, 219, 168) )
+
+
+enum class Mois(val numero: Int, val nom: String) {
+    JANVIER(1, "janvier"),
+    FEVRIER(2, "février"),
+    MARS(3, "mars"),
+    AVRIL(4, "avril"),
+    MAI(5, "mai"),
+    JUIN(6, "juin"),
+    JUILLET(7, "juillet"),
+    AOUT(8, "août"),
+    SEPTEMBRE(9, "septembre"),
+    OCTOBRE(10, "octobre"),
+    NOVEMBRE(11, "novembre"),
+    DECEMBRE(12, "décembre");
+
+    companion object {
+        private val map = values().associateBy(Mois::numero)
+        fun getNomMois(numero: Int): String = map[numero]!!.nom
+    }
+}
+
+
 @Composable
-fun BarChart() {
-    val dataPoints = listOf(
-        Pair("January", 25f),
-        Pair("February", 30f),
-        Pair("March", 15f),
-        Pair("April", 50f),
-        Pair("May", 40f),
-        Pair("June", 20f)
-    )
+        /**
+         * Generate the linechart graph with each months spending
+         */
+fun LineChartByMonth(auth: UserProvider, start : LocalDateTime, end :  LocalDateTime) {
+
+    val dataGraph = mutableListOf<Pair<LocalDateTime, Float>>()
+    var current = start.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS)
+    var endOfMonth = current
+    while (!current.isAfter(end)) {
+        var x = 0f
+        // need to include the last day of months so taking first day 0:0:0 (will be exclude in the getSpending methode)
+        endOfMonth = current.plusMonths(1).withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS)
+        auth.user!!.getSpending(null,current, endOfMonth)
+            { error, spending ->
+                if (error != null) {
+                    println("Une erreur est survenue : ${error.message}")
+                } else {
+                    x = spending
+                }
+            }
+        dataGraph.add(Pair(current, x))
+        current = endOfMonth
+    }
+    val lineEntries = dataGraph.mapIndexed { index, data ->
+        Entry(index.toFloat(), data.second)
+    }
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .border(
+                width = 1.dp,
+                color = androidx.compose.ui.graphics.Color.Blue,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .fillMaxWidth()
+            .height(300.dp)
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            AndroidView(modifier = Modifier.padding(8.dp),
+                factory = { context ->
+                    LineChart(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        setDrawGridBackground(false)
+                        description.isEnabled = false
+
+                        val lineDataSet = LineDataSet(lineEntries, "")
+                        lineDataSet.color = Color.BLUE
+                        lineDataSet.lineWidth = 2f
+                        lineDataSet.circleRadius = 5f
+                        lineDataSet.setCircleColor(Color.BLUE)
+                        lineDataSet.valueTextColor = Color.BLACK
+                        lineDataSet.valueTextSize = 13f
+                        lineDataSet.valueTypeface = Typeface.DEFAULT_BOLD
+
+                        val lineData = LineData(lineDataSet)
+                        data = lineData
+
+                        axisLeft.axisMinimum = 0f
+                        axisRight.isEnabled = false
+                        xAxis.apply {
+                            position = XAxisPosition.BOTTOM
+                            granularity = 1f
+                            setDrawGridLines(false)
+                            valueFormatter = object : ValueFormatter() {
+                                override fun getFormattedValue(value: Float): String {
+                                    return Mois.getNomMois(dataGraph[value.toInt()].first.monthValue)
+                                }
+                            }
+                            textSize = 12f
+                            typeface = Typeface.DEFAULT_BOLD
+                        }
+                        legend.isEnabled = false
+                    }
+                },
+                update = { chart ->
+                    val lineDataSet = LineDataSet(lineEntries, "")
+                    lineDataSet.color = Color.BLUE
+                    lineDataSet.lineWidth = 2f
+                    lineDataSet.circleRadius = 5f
+                    lineDataSet.setCircleColor(Color.BLUE)
+                    lineDataSet.valueTextColor = Color.BLACK
+                    lineDataSet.valueTextSize = 14f
+                    lineDataSet.valueTypeface = Typeface.DEFAULT_BOLD
+
+                    val lineData = LineData(lineDataSet)
+                    chart.data = lineData
+                    chart.notifyDataSetChanged()
+                }
+            )
+        }
+    }
+}@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX): List<Pair<TradeKinds, Float>> {
+    val result = ArrayList<Pair<TradeKinds, Float>>()
+    for (kind in TradeKinds.values()) {
+        result.add(Pair(kind, suspendCancellableCoroutine { continuation ->
+            user.getSpending(kind, after, before) { error, amount ->
+                if (error != null) {
+                    continuation.resumeWithException(error)
+                } else {
+                    continuation.resume(amount, null)
+                }
+            }
+        }))
+    }
+    return result.sortedByDescending { it.second }
+}
+
+@Composable
+/**
+ * @param auth : The user provider
+ * @param after : LocalDateTime (exclude)
+ * @param before: LocalDateTime (exlude !!)
+* @return a PieChart Graph with the most used kinds between after and before
+*/
+fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+    val coroutineScope = rememberCoroutineScope()
+
+    /*val dataPoints = listOf(
+        Pair("Commerce", 25f),
+        Pair("Sport", 30f),
+        Pair("Alimentations", 15f),
+        Pair("Culture", 50f),
+    )*/
+
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .border(
+                width = 1.dp,
+                color = androidx.compose.ui.graphics.Color.Blue,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .fillMaxWidth()
+            .height(300.dp)
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            AndroidView(
+                factory = { context ->
+                    PieChart(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        description.isEnabled = false
+                        setUsePercentValues(true)
+                        setDrawEntryLabels(false)
+                        setDrawHoleEnabled(false)
+
+                        // Customize the text paint object
+                        setEntryLabelColor(Color.BLACK)
+                        setEntryLabelTextSize(14f)
+                        setEntryLabelTypeface(Typeface.DEFAULT_BOLD)
+
+                        legend.apply {
+                            isEnabled = true
+                            textSize = 12f
+                            textColor = Color.BLACK
+                            typeface = Typeface.DEFAULT_BOLD
+                            verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+                            horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+                            orientation = Legend.LegendOrientation.VERTICAL
+                            setDrawInside(false)
+                            xEntrySpace = 20f
+                            yEntrySpace = 10f
+                            yOffset = 0f
+                            xOffset = 0f
+                        }
+                    }
+                },
+                update = { chart ->
+                    coroutineScope.launch {
+                        val top5 = getTopKinds(auth.user!!, after, before).take(5)
+                        val dataPoints = top5.sortedByDescending { it.second }.take(5)
+                        val pieEntries = dataPoints.map { data ->
+                            PieEntry(data.second, data.first.title + " "+ data.second + "$")
+                        }
+
+                        val pieDataSet = PieDataSet(pieEntries, "")
+                        pieDataSet.colors = top5Color
+
+                        val pieData = PieData(pieDataSet)
+                        chart.data = pieData
+                        chart.data.setValueTextSize(13f)
+                        chart.notifyDataSetChanged()
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+
+    val dataPoints = top5.sortedByDescending { it.second }.take(5)
 
     val barEntries = dataPoints.mapIndexed { index, data ->
         BarEntry(index.toFloat(), data.second)
@@ -81,7 +275,7 @@ fun BarChart() {
                     setDrawGridBackground(false)
 
                     val barDataSet = BarDataSet(barEntries, "")
-                    barDataSet.colors = listOf(Color.GREEN)
+                    barDataSet.colors = top5Color
 
                     val barData = BarData(barDataSet)
                     data = barData
@@ -94,7 +288,7 @@ fun BarChart() {
                         setDrawGridLines(false)
                         valueFormatter = object : ValueFormatter() {
                             override fun getFormattedValue(value: Float): String {
-                                return dataPoints[value.toInt()].first
+                                return dataPoints[value.toInt()].first.toString()
                             }
                         }
                     }
@@ -103,7 +297,7 @@ fun BarChart() {
             },
             update = { chart ->
                 val barDataSet = BarDataSet(barEntries, "")
-                barDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+                barDataSet.colors = top5Color
 
                 val barData = BarData(barDataSet)
                 chart.data = barData
@@ -114,13 +308,10 @@ fun BarChart() {
 }
 
 @Composable
-fun LineChart() {
-    val dataPoints = listOf(
-        Pair("Décembre", 12f),
-        Pair("Janvier", 25f),
-        Pair("Février", 30f),
-        Pair("Mars", 15f)
-    )
+fun LineChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+
+    val dataPoints = top5.sortedByDescending { it.second }.take(5)
 
     val lineEntries = dataPoints.mapIndexed { index, data ->
         Entry(index.toFloat(), data.second)
@@ -167,7 +358,7 @@ fun LineChart() {
                             setDrawGridLines(false)
                             valueFormatter = object : ValueFormatter() {
                                 override fun getFormattedValue(value: Float): String {
-                                    return dataPoints[value.toInt()].first
+                                    return dataPoints[value.toInt()].first.toString()
                                 }
                             }
                             textSize = 12f
@@ -196,17 +387,16 @@ fun LineChart() {
 }
 
 @Composable
-fun CubicLineChart() {
-    val dataPoints = listOf(
-        Pair("Tickets", 25f),
-        Pair("Facture", 30f),
-        Pair("Bons", 15f),
-        Pair("Fidélités", 50f),
-    )
+//PieChar With 5 most used kinds between two date
+fun CubicLineChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+
+    val dataPoints = top5.sortedByDescending { it.second }.take(5)
 
     val lineEntries = dataPoints.mapIndexed { index, data ->
         Entry(index.toFloat(), data.second)
     }
+
     Card(
         modifier = Modifier
             .padding(16.dp)
@@ -257,7 +447,7 @@ fun CubicLineChart() {
                             setDrawGridLines(false)
                             valueFormatter = object : ValueFormatter() {
                                 override fun getFormattedValue(value: Float): String {
-                                    return dataPoints[value.toInt()].first
+                                    return dataPoints[value.toInt()].first.toString()
                                 }
                             }
                             textSize = 12f
@@ -292,7 +482,7 @@ fun GroupedBarChart() {
         "Group 1"
     )
     dataSet1.stackLabels = arrayOf("Value 1", "Value 2")
-    dataSet1.color = Color.BLUE
+    dataSet1.color = top5Color[1]
     dataSet1.setDrawValues(false)
 
     val dataSet2 = BarDataSet(
@@ -307,7 +497,7 @@ fun GroupedBarChart() {
         "Group 2",
     )
     dataSet2.stackLabels = arrayOf("Value 1", "Value 2")
-    dataSet2.color = Color.RED
+    dataSet2.color = top5Color[2]
     dataSet2.setDrawValues(false)
 
     val dataSet3 = BarDataSet(
@@ -322,7 +512,7 @@ fun GroupedBarChart() {
         "Group 2"
     )
     dataSet3.stackLabels = arrayOf("Value 1", "Value 2")
-    dataSet3.color = Color.GREEN
+    dataSet3.color = top5Color[3]
     dataSet3.setDrawValues(false)
 
     val barData = BarData(dataSet1, dataSet2, dataSet3)
@@ -387,112 +577,11 @@ fun GroupedBarChart() {
     }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
-suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX): List<Pair<TradeKinds, Float>> {
-    val result = ArrayList<Pair<TradeKinds, Float>>()
-    for (kind in TradeKinds.values()) {
-        result.add(Pair(kind, suspendCancellableCoroutine { continuation ->
-            user.getSpending(kind, after, before) { error, amount ->
-                if (error != null) {
-                    continuation.resumeWithException(error)
-                } else {
-                    continuation.resume(amount, null)
-                }
-            }
-        }))
-    }
-    return result.sortedByDescending { it.second }
-}
-
 @Composable
-//PieChar With 5 most used kinds between two date
-fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    val coroutineScope = rememberCoroutineScope()
+fun HorizontalBarChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
 
-    /*val dataPoints = listOf(
-        Pair("Commerce", 25f),
-        Pair("Sport", 30f),
-        Pair("Alimentations", 15f),
-        Pair("Culture", 50f),
-    )*/
-
-    Card(
-        modifier = Modifier
-            .padding(16.dp)
-            .border(
-                width = 1.dp,
-                color = androidx.compose.ui.graphics.Color.Blue,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .fillMaxWidth()
-            .height(300.dp)
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            AndroidView(
-                factory = { context ->
-                    PieChart(context).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                        description.isEnabled = false
-                        setUsePercentValues(true)
-                        setDrawEntryLabels(false)
-                        setDrawHoleEnabled(false)
-
-                        // Customize the text paint object
-                        setEntryLabelColor(Color.BLACK)
-                        setEntryLabelTextSize(14f)
-                        setEntryLabelTypeface(Typeface.DEFAULT_BOLD)
-
-                        legend.apply {
-                            isEnabled = true
-                            textSize = 12f
-                            textColor = Color.BLACK
-                            typeface = Typeface.DEFAULT_BOLD
-                            verticalAlignment = Legend.LegendVerticalAlignment.CENTER
-                            horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
-                            orientation = Legend.LegendOrientation.VERTICAL
-                            setDrawInside(false)
-                            xEntrySpace = 20f
-                            yEntrySpace = 10f
-                            yOffset = 0f
-                            xOffset = 0f
-                        }
-                    }
-                },
-                update = { chart ->
-                    coroutineScope.launch {
-                        val top5 = getTopKinds(auth.user!!, after, before).take(5)
-                        val dataPoints = top5.reversed().take(5)
-                        val pieEntries = dataPoints.map { data ->
-                            PieEntry(data.second, data.first.title)
-                        }
-
-                        val pieDataSet = PieDataSet(pieEntries, "")
-                        pieDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
-
-                        val pieData = PieData(pieDataSet)
-                        chart.data = pieData
-                        chart.data.setValueTextSize(13f)
-                        chart.notifyDataSetChanged()
-                    }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun HorizontalBarChart() {
-    val dataPoints = listOf(
-        Pair("January", 25f),
-        Pair("February", 30f),
-        Pair("March", 15f),
-        Pair("April", 50f),
-        Pair("May", 40f),
-        Pair("June", 20f)
-    )
+    val dataPoints = top5.sortedByDescending { it.second }.take(5)
 
     val barEntries = dataPoints.mapIndexed { index, data ->
         BarEntry(index.toFloat(), data.second)
@@ -528,7 +617,7 @@ fun HorizontalBarChart() {
                         setDrawGridBackground(false)
 
                         val barDataSet = BarDataSet(barEntries, "")
-                        barDataSet.colors = listOf(Color.GREEN)
+                        barDataSet.colors = top5Color
 
                         val barData = BarData(barDataSet)
                         data = barData
@@ -539,7 +628,7 @@ fun HorizontalBarChart() {
                         xAxis.granularity = 1f
                         xAxis.valueFormatter = object : ValueFormatter() {
                             override fun getFormattedValue(value: Float): String {
-                                return dataPoints[value.toInt()].first
+                                return dataPoints[value.toInt()].first.toString()
                             }
                         }
                         legend.isEnabled = false
@@ -547,7 +636,7 @@ fun HorizontalBarChart() {
                 },
                 update = { chart ->
                     val barDataSet = BarDataSet(barEntries, "")
-                    barDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+                    barDataSet.colors = top5Color
 
                     val barData = BarData(barDataSet)
                     chart.data = barData
@@ -599,7 +688,7 @@ fun BubbleChart() {
                         setPinchZoom(true)
 
                         val bubbleDataSet = BubbleDataSet(bubbleEntries, "Data Set")
-                        bubbleDataSet.colors = listOf(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW)
+                        bubbleDataSet.colors = top5Color
                         bubbleDataSet.valueTextSize = 12f
 
                         val bubbleData = BubbleData(bubbleDataSet)
@@ -624,7 +713,7 @@ fun BubbleChart() {
                 },
                 update = { chart ->
                     val bubbleDataSet = BubbleDataSet(bubbleEntries, "Data Set")
-                    bubbleDataSet.colors = listOf(Color.MAGENTA, Color.CYAN, Color.DKGRAY, Color.LTGRAY)
+                    bubbleDataSet.colors = top5Color
                     bubbleDataSet.valueTextSize = 16f
 
                     val bubbleData = BubbleData(bubbleDataSet)
@@ -637,22 +726,29 @@ fun BubbleChart() {
 }
 
 @Composable
-fun RadarChart() {
-    val dataPoints = listOf(
-        Pair("Speed", 70f),
-        Pair("Power", 30f),
-        Pair("Endurance", 50f),
-        Pair("Agility", 90f),
-        Pair("Accuracy", 80f),
-        Pair("Reaction Time", 65f)
-    )
+fun RadarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+    var top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+
+    var dataPoints = top5.sortedByDescending { it.second }.take(5)
+
+    val maxValue = dataPoints.maxByOrNull { it.second }?.second ?: 0f
+    val yAxisMaxValue = (maxValue / 10f).coerceAtLeast(1f) * 10f
+    /*var tavue=0
+    for(s in dataPoints)
+    {
+        tavue=tavue+s.second.toInt()
+    }
+    for (s in 0 until dataPoints.size) {
+        var pute=dataPoints[s].second.toInt()
+        var final=(pute / tavue)*100
+        dataPoints[s]=final
+    }*/
 
     val radarEntries = dataPoints.mapIndexed { index, data ->
         RadarEntry(data.second).apply {
             dataPoints[index].first
         }
     }
-
     Card(
         modifier = Modifier
             .padding(16.dp)
@@ -689,22 +785,19 @@ fun RadarChart() {
 
                         val radarData = RadarData(listOf<IRadarDataSet>(radarDataSet))
                         data = radarData
-
                         xAxis.apply {
                             valueFormatter = object : ValueFormatter() {
                                 override fun getFormattedValue(value: Float): String {
-                                    return dataPoints[value.toInt() % dataPoints.size].first
+                                    return dataPoints[value.toInt() % dataPoints.size].first.toString()
                                 }
                             }
-                            textSize = 14f
+                            textSize = 80f
                         }
-
                         yAxis.apply {
-                            setDrawLabels(false)
+                            setDrawLabels(true)
                             setAxisMinValue(0f)
-                            setAxisMaxValue(100f)
+                            setAxisMaxValue((yAxisMaxValue/140)*100)
                         }
-
                         legend.isEnabled = false
                         description.isEnabled = false
                     }
