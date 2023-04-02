@@ -2,6 +2,7 @@ package com.example.digiit.photos
 
 import android.content.Context
 import android.net.Uri
+import android.widget.ToggleButton
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -9,15 +10,15 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.IconToggleButton
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +54,7 @@ fun CameraView(
     val cameraSelector = CameraSelector.Builder()
         .requireLensFacing(lensFacing)
         .build()
+    val flashMode = remember { mutableStateOf(ImageCapture.FLASH_MODE_OFF) }
 
     LaunchedEffect(lensFacing) {
         val cameraProvider = context.getCameraProvider()
@@ -67,33 +69,63 @@ fun CameraView(
         preview.setSurfaceProvider(previewView.surfaceProvider)
     }
 
-    Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
+    Box(contentAlignment = Alignment.BottomEnd, modifier = Modifier.fillMaxSize()) {
         AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
 
-        IconButton(
-            modifier = Modifier.padding(bottom = 20.dp),
-            onClick = {
-                takePhoto(
-                    filenameFormat = "yyyy-MM-dd-HH-mm-ss-SSS",
-                    imageCapture = imageCapture,
-                    outputDirectory = outputDirectory,
-                    executor = executor,
-                    onImageCaptured = onImageCaptured,
-                    onError = onError
-                )
-            },
-            content = {
-                Icon(
-                    painter = painterResource(id = R.drawable.camera),
-                    contentDescription = "Take picture",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(90.dp)
-                        .padding(1.dp)
-                        .border(1.dp, Color.White, CircleShape)
-                )
-            }
-        )
+        Row(
+            modifier = Modifier
+                .padding(bottom = 20.dp, start = 75.dp)
+                .align(Alignment.BottomCenter),
+
+        ) {
+            IconButton(
+                onClick = {
+                    takePhoto(
+                        filenameFormat = "yyyy-MM-dd-HH-mm-ss-SSS",
+                        imageCapture = imageCapture,
+                        outputDirectory = outputDirectory,
+                        executor = executor,
+                        onImageCaptured = onImageCaptured,
+                        onError = onError,
+                        flashMode = flashMode.value)
+                },
+                content = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.camera),
+                        contentDescription = "Take picture",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(90.dp)
+                            .padding(1.dp)
+                            .border(1.dp, Color.White, CircleShape)
+                    )
+                }
+            )
+
+            IconToggleButton(
+                checked = flashMode.value == ImageCapture.FLASH_MODE_ON,
+                onCheckedChange = { isChecked ->
+                    flashMode.value = if (isChecked) ImageCapture.FLASH_MODE_ON else ImageCapture.FLASH_MODE_OFF
+                    imageCapture.flashMode = flashMode.value
+                },
+                modifier = Modifier.padding(start = 20.dp),
+                content = {
+                    Icon(
+                        painter = if (flashMode.value == ImageCapture.FLASH_MODE_ON) painterResource(
+                            id = R.drawable.flash_on
+                        ) else painterResource(
+                            id = R.drawable.flash_off
+                        ),
+                        contentDescription = "Flash",
+                        tint = if (flashMode.value == ImageCapture.FLASH_MODE_ON) Color.Yellow else Color.White,
+                        modifier = Modifier
+                            .size(60.dp)
+                            .padding(1.dp)
+                            .border(1.dp, Color.White, CircleShape)
+                    )
+                }
+            )
+        }
     }
 }
 
@@ -102,6 +134,7 @@ private fun takePhoto(
     imageCapture: ImageCapture,
     outputDirectory: File,
     executor: Executor,
+    flashMode: Int,
     onImageCaptured: (Uri) -> Unit,
     onError: (ImageCaptureException) -> Unit
 ) {
@@ -113,6 +146,7 @@ private fun takePhoto(
 
     val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
+    imageCapture.flashMode = flashMode // set flash mode
     imageCapture.takePicture(outputOptions, executor, object: ImageCapture.OnImageSavedCallback {
         override fun onError(exception: ImageCaptureException) {
             onError(exception)

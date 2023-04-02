@@ -2,6 +2,7 @@ package com.example.digiit.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
@@ -44,9 +45,7 @@ fun ColorChooser(text: String, color: MutableState<Color>) {
     Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth()) {
         Button(modifier = Modifier
             .padding(horizontal = 12.dp)
-            .weight(1f), onClick = {
-            colorDialog.show()
-        }) {
+            .weight(1f), onClick = { }) {
             Text(text = text, fontSize = 18.sp)
         }
 
@@ -56,7 +55,8 @@ fun ColorChooser(text: String, color: MutableState<Color>) {
                     .size(55.dp)
                     .clip(CircleShape)
                     .background(colorValue.value)
-                    .border(1.dp, MaterialTheme.colors.onBackground, CircleShape),
+                    .border(1.dp, MaterialTheme.colors.onBackground, CircleShape)
+                    .clickable { colorDialog.show() },
                 contentAlignment = Alignment.Center
             ) {}
         }
