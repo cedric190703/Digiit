@@ -230,7 +230,7 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                         val top5 = getTopKinds(auth.user!!, after, before).take(5)
                         val dataPoints = top5.sortedByDescending { it.second }.take(5)
                         val pieEntries = dataPoints.map { data ->
-                            PieEntry(data.second, data.first.title + " "+ data.second + "%")
+                            PieEntry(data.second, data.first.title + " "+ data.second + "$")
                         }
 
                         val pieDataSet = PieDataSet(pieEntries, "")
