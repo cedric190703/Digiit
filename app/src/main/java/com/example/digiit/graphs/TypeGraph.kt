@@ -2,7 +2,10 @@ package com.example.digiit.graphs
 
 import androidx.compose.ui.graphics.Color
 import com.example.digiit.R
+import com.example.digiit.data.ticket.RemoteTicket
+import com.example.digiit.utils.ActionCallback
 import com.github.mikephil.charting.data.BarEntry
+import com.google.firebase.firestore.DocumentReference
 
 enum class TypeGraph(
     val title: String,

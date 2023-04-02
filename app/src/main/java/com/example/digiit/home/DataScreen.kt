@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -13,10 +14,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,18 +74,17 @@ fun DataScreen(auth: UserProvider) {
     )
     if(showDialog.value)
     {
-        DialogGraph( setShowDialog = {
+        DialogGraph( auth,setShowDialog = {
             showDialog.value = it
         })
     }
 }
 
-var listGraphs = mutableStateListOf<TypeGraph>()
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
     val listState = rememberLazyListState()
+    val listGraphs=auth.user!!.listGraphs
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -137,8 +134,9 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                 state = listState,
                 modifier = Modifier.scrollbar(state = listState)
             ) {
-                items(listGraphs) { item ->
-                    val state = rememberDismissState(
+                itemsIndexed(listGraphs) { _: Int, item : TypeGraph ->
+                    val state = DismissState(
+                        initialValue = DismissValue.Default,
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
                                 listGraphs.remove(item)
@@ -180,9 +178,9 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                                 TypeGraph.CubicLine -> CubicLineChart(auth, StartDate, EndDate)
                                 TypeGraph.HorizontalBarChart -> HorizontalBarChart(auth, StartDate, EndDate)
                             }
-
                         },
                         directions = setOf(DismissDirection.EndToStart)
+
                     )
                 }
             }

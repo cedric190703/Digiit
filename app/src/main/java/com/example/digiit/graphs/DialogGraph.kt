@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.digiit.home.listGraphs
+import com.example.digiit.data.UserProvider
 import com.google.type.DateTime
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -26,6 +26,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import com.example.digiit.data.user.User
 
 val icons = listOf<TypeGraph>(
     TypeGraph.LineChart,
@@ -40,7 +41,7 @@ val icons = listOf<TypeGraph>(
 var StartDate: LocalDateTime= LocalDateTime.now()
 var EndDate: LocalDateTime=LocalDateTime.now()
 @Composable
-fun     DialogGraph(setShowDialog: (Boolean) -> Unit) {
+fun     DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
     val dateDialogState = rememberMaterialDialogState()
     var pickedDateDebut by remember {
         mutableStateOf(LocalDateTime.now())
@@ -247,10 +248,10 @@ fun     DialogGraph(setShowDialog: (Boolean) -> Unit) {
                                     onClick = {
                                         setShowDialog(false)
                                         when (firstIconIndex){
-                                            0->listGraphs.add(TypeGraph.CubicLine)
-                                            2->listGraphs.add(TypeGraph.BarChart)
-                                            4->listGraphs.add(TypeGraph.GroupedBarChart)
-                                            6->listGraphs.add(TypeGraph.RadarChartData)
+                                            0->auth.user!!.listGraphs.add(TypeGraph.CubicLine)
+                                            2->auth.user!!.listGraphs.add(TypeGraph.BarChart)
+                                            4->auth.user!!.listGraphs.add(TypeGraph.GroupedBarChart)
+                                            6->auth.user!!.listGraphs.add(TypeGraph.RadarChartData)
                                         }
                                     },
                                     icon = {
@@ -274,10 +275,10 @@ fun     DialogGraph(setShowDialog: (Boolean) -> Unit) {
                                     onClick = {
                                         setShowDialog(false)
                                         when (secondIconIndex){
-                                            1->listGraphs.add(TypeGraph.LineChart)
-                                            3->listGraphs.add(TypeGraph.BubbleGraph)
-                                            5->listGraphs.add(TypeGraph.PieChart)
-                                            7->listGraphs.add(TypeGraph.HorizontalBarChart)
+                                            1->auth.user!!.listGraphs.add(TypeGraph.LineChart)
+                                            3->auth.user!!.listGraphs.add(TypeGraph.BubbleGraph)
+                                            5->auth.user!!.listGraphs.add(TypeGraph.PieChart)
+                                            7->auth.user!!.listGraphs.add(TypeGraph.HorizontalBarChart)
                                         }
                                     },
                                     icon = {
