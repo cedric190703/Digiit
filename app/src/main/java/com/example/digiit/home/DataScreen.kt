@@ -82,7 +82,7 @@ fun DataScreen(auth: UserProvider) {
     }
 }
 
-var listGraphs = mutableStateListOf<Graph>()
+var listGraphs = mutableStateListOf<TypeGraph>()
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -91,7 +91,7 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-                .fillMaxWidth()
+            .fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.padding(6.dp))
         Icon(
@@ -132,10 +132,11 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                 )
             }
         }
-        else
-        {
-            LazyColumn(state = listState,
-                modifier = Modifier.scrollbar(state = listState)) {
+        else {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.scrollbar(state = listState)
+            ) {
                 items(listGraphs) { item ->
                     val state = rememberDismissState(
                         confirmStateChange = {
@@ -148,11 +149,12 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                     SwipeToDismiss(
                         state = state,
                         background = {
-                            val color = when (state.dismissDirection) {
-                                DismissDirection.StartToEnd -> Color.Transparent
-                                DismissDirection.EndToStart -> Color.Red
-                                null -> Color.Transparent
-                            }
+                            val color =
+                                if (kotlin.math.abs(state.direction) > 0.1) when (state.dismissDirection) {
+                                    DismissDirection.StartToEnd -> Color.Transparent
+                                    DismissDirection.EndToStart -> Color.Red
+                                    null -> Color.Transparent
+                                } else Color.Transparent
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -168,6 +170,17 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                             }
                         },
                         dismissContent = {
+                            when (item) {
+                                TypeGraph.PieChart -> PieChart(auth, StartDate, EndDate)
+                                TypeGraph.RadarChartData -> RadarChart(auth, StartDate, EndDate)
+                                TypeGraph.LineChart -> LineChart(auth, StartDate, EndDate)
+                                TypeGraph.GroupedBarChart -> GroupedBarChart()
+                                TypeGraph.BarChart -> BarChart(auth, StartDate, EndDate)
+                                TypeGraph.BubbleGraph -> BubbleChart()
+                                TypeGraph.CubicLine -> CubicLineChart(auth, StartDate, EndDate)
+                                TypeGraph.HorizontalBarChart -> HorizontalBarChart(auth, StartDate, EndDate)
+                            }
+
                         },
                         directions = setOf(DismissDirection.EndToStart)
                     )

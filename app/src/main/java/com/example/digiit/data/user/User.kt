@@ -43,6 +43,7 @@ abstract class User {
 
     abstract fun getSpending(kind: TradeKinds?, after: LocalDateTime?, before: LocalDateTime?, callback: (error: Exception?, spending: Float) -> Unit)
 
+    abstract fun getSpeedingIn(kind : TradeKinds, after: LocalDateTime?, before: LocalDateTime?) : Float
     abstract fun loadProfilePicture(callback: ActionCallback)
     abstract fun saveProfilePicture(callback: ActionCallback)
 

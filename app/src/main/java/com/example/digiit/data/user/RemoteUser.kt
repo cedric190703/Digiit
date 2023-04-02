@@ -133,6 +133,19 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
         callback(null, spending)
     }
 
+    override fun getSpeedingIn(
+        kind: TradeKinds,
+        after: LocalDateTime?,
+        before: LocalDateTime?
+    ): Float {
+        var result = 0f;
+        for (ticket in tickets) {
+            if ((ticket.type != null && ticket.type == kind) && (after == null || after <= ticket.date) && (before == null || ticket.date <= before)) {
+                result += ticket.price;
+            }
+        }
+        return result
+    }
     override fun loadProfilePicture(callback: ActionCallback) {
         if (profilePictureRef != null) {
             profilePictureRef!!.getBytes(MAX_IMAGE_SIZE).addOnCompleteListener { task ->

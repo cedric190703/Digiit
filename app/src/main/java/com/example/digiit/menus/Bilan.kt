@@ -137,7 +137,7 @@ fun Bilan(onDismiss: (Boolean) -> Unit,
                 item {
                     Text(text = "Dépenses avec les 4 types de documents les plus importants :",
                         modifier = Modifier.padding(start = 18.dp, top = 12.dp))
-                    CubicLineChart()
+                    CubicLineChart(auth,start,end)
                 }
                 item {
                     Button(
