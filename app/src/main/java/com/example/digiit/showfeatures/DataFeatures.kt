@@ -155,7 +155,6 @@ fun Features(
         if (selectedPage == listData.size - 1) {
             Button(
                 onClick = {
-                    println("here1")
                     onClick()
                 },
                 modifier = Modifier
