@@ -369,11 +369,9 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit,
                                         // Call EditCard when apiResponse is not null
                                         apiResponse?.let { apiResponse ->
                                             if(apiResponse.status == "success") {
-                                                Log.d("results", "${apiResponse.title} | ${apiResponse.total} | ${apiResponse.date}")
+                                                Log.d("results", "${apiResponse.title} | ${apiResponse.total}")
                                                 card.title = apiResponse.title.orEmpty()
-                                                // For now
-                                                // DONT TOUCH
-                                                card.price = 0f
+                                                card.price = apiResponse.total?.toFloat() ?: 0f
                                                 callFunc.value = true
                                             } else {
                                                 card.title = ""

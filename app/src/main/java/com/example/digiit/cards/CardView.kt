@@ -36,7 +36,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket, auth: UserProvide
     Dialog(onDismissRequest = { setState(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
-            color = ticket.colorIcon) {
+            color = ticket.colorTag) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
@@ -212,7 +212,7 @@ fun CardViewBig(
     Dialog(onDismissRequest = { setState(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
-            color = ticket.colorIcon) {
+            color = ticket.colorTag) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -385,17 +385,19 @@ fun CardViewBig(
 }
 
 @Composable
-fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet) {
+fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet,auth: UserProvider) {
     val showDialog = remember { mutableStateOf(false) }
     val dialogModif = remember { mutableStateOf(false) }
     val bigScreen = remember { mutableStateOf(false) }
     Dialog(onDismissRequest = { setState(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
-            color = wallet.colorIcon) {
+            color = wallet.colorTag) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -404,7 +406,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet) {
                     IconButton(onClick = { setState(false) }) {
                         Icon(imageVector = Icons.Default.Close,
                             contentDescription = "Close",
-                            tint = MaterialTheme.colors.primary,
+                            tint = Color.White,
                             modifier = Modifier.size(38.dp))
                     }
                 }
@@ -443,12 +445,12 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet) {
                 Spacer(modifier = Modifier.padding(12.dp))
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(65.dp),
-                    text = {  Text(text = wallet.walletType.title,
+                    text = {  Text(text = wallet.type.title,
                         fontSize = 17.sp, color = Color.White) },
                     backgroundColor = Color.Transparent,
                     onClick = {  },
                     icon = {
-                        Icon(painter = painterResource(wallet.walletType.icon),
+                        Icon(painter = painterResource(wallet.type.icon),
                             "Logo commercial type wallet",
                             modifier = Modifier
                                 .padding(5.dp)
@@ -560,7 +562,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet) {
                         wallet = wallet,
                         setLittleDialog = {
                             setState(false)
-                        })
+                        }, auth = auth)
                 }
             }
         }
@@ -571,14 +573,15 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet) {
 fun CardViewBigWallet(
     setState: (Boolean) -> Unit,
     wallet: Wallet,
-    setLittleDialog: (Boolean) -> Unit
+    setLittleDialog: (Boolean) -> Unit,
+    auth: UserProvider
 ) {
     val showDialog = remember { mutableStateOf(false) }
     val dialogModif = remember { mutableStateOf(false) }
     Dialog(onDismissRequest = { setState(false) }) {
         Surface(
             shape = RoundedCornerShape(15.dp),
-            color = wallet.colorIcon) {
+            color = wallet.colorTag) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -634,12 +637,12 @@ fun CardViewBigWallet(
                 )
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(65.dp),
-                    text = {  Text(text = wallet.walletType.title,
+                    text = {  Text(text = wallet.type.title,
                         fontSize = 17.sp, color = Color.White) },
                     backgroundColor = Color.Transparent,
                     onClick = {  },
                     icon = {
-                        Icon(painter = painterResource(wallet.walletType.icon),
+                        Icon(painter = painterResource(wallet.type.icon),
                             "Logo type wallet",
                             modifier = Modifier
                                 .padding(5.dp)
