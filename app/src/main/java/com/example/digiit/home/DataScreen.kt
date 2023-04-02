@@ -21,8 +21,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
@@ -84,6 +88,7 @@ fun DataScreen(auth: UserProvider) {
 @Composable
 fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
     val listState = rememberLazyListState()
+    val tickets=auth.user!!.tickets
     val listGraphs=auth.user!!.listGraphs
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -112,7 +117,7 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
         )
         Spacer(modifier = Modifier.padding(4.dp))
-        if(listGraphs.size == 0)
+        if(tickets.size == 0)
         {
             Image(painter = painterResource(id = R.drawable.data_image),
                 contentDescription = "image for no data",
@@ -126,6 +131,32 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                         fontWeight = FontWeight.Bold,
                         fontSize = 30.sp
                     )
+                )
+            }
+        }
+        else if(listGraphs.size==0){
+            Image(painter = painterResource(id = R.drawable.data_image),
+                contentDescription = "image for no data",
+                modifier = Modifier
+                    .width(350.dp)
+                    .height(250.dp))
+            Column(modifier = Modifier.padding(14.dp)) {
+                Text(
+                    text = buildAnnotatedString {
+                        append("Sélectionner un ")
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Blue,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        ) {
+                            append("graph")
+                        }
+                        append(" à ajouter")
+
+                    },
+                    fontSize = 25.sp,
                 )
             }
         }
@@ -180,7 +211,6 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                             }
                         },
                         directions = setOf(DismissDirection.EndToStart)
-
                     )
                 }
             }

@@ -75,7 +75,6 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
             }
         }
     }
-
     override fun queryTickets(callback: ActionCallback) {
         val query = document.collection("tickets")
         query.get().addOnCompleteListener {task ->
