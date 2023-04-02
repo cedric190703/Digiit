@@ -16,7 +16,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.digiit.data.UserProvider
 import com.example.digiit.graphs.CubicLineChart
-import com.example.digiit.graphs.LineChart
+import com.example.digiit.graphs.LineChartByMonth
 import com.example.digiit.graphs.PieChart
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.utils.getCurrentMonth
@@ -132,7 +132,7 @@ fun Bilan(onDismiss: (Boolean) -> Unit,
                 }
                 item {
                     Text(text = "Dépenses des 4 derniers mois :")
-                    LineChart()
+                    LineChartByMonth(auth, start.minusMonths(3), end)
                 }
                 item {
                     Text(text = "Dépenses avec les 4 types de documents les plus importants :",

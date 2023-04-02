@@ -6,49 +6,50 @@ import android.view.ViewGroup
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.formatter.ValueFormatter
 import androidx.compose.material.Card
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.UserProvider
 import com.example.digiit.data.user.User
-import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.*
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.charts.HorizontalBarChart
-import com.github.mikephil.charting.charts.BubbleChart
-import com.github.mikephil.charting.data.BubbleData
-import com.github.mikephil.charting.data.BubbleDataSet
-import com.github.mikephil.charting.data.BubbleEntry
-import com.github.mikephil.charting.charts.RadarChart
-import com.github.mikephil.charting.data.RadarData
-import com.github.mikephil.charting.data.RadarDataSet
-import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import kotlin.coroutines.resumeWithException
+
+
+enum class Mois(val numero: Int, val nom: String) {
+    JANVIER(1, "janvier"),
+    FEVRIER(2, "février"),
+    MARS(3, "mars"),
+    AVRIL(4, "avril"),
+    MAI(5, "mai"),
+    JUIN(6, "juin"),
+    JUILLET(7, "juillet"),
+    AOUT(8, "août"),
+    SEPTEMBRE(9, "septembre"),
+    OCTOBRE(10, "octobre"),
+    NOVEMBRE(11, "novembre"),
+    DECEMBRE(12, "décembre");
+
+    companion object {
+        private val map = values().associateBy(Mois::numero)
+        fun getNomMois(numero: Int): String = map[numero]!!.nom
+    }
+}
+
 
 @Composable
 fun BarChart() {
@@ -114,7 +115,31 @@ fun BarChart() {
 }
 
 @Composable
-fun LineChart() {
+        /**
+         * Generate the linechart graph with each months spending
+         */
+fun LineChartByMonth(auth: UserProvider, start : LocalDateTime, end :  LocalDateTime) {
+
+    val dataGraph = mutableListOf<Pair<LocalDateTime, Float>>()
+    var current = start.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS)
+    var endOfMonth = current
+    while (!current.isAfter(end)) {
+        var x = 0f
+        // need to include the last day of months so taking first day 0:0:0 (will be exclude in the getSpending methode)
+        endOfMonth = current.plusMonths(1).withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS)
+        auth.user!!.getSpending(null,current, endOfMonth)
+            { error, spending ->
+                if (error != null) {
+                    println("Une erreur est survenue : ${error.message}")
+                } else {
+                    x = spending
+                }
+            }
+        dataGraph.add(Pair(current, x))
+        current = endOfMonth
+    }
+
+
     val dataPoints = listOf(
         Pair("Décembre", 12f),
         Pair("Janvier", 25f),
@@ -122,7 +147,7 @@ fun LineChart() {
         Pair("Mars", 15f)
     )
 
-    val lineEntries = dataPoints.mapIndexed { index, data ->
+    val lineEntries = dataGraph.mapIndexed { index, data ->
         Entry(index.toFloat(), data.second)
     }
     Card(
@@ -167,7 +192,7 @@ fun LineChart() {
                             setDrawGridLines(false)
                             valueFormatter = object : ValueFormatter() {
                                 override fun getFormattedValue(value: Float): String {
-                                    return dataPoints[value.toInt()].first
+                                    return Mois.getNomMois(dataGraph[value.toInt()].first.monthValue)
                                 }
                             }
                             textSize = 12f
@@ -405,7 +430,12 @@ suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, b
 }
 
 @Composable
-//PieChar With 5 most used kinds between two date
+/**
+ * @param auth : The user provider
+ * @param after : LocalDateTime (exclude)
+ * @param before: LocalDateTime (exlude !!)
+* @return a PieChart Graph with the most used kinds between after and before
+*/
 fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -464,9 +494,9 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                 update = { chart ->
                     coroutineScope.launch {
                         val top5 = getTopKinds(auth.user!!, after, before).take(5)
-                        val dataPoints = top5.reversed().take(5)
+                        val dataPoints = top5.sortedByDescending { it.second }.take(5)
                         val pieEntries = dataPoints.map { data ->
-                            PieEntry(data.second, data.first.title)
+                            PieEntry(data.second, data.first.title + " "+ data.second + "%")
                         }
 
                         val pieDataSet = PieDataSet(pieEntries, "")
