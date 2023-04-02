@@ -29,6 +29,8 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.coroutines.resumeWithException
 
+val top5Color = listOf(Color.rgb(85, 216, 254), Color.rgb(255, 131, 115), Color.rgb(255, 218, 131), Color.rgb(163, 160, 251), Color.rgb(90, 219, 168) )
+
 
 enum class Mois(val numero: Int, val nom: String) {
     JANVIER(1, "janvier"),
@@ -234,7 +236,7 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                         }
 
                         val pieDataSet = PieDataSet(pieEntries, "")
-                        pieDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+                        pieDataSet.colors = top5Color
 
                         val pieData = PieData(pieDataSet)
                         chart.data = pieData
@@ -273,7 +275,7 @@ fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                     setDrawGridBackground(false)
 
                     val barDataSet = BarDataSet(barEntries, "")
-                    barDataSet.colors = listOf(Color.GREEN)
+                    barDataSet.colors = top5Color
 
                     val barData = BarData(barDataSet)
                     data = barData
@@ -295,7 +297,7 @@ fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
             },
             update = { chart ->
                 val barDataSet = BarDataSet(barEntries, "")
-                barDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+                barDataSet.colors = top5Color
 
                 val barData = BarData(barDataSet)
                 chart.data = barData
@@ -480,7 +482,7 @@ fun GroupedBarChart() {
         "Group 1"
     )
     dataSet1.stackLabels = arrayOf("Value 1", "Value 2")
-    dataSet1.color = Color.BLUE
+    dataSet1.color = top5Color[1]
     dataSet1.setDrawValues(false)
 
     val dataSet2 = BarDataSet(
@@ -495,7 +497,7 @@ fun GroupedBarChart() {
         "Group 2",
     )
     dataSet2.stackLabels = arrayOf("Value 1", "Value 2")
-    dataSet2.color = Color.RED
+    dataSet2.color = top5Color[2]
     dataSet2.setDrawValues(false)
 
     val dataSet3 = BarDataSet(
@@ -510,7 +512,7 @@ fun GroupedBarChart() {
         "Group 2"
     )
     dataSet3.stackLabels = arrayOf("Value 1", "Value 2")
-    dataSet3.color = Color.GREEN
+    dataSet3.color = top5Color[3]
     dataSet3.setDrawValues(false)
 
     val barData = BarData(dataSet1, dataSet2, dataSet3)
@@ -615,7 +617,7 @@ fun HorizontalBarChart(auth : UserProvider, after : LocalDateTime = LocalDateTim
                         setDrawGridBackground(false)
 
                         val barDataSet = BarDataSet(barEntries, "")
-                        barDataSet.colors = listOf(Color.GREEN)
+                        barDataSet.colors = top5Color
 
                         val barData = BarData(barDataSet)
                         data = barData
@@ -634,7 +636,7 @@ fun HorizontalBarChart(auth : UserProvider, after : LocalDateTime = LocalDateTim
                 },
                 update = { chart ->
                     val barDataSet = BarDataSet(barEntries, "")
-                    barDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+                    barDataSet.colors = top5Color
 
                     val barData = BarData(barDataSet)
                     chart.data = barData
@@ -686,7 +688,7 @@ fun BubbleChart() {
                         setPinchZoom(true)
 
                         val bubbleDataSet = BubbleDataSet(bubbleEntries, "Data Set")
-                        bubbleDataSet.colors = listOf(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW)
+                        bubbleDataSet.colors = top5Color
                         bubbleDataSet.valueTextSize = 12f
 
                         val bubbleData = BubbleData(bubbleDataSet)
@@ -711,7 +713,7 @@ fun BubbleChart() {
                 },
                 update = { chart ->
                     val bubbleDataSet = BubbleDataSet(bubbleEntries, "Data Set")
-                    bubbleDataSet.colors = listOf(Color.MAGENTA, Color.CYAN, Color.DKGRAY, Color.LTGRAY)
+                    bubbleDataSet.colors = top5Color
                     bubbleDataSet.valueTextSize = 16f
 
                     val bubbleData = BubbleData(bubbleDataSet)
