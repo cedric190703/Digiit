@@ -143,6 +143,8 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
                     callback(task.exception)
                 }
             }
+        } else {
+            callback(null)
         }
     }
 

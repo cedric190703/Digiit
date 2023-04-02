@@ -45,7 +45,7 @@ fun EditCard(
     setShowDialog: (Boolean) -> Unit,
     setView: (Boolean) -> Unit,
     edit: Boolean = true
-){
+) {
     val ctx = LocalContext.current
 
     val ticket = card as? Ticket
@@ -372,14 +372,25 @@ fun EditCard(
                                 if (ticket.isValid()) {
                                     ticket.save { error ->
                                         if (error == null) {
-                                            Toasty.success(
-                                                ctx,
-                                                "Le ticket a bien été modifié",
-                                                Toast.LENGTH_SHORT,
-                                                true
-                                            ).show()
-                                            setShowDialog(false)
-                                            setView(false)
+                                            ticket.saveImage { err ->
+                                                if (err == null) {
+                                                    Toasty.success(
+                                                        ctx,
+                                                        "Le ticket a bien été modifié",
+                                                        Toast.LENGTH_SHORT,
+                                                        true
+                                                    ).show()
+                                                    setShowDialog(false)
+                                                    setView(false)
+                                                } else {
+                                                    Toasty.error(
+                                                        ctx,
+                                                        "Erreur de sauvegarde de l'image du ticket",
+                                                        Toast.LENGTH_SHORT,
+                                                        true
+                                                    ).show()
+                                                }
+                                            }
                                         } else {
                                             Toasty.error(
                                                 ctx,
@@ -397,8 +408,48 @@ fun EditCard(
                                         true
                                     ).show()
                                 }
-                            } else {
-                                // TODO : Update wallet with backend
+                            } else if(wallet != null) {
+                                wallet.expiryDate = expiry!!.value
+                                wallet.walletType = walletType!!.value
+                                if (wallet.isValid()) {
+                                    wallet.save { error ->
+                                        if (error == null) {
+                                            wallet.saveImage { err ->
+                                                if (err == null) {
+                                                    Toasty.success(
+                                                        ctx,
+                                                        "Le porte feuilles a bien été modifié",
+                                                        Toast.LENGTH_SHORT,
+                                                        true
+                                                    ).show()
+                                                    setShowDialog(false)
+                                                    setView(false)
+                                                } else {
+                                                    Toasty.error(
+                                                        ctx,
+                                                        "Erreur de sauvegarde de l'image du feuilles",
+                                                        Toast.LENGTH_SHORT,
+                                                        true
+                                                    ).show()
+                                                }
+                                            }
+                                        } else {
+                                            Toasty.error(
+                                                ctx,
+                                                "Erreur de sauvegarde du feuilles",
+                                                Toast.LENGTH_SHORT,
+                                                true
+                                            ).show()
+                                        }
+                                    }
+                                } else {
+                                    Toasty.error(
+                                        ctx,
+                                        "Des champs n'ont pas été remplis correctement",
+                                        Toast.LENGTH_SHORT,
+                                        true
+                                    ).show()
+                                }
                             }
                         },
                         backgroundColor = MaterialTheme.colors.primary

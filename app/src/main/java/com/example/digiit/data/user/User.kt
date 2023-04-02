@@ -1,9 +1,12 @@
 package com.example.digiit.data.user
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.example.digiit.R
 import com.example.digiit.data.CommercialType
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.ticket.Ticket
@@ -23,9 +26,16 @@ abstract class User {
     abstract val local: Boolean
 
     abstract var profilePicture: Bitmap?
+    var defaultPicture: Bitmap? = null
 
-    fun getImageBitmapOrDefault(): ImageBitmap {
+    fun getImageBitmapOrDefault(ctx: Context): ImageBitmap {
         if (profilePicture == null) {
+            if (defaultPicture == null) {
+                defaultPicture = BitmapFactory.decodeResource(ctx.resources, R.drawable.profile)
+            }
+            if (defaultPicture != null) {
+                return defaultPicture!!.asImageBitmap()
+            }
             return ImageBitmap(1, 1)
         }
         return profilePicture!!.asImageBitmap();

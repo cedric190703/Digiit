@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -21,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,15 +37,17 @@ import es.dmoral.toasty.Toasty
 
 @Composable
 fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
-    // photoUri for the file
+    // photoUri for the
+    val ctx = LocalContext.current
     var photoUri: Uri? by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         photoUri = uri
+        val bitmap: Bitmap? = if (photoUri != null) createBitmapFromUri(context = ctx, uri = photoUri) else null
+        auth.user!!.profilePicture = bitmap
     }
     val name = remember { mutableStateOf(auth.user!!.name) }
     val lastname = remember { mutableStateOf(auth.user!!.lastname) }
     val email = remember { mutableStateOf(auth.user!!.email) }
-    val ctx = LocalContext.current
     // Change this value to have the real maxValueSlider
     // TODO
     val maxValueSlider = remember { mutableStateOf("1000") }
@@ -56,9 +60,10 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
     ) {
         Surface(
             modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(16.dp),
+                .padding(16.dp)
+                .background(Color.Transparent),
             shape = RoundedCornerShape(8.dp),
             elevation = 8.dp
         ) {
@@ -87,7 +92,7 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.profile),
+                        bitmap = auth.user!!.getImageBitmapOrDefault(ctx),
                         contentDescription = "Profile Image",
                         modifier = Modifier
                             .size(70.dp)
@@ -144,16 +149,22 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                     modifier = Modifier
                         .height(85.dp)
                         .padding(vertical = 18.dp, horizontal = 4.dp),
-                    text = {  Text(text = "Modifier élement", fontSize = 18.sp) },
+                    text = {  Text(text = "Modifier", fontSize = 18.sp) },
                     onClick = {
                         auth.user!!.email = email.value
                         auth.user!!.name = name.value
                         auth.user!!.lastname = lastname.value
                         auth.user!!.save { err ->
-                            if (err != null) {
-                                Toasty.error(ctx, "Impossible de modifiées les paramètres de l'utilisateur", Toast.LENGTH_SHORT, true).show()
+                            if (err == null) {
+                                auth.user!!.saveProfilePicture { err ->
+                                    if (err == null) {
+                                        Toasty.success(ctx, "Les paramètres de l'utilisateur ont bien été modifiées", Toast.LENGTH_SHORT, true).show()
+                                    } else {
+                                        Toasty.error(ctx, "Impossible de modifiées la photo de profile de l'utilisateur", Toast.LENGTH_SHORT, true).show()
+                                    }
+                                }
                             } else {
-                                Toasty.success(ctx, "Les paramètres de l'utilisateur ont bien été modifiées", Toast.LENGTH_SHORT, true).show()
+                                Toasty.error(ctx, "Impossible de modifiées les paramètres de l'utilisateur", Toast.LENGTH_SHORT, true).show()
                             }
                         }
                         onDismiss(false)
@@ -161,11 +172,6 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                     backgroundColor = MaterialTheme.colors.primary
                 )
             }
-        }
-        if (photoUri != null) {
-            val bitmapTmp: Bitmap = createBitmapFromUri(context = LocalContext.current, uri = photoUri)
-            // use the bitmap for the User here
-            // TODO
         }
     }
 }

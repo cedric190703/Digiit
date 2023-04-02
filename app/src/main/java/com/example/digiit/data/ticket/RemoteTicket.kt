@@ -14,19 +14,17 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.UUID
 
 
-class RemoteTicket(private val user: RemoteUser, private var saved: Boolean, private val document: DocumentReference) : LocalTicket(null) {
+class RemoteTicket(private val user: RemoteUser, private var saved: Boolean, private val document: DocumentReference) : Ticket() {
     private val storage = Firebase.storage(document.firestore.app)
     private var imageId = ""
     private var imageRef : StorageReference? = null
 
     fun load(item: DocumentSnapshot) {
-        file = File("remote/${item.id}/user.dat")
         lastEdit = item.getTimestamp("lastEdit")!!.seconds
         type = TradeKinds.valueOf(item.getString("type")!!)
         tag = item.getString("tag")!!
@@ -124,6 +122,8 @@ class RemoteTicket(private val user: RemoteUser, private var saved: Boolean, pri
             imageRef!!.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->
                 callback(task.exception)
             }
+        } else {
+            callback(null)
         }
     }
 

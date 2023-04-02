@@ -127,6 +127,8 @@ class RemoteWallet(private val user: RemoteUser, private var saved: Boolean, pri
             imageRef!!.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->
                 callback(task.exception)
             }
+        } else {
+            callback(null)
         }
     }
 

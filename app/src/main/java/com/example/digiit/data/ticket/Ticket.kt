@@ -15,7 +15,6 @@ abstract class Ticket(
     comment: String = "",
     colorIcon: Color = Color.Black,
     colorTag: Color = Color.Black,
-    colorText: Color = Color.Black,
     var rating: Float = 0f
 ) : Card(type, tag, title, price, date, comment, colorIcon, colorTag) {
     fun isValid(): Boolean {
