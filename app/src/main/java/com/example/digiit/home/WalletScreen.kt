@@ -1,9 +1,11 @@
 package com.example.digiit.home
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,18 +15,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.digiit.R
-import com.example.digiit.cards.WalletsCard
+import com.example.digiit.cards.WalletCard
 import com.example.digiit.data.UserProvider
+import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.photos.SelectOption
 import com.example.digiit.photos.TypeScreen
 import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.search.SearchViewHomeWallet
+import es.dmoral.toasty.Toasty
 
 @Composable
 fun WalletScreen(auth: UserProvider) {
@@ -76,13 +81,14 @@ fun WalletScreen(auth: UserProvider) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WalletContent(paddingValues: PaddingValues, auth: UserProvider) {
-    var listWallets = auth.user!!.wallets
+    val context = LocalContext.current.applicationContext
+    val userWallets = auth.user!!.wallets
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()) {
         SearchViewHomeWallet(auth)
-        if(listWallets.size == 0)
+        if(userWallets.size == 0)
         {
             Spacer(modifier = Modifier.padding(15.dp))
             Image(painter = painterResource(id = R.drawable.wallet_image),
@@ -104,25 +110,33 @@ fun WalletContent(paddingValues: PaddingValues, auth: UserProvider) {
         {
             LazyColumn(state = listState,
                 modifier = Modifier.scrollbar(state = listState)) {
-                items(listWallets.size) { item ->
+                itemsIndexed(userWallets) { _: Int, wallet: Wallet ->
                     val state= rememberDismissState(
                         confirmStateChange = {
-                            if (it == DismissValue.DismissedToStart){
-                                // Remove the wallet with this when the user is imported in this function
-                                // Wallet to implement
-                                // wallet.remove(item)
+                            if (it == DismissValue.DismissedToStart) {
+                                userWallets.remove(wallet)
+                                wallet.delete { err ->
+                                    if (err == null) {
+                                        Toasty.success(context, "Porte feuille supprimé", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Toasty.error(context, "Error lors de la suppression du feuille", Toast.LENGTH_SHORT).show()
+                                        userWallets.add(wallet)
+                                    }
+                                }
+                                true
+                            } else {
+                                false
                             }
-                            true
                         }
                     )
                     SwipeToDismiss(
                         state = state,
                         background = {
-                            val color=when(state.dismissDirection){
+                            val color = if (kotlin.math.abs(state.direction) > 0.1) when(state.dismissDirection){
                                 DismissDirection.StartToEnd -> Color.Transparent
                                 DismissDirection.EndToStart -> Color.Red
                                 null -> Color.Transparent
-                            }
+                            } else Color.Transparent
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -139,9 +153,9 @@ fun WalletContent(paddingValues: PaddingValues, auth: UserProvider) {
 
                         },
                         dismissContent = {
-                            WalletsCard(wallet = listWallets[item], auth = auth)
+                            WalletCard(wallet = wallet, auth = auth)
                         },
-                        directions=setOf(DismissDirection.EndToStart)
+                        directions = setOf(DismissDirection.EndToStart)
                     )
                 }
             }

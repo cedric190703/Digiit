@@ -87,7 +87,7 @@ fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
     val listState = rememberLazyListState()
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier.fillMaxWidth()) {
+        modifier = Modifier.fillMaxWidth()) {
         SearchViewHomeTicket(auth)
         if(userTickets.isEmpty())
         {

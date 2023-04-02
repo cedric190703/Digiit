@@ -1,7 +1,5 @@
 package com.example.digiit.menus
 
-import android.graphics.Bitmap
-import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -23,14 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.digiit.R
 import com.example.digiit.data.UserProvider
 import com.example.digiit.photos.createBitmapFromUri
 import es.dmoral.toasty.Toasty
@@ -39,11 +38,9 @@ import es.dmoral.toasty.Toasty
 fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
     // photoUri for the
     val ctx = LocalContext.current
-    var photoUri: Uri? by remember { mutableStateOf(null) }
+    var photo: ImageBitmap by remember { mutableStateOf(auth.user!!.getImageBitmapOrDefault(ctx)) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        photoUri = uri
-        val bitmap: Bitmap? = if (photoUri != null) createBitmapFromUri(context = ctx, uri = photoUri) else null
-        auth.user!!.profilePicture = bitmap
+        photo = createBitmapFromUri(context = ctx, uri = uri).asImageBitmap()
     }
     val name = remember { mutableStateOf(auth.user!!.name) }
     val lastname = remember { mutableStateOf(auth.user!!.lastname) }
@@ -61,17 +58,15 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(16.dp)
-                .background(Color.Transparent),
+                .wrapContentHeight(),
             shape = RoundedCornerShape(8.dp),
             elevation = 8.dp
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -92,7 +87,7 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        bitmap = auth.user!!.getImageBitmapOrDefault(ctx),
+                        bitmap = photo,
                         contentDescription = "Profile Image",
                         modifier = Modifier
                             .size(70.dp)
@@ -143,7 +138,7 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                     onValueChange = { maxValueSlider.value = it },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Montant maximum pour ce mois") },
-                    placeholder = { "Montant maximum pour ce mois" }
+                    placeholder = { Text(text = "Montant maximum pour ce mois") }
                 )
                 ExtendedFloatingActionButton(
                     modifier = Modifier
@@ -154,10 +149,11 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                         auth.user!!.email = email.value
                         auth.user!!.name = name.value
                         auth.user!!.lastname = lastname.value
-                        auth.user!!.save { err ->
-                            if (err == null) {
-                                auth.user!!.saveProfilePicture { err ->
-                                    if (err == null) {
+                        auth.user!!.profilePicture = photo.asAndroidBitmap()
+                        auth.user!!.save { err1 ->
+                            if (err1 == null) {
+                                auth.user!!.saveProfilePicture { err2 ->
+                                    if (err2 == null) {
                                         Toasty.success(ctx, "Les paramètres de l'utilisateur ont bien été modifiées", Toast.LENGTH_SHORT, true).show()
                                     } else {
                                         Toasty.error(ctx, "Impossible de modifiées la photo de profile de l'utilisateur", Toast.LENGTH_SHORT, true).show()

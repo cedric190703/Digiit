@@ -106,7 +106,7 @@ fun EditCard(
 
                 Spacer(modifier = Modifier.padding(13.dp))
                 OutlinedTextField(
-                    value = price.toString(),
+                    value = if (price == 0.0f) "" else price.toString(),
                     onValueChange = { price = it.toFloat() },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Prix") },

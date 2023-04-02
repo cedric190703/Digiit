@@ -546,13 +546,23 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet,auth: UserPr
                 }
                 if(showDialog.value)
                 {
-                    // Delete Wallet
-                    // TODO
+                    DialogDelete(wallet, onDismiss = {
+                        showDialog.value = it
+                    }, auth = auth, setSmallDialog = {
+                        // Nothing
+                        setState(it)
+                    }, setBigScreen = {
+                    })
                 }
                 if(dialogModif.value)
                 {
-                    // Edit Wallet
-                    // TODO
+                    EditCard(wallet,
+                        setShowDialog = {
+                            dialogModif.value = it
+                        },
+                        setView = {
+                            setState(it)
+                        }, true)
                 }
                 if(bigScreen.value)
                 {
@@ -753,11 +763,23 @@ fun CardViewBigWallet(
                 }
                 if(showDialog.value)
                 {
-                    // TODO : Delete Wallet
+                    DialogDelete(wallet, onDismiss = {
+                        showDialog.value = it
+                    }, auth = auth, setSmallDialog = {
+                        // Nothing
+                        setState(it)
+                    }, setBigScreen = {
+                    })
                 }
                 if(dialogModif.value)
                 {
-                    // TODO : Edit Wallet
+                    EditCard(wallet,
+                        setShowDialog = {
+                            dialogModif.value = it
+                        },
+                        setView = {
+                            setState(it)
+                        }, true)
                 }
             }
         }

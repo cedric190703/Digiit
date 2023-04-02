@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.digiit.data.UserProvider
+import com.example.digiit.data.card.Card
 import com.example.digiit.data.ticket.Ticket
 import es.dmoral.toasty.Toasty
 
@@ -34,7 +35,7 @@ import es.dmoral.toasty.Toasty
 
 @Composable
 fun DialogDelete(
-    ticket: Ticket,
+    card: Card,
     auth: UserProvider,
     cornerRadius: Dp = 12.dp,
     deleteButtonColor: Color = Color(0xFFD10303),
@@ -147,9 +148,9 @@ fun DialogDelete(
                                 interactionSource = interactionSource
                             ) {
                                 onDismiss(false)
-                                ticket.delete { error ->
+                                card.delete { error ->
                                     if (error == null) {
-                                        auth.user!!.tickets.remove(ticket)
+                                        auth.user!!.tickets.remove(card)
                                         Toasty.success(context, "Ticket supprimé", Toast.LENGTH_SHORT).show()
                                         setSmallDialog(false)
                                         setBigScreen(false)
