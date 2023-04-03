@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.digiit.R
 import com.example.digiit.data.UserProvider
 import com.example.digiit.menus.*
-import com.example.digiit.utils.CustomProgressBar
+import com.example.digiit.widgets.CustomProgressBar
 import com.example.digiit.utils.getCurrentMonth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

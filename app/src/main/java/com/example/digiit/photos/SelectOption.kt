@@ -44,13 +44,12 @@ import java.util.concurrent.Executors
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import com.example.digiit.cards.EditCard
 import com.example.digiit.data.card.Card
 import com.example.digiit.data.user.User
 import com.example.digiit.getAPIResponse.ApiResponse
 import com.example.digiit.getAPIResponse.getApiResponse
-import com.example.digiit.utils.LottieLoadingAnimation
+import com.example.digiit.widgets.LottieLoadingAnimation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull

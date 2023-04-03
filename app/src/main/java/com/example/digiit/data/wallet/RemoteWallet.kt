@@ -112,6 +112,8 @@ class RemoteWallet(private val user: RemoteUser, private var saved: Boolean, pri
                     callback(task.exception)
                 }
             }
+        } else {
+            callback(null)
         }
     }
 

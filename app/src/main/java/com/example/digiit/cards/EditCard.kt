@@ -107,7 +107,11 @@ fun EditCard(
                 Spacer(modifier = Modifier.padding(13.dp))
                 OutlinedTextField(
                     value = if (price == 0.0f) "" else price.toString(),
-                    onValueChange = { price = it.toFloat() },
+                    onValueChange = {
+                        try {
+                            price = it.toFloat()
+                        } catch (_: java.lang.NumberFormatException) {}
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Prix") },
                     placeholder = { Text(text = "Prix du ticket") }

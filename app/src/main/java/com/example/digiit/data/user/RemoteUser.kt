@@ -69,7 +69,7 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
                 if (profilePictureId.isNotEmpty()) {
                     profilePictureRef = storage.getReference("profiles/$profilePictureId")
                 }
-                callback(null)
+                loadProfilePicture(callback)
             } else {
                 callback(task.exception)
             }
@@ -139,7 +139,7 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
     ): Float {
         var result = 0f;
         for (ticket in tickets) {
-            if ((ticket.type != null && ticket.type == kind) && (after == null || after <= ticket.date) && (before == null || ticket.date <= before)) {
+            if ((ticket.type == kind) && (after == null || after <= ticket.date) && (before == null || ticket.date <= before)) {
                 result += ticket.price;
             }
         }
@@ -167,11 +167,13 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
             if (profilePictureRef == null) {
                 // If there is no already saved image then create a new id
                 profilePictureId = UUID.randomUUID().toString()
-                profilePictureRef = storage.getReference("images/$profilePictureId")
+                profilePictureRef = storage.getReference("profiles/$profilePictureId")
             }
             profilePictureRef!!.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->
                 callback(task.exception)
             }
+        } else {
+            callback(null);
         }
     }
 
