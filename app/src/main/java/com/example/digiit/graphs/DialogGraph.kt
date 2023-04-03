@@ -39,7 +39,7 @@ val icons = listOf<TypeGraph>(
     TypeGraph.RadarChartData,
     TypeGraph.HorizontalBarChart)
 
-var StartDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
+var StartDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN)
 var EndDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
 
 @Composable
