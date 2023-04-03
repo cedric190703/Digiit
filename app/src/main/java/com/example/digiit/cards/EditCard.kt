@@ -1,5 +1,6 @@
 package com.example.digiit.cards
 
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +26,7 @@ import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.card.Card
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
+import com.example.digiit.photos.PhotoGetter
 import com.example.digiit.utils.ObservableMutableState
 import com.example.digiit.widgets.AsyncImage
 import com.example.digiit.widgets.ColorChooser
@@ -54,6 +58,7 @@ fun EditCard(
     val colorIcon = ObservableMutableState(card.colorIcon) { card.colorIcon = it }
     val colorTag  = ObservableMutableState(card.colorTag)  { card.colorTag  = it }
 
+    var image by remember { mutableStateOf<Bitmap?>(null) }
     var title by remember { mutableStateOf(card.title) }
     var price by remember { mutableStateOf(card.price) }
     var tag by remember{ mutableStateOf(card.tag)}
@@ -73,6 +78,7 @@ fun EditCard(
     val expiryDateDialogState = if (wallet != null) rememberMaterialDialogState() else null
     val expiryTimeDialogState = if (wallet != null) rememberMaterialDialogState() else null
 
+    val showPictureGetter = remember { mutableStateOf(false) }
 
     Dialog(
         onDismissRequest = { setShowDialog(false) }) {
@@ -89,11 +95,19 @@ fun EditCard(
                 )
             ) {
                 AsyncImage(modifier = Modifier
-                        .padding(17.dp)
-                        .size(350.dp)
+                    .padding(17.dp)
+                    .size(350.dp)
+                    .clickable {
+                        showPictureGetter.value = true
+                    }
                 ) { callback ->
-                    card.loadImage {
-                        callback(card.getImageBitmapOrDefault())
+                    if (image != null) {
+                        callback(image!!.asImageBitmap())
+                    } else {
+                        card.loadImage {
+                            image = card.getImageBitmapOrDefault().asAndroidBitmap()
+                            callback(image!!.asImageBitmap())
+                        }
                     }
                 }
                 OutlinedTextField(
@@ -140,7 +154,8 @@ fun EditCard(
                 Card(
                     elevation = 10.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.primary),
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier
+                        .padding(10.dp)
                         .clickable { typeState.show() }
                 ) {
                     Text(text = type.title, modifier = Modifier.padding(13.dp))
@@ -167,7 +182,8 @@ fun EditCard(
                 Card(
                     elevation = 10.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.primary),
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier
+                        .padding(12.dp)
                         .clickable { dateDialogState.show() }
                 ) {
                     Text(
@@ -186,7 +202,8 @@ fun EditCard(
                 Card(
                     elevation = 10.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.primary),
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier
+                        .padding(12.dp)
                         .clickable { timeDialogState.show() }
                 ) {
                     Text(
@@ -260,7 +277,8 @@ fun EditCard(
                     Card(
                         elevation = 10.dp,
                         border = BorderStroke(2.dp, MaterialTheme.colors.primary),
-                        modifier = Modifier.padding(12.dp)
+                        modifier = Modifier
+                            .padding(12.dp)
                             .clickable { expiryDateDialogState!!.show() }
                     ) {
                         Text(modifier = Modifier.padding(12.dp), text = expiry!!.value.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), fontSize = 25.sp, fontWeight = FontWeight.Bold)
@@ -275,7 +293,8 @@ fun EditCard(
                     Card(
                         elevation = 10.dp,
                         border = BorderStroke(2.dp, MaterialTheme.colors.primary),
-                        modifier = Modifier.padding(12.dp)
+                        modifier = Modifier
+                            .padding(12.dp)
                             .clickable { expiryTimeDialogState!!.show() }
                     ) {
                         Text(modifier = Modifier.padding(12.dp),text = expiry!!.value.format(DateTimeFormatter.ofPattern("HH:mm")), fontSize = 25.sp, fontWeight = FontWeight.Bold)
@@ -323,7 +342,8 @@ fun EditCard(
                     Card(
                         elevation = 10.dp,
                         border = BorderStroke(2.dp, MaterialTheme.colors.primary),
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier
+                            .padding(10.dp)
                             .clickable { typeStateDocs!!.show() }
                     ) {
                         Text(text = walletType!!.value.title, modifier = Modifier.padding(13.dp))
@@ -365,6 +385,7 @@ fun EditCard(
                             card.comment = comment
                             card.colorIcon = colorIcon.value
                             card.colorTag = colorTag.value
+                            card.image = image
 
                             if (ticket != null) {
                                 ticket.rating = rating!!.value.toFloat()
@@ -464,5 +485,14 @@ fun EditCard(
                 }
             }
         }
+    }
+
+    if (showPictureGetter.value) {
+        PhotoGetter(onDismiss = {
+            showPictureGetter.value = false
+        }, onRetrieve = { img ->
+            image = img
+            showPictureGetter.value = false
+        })
     }
 }

@@ -127,7 +127,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?, typeScreen: Type
                 if (typeScreen == TypeScreen.Ticket) {
                     Spacer(modifier = Modifier.padding(12.dp))
 
-                    LabelledCheckBox(checked = enableOCR, onCheckedChange = { checked ->
+                    LabelledCheckBox(checked = enableOCR.value, onCheckedChange = { checked ->
                         enableOCR.value = checked
                     }, label = "Activer l'OCR")
 

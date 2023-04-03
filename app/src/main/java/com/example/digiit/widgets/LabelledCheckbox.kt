@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,11 +20,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LabelledCheckBox(
-    checked: MutableState<Boolean>,
+    checked: Boolean,
     onCheckedChange: ((Boolean) -> Unit),
     label: String,
     modifier: Modifier = Modifier
 ) {
+    val update = remember { mutableStateOf(checked) } // Used only to refresh compose
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -32,15 +34,15 @@ fun LabelledCheckBox(
                 indication = rememberRipple(color = MaterialTheme.colors.primary),
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = {
-                    checked.value = !checked.value
-                    onCheckedChange(checked.value)
+                    update.value = !update.value
+                    onCheckedChange(!checked)
                 }
             )
             .requiredHeight(ButtonDefaults.MinHeight)
             .padding(4.dp)
     ) {
         Checkbox(
-            checked = checked.value,
+            checked = checked,
             onCheckedChange = null
         )
 

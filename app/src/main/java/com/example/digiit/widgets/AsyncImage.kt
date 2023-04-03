@@ -20,12 +20,12 @@ fun AsyncImage(modifier: Modifier = Modifier, getter: (callback: (img: ImageBitm
     val image = remember { mutableStateOf(ImageBitmap(1,1)) }
     val loaded = remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = null) {
+    //LaunchedEffect(key1 = null) {
         getter { img ->
             image.value = img
             loaded.value = true
         }
-    }
+    //}
 
     Box(modifier = modifier) {
         CircularProgressIndicator(modifier = Modifier
