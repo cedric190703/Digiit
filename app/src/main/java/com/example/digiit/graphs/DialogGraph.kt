@@ -40,8 +40,9 @@ val icons = listOf<TypeGraph>(
 
 var StartDate: LocalDateTime= LocalDateTime.now()
 var EndDate: LocalDateTime=LocalDateTime.now()
+
 @Composable
-fun     DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
+fun DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
     val dateDialogState = rememberMaterialDialogState()
     var pickedDateDebut by remember {
         mutableStateOf(LocalDateTime.now())

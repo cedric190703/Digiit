@@ -1,13 +1,10 @@
 package com.example.digiit.cards
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -131,9 +128,9 @@ fun EditCard(
                 Button(modifier = Modifier
                     .width(250.dp)
                     .padding(4.dp),
-                    onClick = { typeState.show() }
+                    onClick = { }
                 ) {
-                    Text(text = "Type de produit",
+                    Text(text = "Type de produit :",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold)
                 }
@@ -142,6 +139,7 @@ fun EditCard(
                     elevation = 10.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                     modifier = Modifier.padding(10.dp)
+                        .clickable { typeState.show() }
                 ) {
                     Text(text = type.title, modifier = Modifier.padding(13.dp))
                 }
@@ -160,9 +158,7 @@ fun EditCard(
                 }
 
                 Spacer(modifier = Modifier.padding(5.dp))
-                Button(onClick = {
-                    dateDialogState.show()
-                }) {
+                Button(onClick = { }) {
                     Text(text = "Sélectionner une date :", fontSize = 18.sp)
                 }
 
@@ -170,6 +166,7 @@ fun EditCard(
                     elevation = 10.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                     modifier = Modifier.padding(12.dp)
+                        .clickable { dateDialogState.show() }
                 ) {
                     Text(
                         modifier = Modifier.padding(12.dp),
@@ -180,9 +177,7 @@ fun EditCard(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = {
-                    timeDialogState.show()
-                }) {
+                Button(onClick = { }) {
                     Text(text = "Sélectionner une heure :", fontSize = 18.sp)
                 }
 
@@ -190,6 +185,7 @@ fun EditCard(
                     elevation = 10.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                     modifier = Modifier.padding(12.dp)
+                        .clickable { timeDialogState.show() }
                 ) {
                     Text(
                         modifier = Modifier.padding(12.dp),
@@ -255,9 +251,7 @@ fun EditCard(
                 if(wallet != null) {
                     Spacer(modifier = Modifier.padding(10.dp))
                     Button(modifier = Modifier.padding(12.dp),
-                        onClick = {
-                            expiryDateDialogState!!.show()
-                        }) {
+                        onClick = { }) {
                         Text(text = "Sélectionner une date d'expiration :", fontSize = 18.sp)
                     }
 
@@ -265,15 +259,14 @@ fun EditCard(
                         elevation = 10.dp,
                         border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                         modifier = Modifier.padding(12.dp)
+                            .clickable { expiryDateDialogState!!.show() }
                     ) {
                         Text(modifier = Modifier.padding(12.dp), text = expiry!!.value.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), fontSize = 25.sp, fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(modifier = Modifier.padding(18.dp),
-                        onClick = {
-                            expiryTimeDialogState!!.show()
-                        }) {
+                        onClick = { }) {
                         Text(text = "Sélectionner une heure d'expiration :", fontSize = 18.sp)
                     }
 
@@ -281,6 +274,7 @@ fun EditCard(
                         elevation = 10.dp,
                         border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                         modifier = Modifier.padding(12.dp)
+                            .clickable { expiryTimeDialogState!!.show() }
                     ) {
                         Text(modifier = Modifier.padding(12.dp),text = expiry!!.value.format(DateTimeFormatter.ofPattern("HH:mm")), fontSize = 25.sp, fontWeight = FontWeight.Bold)
                     }
@@ -318,9 +312,7 @@ fun EditCard(
                     Spacer(modifier = Modifier.padding(12.dp))
                     Button(modifier = Modifier
                         .width(250.dp)
-                        .padding(4.dp), onClick = {
-                        typeStateDocs!!.show()
-                    }) {
+                        .padding(4.dp), onClick = { }) {
                         Text(text = "Sélectionner un type de document :",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold)
@@ -330,6 +322,7 @@ fun EditCard(
                         elevation = 10.dp,
                         border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                         modifier = Modifier.padding(10.dp)
+                            .clickable { typeStateDocs!!.show() }
                     ) {
                         Text(text = walletType!!.value.title, modifier = Modifier.padding(13.dp))
                     }
