@@ -258,52 +258,63 @@ fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
     val barEntries = dataPoints.mapIndexed { index, data ->
         BarEntry(index.toFloat(), data.second)
     }
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .border(
+                width = 1.dp,
+                color = androidx.compose.ui.graphics.Color.Blue,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .fillMaxWidth()
+            .height(300.dp)
+    ){
+        Box(modifier = Modifier.fillMaxSize()) {
+            AndroidView(
+                factory = { context ->
+                    BarChart(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        setDrawBarShadow(false)
+                        setDrawValueAboveBar(true)
+                        description.isEnabled = false
+                        setMaxVisibleValueCount(60)
+                        setPinchZoom(false)
+                        setDrawGridBackground(false)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        AndroidView(
-            factory = { context ->
-                BarChart(context).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                    setDrawBarShadow(false)
-                    setDrawValueAboveBar(true)
-                    description.isEnabled = false
-                    setMaxVisibleValueCount(60)
-                    setPinchZoom(false)
-                    setDrawGridBackground(false)
+                        val barDataSet = BarDataSet(barEntries, "")
+                        barDataSet.colors = top5Color
 
+                        val barData = BarData(barDataSet)
+                        data = barData
+
+                        axisLeft.isEnabled = false
+                        axisRight.isEnabled = false
+                        xAxis.apply {
+                            position = XAxisPosition.BOTTOM
+                            granularity = 1f
+                            setDrawGridLines(false)
+                            valueFormatter = object : ValueFormatter() {
+                                override fun getFormattedValue(value: Float): String {
+                                    return dataPoints[value.toInt()].first.toString()
+                                }
+                            }
+                        }
+                        legend.isEnabled = false
+                    }
+                },
+                update = { chart ->
                     val barDataSet = BarDataSet(barEntries, "")
                     barDataSet.colors = top5Color
 
                     val barData = BarData(barDataSet)
-                    data = barData
-
-                    axisLeft.isEnabled = false
-                    axisRight.isEnabled = false
-                    xAxis.apply {
-                        position = XAxisPosition.BOTTOM
-                        granularity = 1f
-                        setDrawGridLines(false)
-                        valueFormatter = object : ValueFormatter() {
-                            override fun getFormattedValue(value: Float): String {
-                                return dataPoints[value.toInt()].first.toString()
-                            }
-                        }
-                    }
-                    legend.isEnabled = false
-                }
-            },
-            update = { chart ->
-                val barDataSet = BarDataSet(barEntries, "")
-                barDataSet.colors = top5Color
-
-                val barData = BarData(barDataSet)
-                chart.data = barData
-                chart.notifyDataSetChanged()
-            }
-        )
+                    chart.data = barData
+                    chart.notifyDataSetChanged()
+                },
+            )
+        }
     }
 }
 
@@ -751,7 +762,7 @@ fun RadarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, b
     }
     Card(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(25.dp)
             .border(
                 width = 1.dp,
                 color = androidx.compose.ui.graphics.Color.Blue,
@@ -791,7 +802,9 @@ fun RadarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, b
                                     return dataPoints[value.toInt() % dataPoints.size].first.toString()
                                 }
                             }
-                            textSize = 80f
+                            textSize = 10f
+                            setLabelCount(dataPoints.size, true) // pour afficher tous les labels
+                            setAvoidFirstLastClipping(true)
                         }
                         yAxis.apply {
                             setDrawLabels(true)

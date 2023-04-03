@@ -27,6 +27,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.example.digiit.data.user.User
+import java.time.LocalTime
 
 val icons = listOf<TypeGraph>(
     TypeGraph.LineChart,
@@ -38,8 +39,8 @@ val icons = listOf<TypeGraph>(
     TypeGraph.RadarChartData,
     TypeGraph.HorizontalBarChart)
 
-var StartDate: LocalDateTime= LocalDateTime.now()
-var EndDate: LocalDateTime=LocalDateTime.now()
+var StartDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
+var EndDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
 
 @Composable
 fun DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
@@ -117,22 +118,14 @@ fun DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "      De :",
+                            text = "   De",
                             fontSize = 22.sp,
                             modifier = Modifier
                                 .weight(1f)
                                 .width(5.dp)
                         )
                         Text(
-                            text = "      ---",
-                            fontSize = 25.sp,
-                            modifier = Modifier
-                                .weight(1f)
-                                .width(5.dp)
-                        )
-
-                        Text(
-                            text = "Jusqu'a :",
+                            text = "  Jusqu'à",
                             fontSize = 22.sp,
                             modifier = Modifier
                                 .weight(1f)
