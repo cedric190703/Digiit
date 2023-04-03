@@ -76,6 +76,15 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
     ): Float {
         TODO("Not yet implemented")
     }
+
+    override fun getSpendingWithRating(
+        kind: TradeKinds,
+        after: LocalDateTime?,
+        before: LocalDateTime?
+    ): Pair<Float, Float> {
+        TODO("Not yet implemented")
+    }
+
     override fun loadProfilePicture(callback: ActionCallback) {
         TODO("Not yet implemented")
     }

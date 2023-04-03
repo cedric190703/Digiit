@@ -145,6 +145,27 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
         }
         return result
     }
+
+    override fun getSpendingWithRating(
+        kind: TradeKinds,
+        after: LocalDateTime?,
+        before: LocalDateTime?
+    ): Pair<Float, Float> {
+        var spending = 0f
+        var sumRating = 0f
+        var nbTickets = 0f
+        for (ticket in tickets) {
+            if ((ticket.type != null && ticket.type == kind) && (after == null || after <= ticket.date) && (before == null || ticket.date <= before)) {
+                spending += ticket.price
+                sumRating += ticket.rating
+                nbTickets += 1
+            }
+        }
+
+        val averageRating = if (nbTickets != 0f) sumRating / nbTickets else sumRating
+        return Pair(spending, averageRating)
+    }
+
     override fun loadProfilePicture(callback: ActionCallback) {
         if (profilePictureRef != null) {
             profilePictureRef!!.getBytes(MAX_IMAGE_SIZE).addOnCompleteListener { task ->

@@ -202,7 +202,7 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                                 TypeGraph.LineChart -> LineChart(auth, StartDate, EndDate)
                                 TypeGraph.GroupedBarChart -> GroupedBarChart()
                                 TypeGraph.BarChart -> BarChart(auth, StartDate, EndDate)
-                                TypeGraph.BubbleGraph -> BubbleChart()
+                                TypeGraph.BubbleGraph -> BubbleChart(auth, StartDate, EndDate)
                                 TypeGraph.CubicLine -> CubicLineChart(auth, StartDate, EndDate)
                                 TypeGraph.HorizontalBarChart -> HorizontalBarChart(auth, StartDate, EndDate)
                             }

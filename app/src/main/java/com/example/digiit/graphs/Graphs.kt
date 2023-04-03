@@ -16,17 +16,22 @@ import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.UserProvider
 import com.example.digiit.data.user.User
 import com.github.mikephil.charting.charts.*
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBubbleDataSet
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.coroutines.resumeWithException
 
 val top5Color = listOf(Color.rgb(85, 216, 254), Color.rgb(255, 131, 115), Color.rgb(255, 218, 131), Color.rgb(163, 160, 251), Color.rgb(90, 219, 168) )
@@ -660,18 +665,41 @@ fun HorizontalBarChart(auth : UserProvider, after : LocalDateTime = LocalDateTim
 }
 
 @Composable
-fun BubbleChart() {
-    val dataPoints = listOf(
-        Triple(0f, 30f, 5f),
-        Triple(1f, 40f, 10f),
-        Triple(2f, 15f, 20f),
-        Triple(3f, 50f, 15f),
-        Triple(4f, 25f, 8f),
-        Triple(5f, 35f, 12f)
-    )
+fun BubbleChart(auth : UserProvider, start : LocalDateTime = LocalDateTime.MIN, end : LocalDateTime = LocalDateTime.MAX) {
+    val months = mutableListOf<LocalDateTime>()
 
-    val bubbleEntries = dataPoints.map { data ->
-        BubbleEntry(data.first, data.second, data.third)
+    // (date, averageRating, spending)
+    val dataGraph = mutableListOf<Triple<LocalDateTime, Float, Float>>()
+
+    var current = start.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS)
+    var endOfMonth = current
+
+    while (!current.isAfter(end)) {
+        months.add(current)
+
+        // need to include the last day of months so taking first day 0:0:0 (will be exclude in the getSpending methode)
+        endOfMonth = current.plusMonths(1).withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS)
+
+        for (tradekind in TradeKinds.values()) {
+            val (spending, averageRating) = auth.user!!.getSpendingWithRating(tradekind, start, end)
+            dataGraph.add(Triple(current, averageRating, spending))
+        }
+        current = endOfMonth
+    }
+
+    val entriesByMonth = mutableMapOf<Int, MutableList<BubbleEntry>>()
+    for (i in 0 until months.size) {
+        entriesByMonth[i] = mutableListOf()
+    }
+    for (triple in dataGraph) {
+        val monthIndex = months.indexOf(triple.first.withDayOfMonth(1))
+        if (monthIndex != -1) {
+            entriesByMonth[monthIndex]?.add(BubbleEntry(
+                monthIndex.toFloat(),
+                triple.second,
+                triple.third
+            ))
+        }
     }
 
     Card(
@@ -686,7 +714,7 @@ fun BubbleChart() {
             .height(300.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            AndroidView(
+            AndroidView(modifier = Modifier.padding(8.dp),
                 factory = { context ->
                     BubbleChart(context).apply {
                         layoutParams = ViewGroup.LayoutParams(
@@ -698,36 +726,60 @@ fun BubbleChart() {
                         setTouchEnabled(true)
                         setPinchZoom(true)
 
-                        val bubbleDataSet = BubbleDataSet(bubbleEntries, "Data Set")
-                        bubbleDataSet.colors = top5Color
-                        bubbleDataSet.valueTextSize = 12f
+                        val bubbleDataSets = mutableListOf<BubbleDataSet>()
 
-                        val bubbleData = BubbleData(bubbleDataSet)
+                        for ((monthIndex, entries) in entriesByMonth) {
+                            val dataSet = BubbleDataSet(entries, "Month $monthIndex")
+                            dataSet.colors = listOf(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN)
+                            dataSet.valueTextSize = 12f
+                            bubbleDataSets.add(dataSet)
+                        }
+
+                        val bubbleData = BubbleData(bubbleDataSets as List<IBubbleDataSet>?)
                         data = bubbleData
 
-                        xAxis.setDrawGridLines(false)
-                        xAxis.axisMinimum = -0.5f
-                        xAxis.axisMaximum = dataPoints.size - 0.5f
-                        xAxis.valueFormatter = object : ValueFormatter() {
-                            override fun getFormattedValue(value: Float): String {
-                                return dataPoints[value.toInt()].first.toString()
+                        xAxis.apply {
+                            textSize = 12f
+                            typeface = Typeface.DEFAULT_BOLD
+                            axisMinimum = -0.5f
+                            axisMaximum = dataGraph.size - 0.5f
+                            position = XAxisPosition.BOTTOM
+                            granularity = 1f
+                            setDrawGridLines(false)
+                            val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.FRENCH)
+
+                            valueFormatter = object : ValueFormatter() {
+                                override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                                    val month = months.getOrNull(value.toInt())
+                                    if (month != null) {
+                                        return formatter.format(month)
+                                    } else {
+                                        return ""
+                                    }
+                                }
                             }
                         }
 
-                        axisLeft.axisMinimum = 0f
-                        axisLeft.axisMaximum = 60f
+                        axisLeft.apply {
+                            axisMinimum = 0f
+                            axisMaximum = 5.4f
+                        }
 
                         axisRight.isEnabled = false
-
                         legend.isEnabled = false
                     }
                 },
                 update = { chart ->
-                    val bubbleDataSet = BubbleDataSet(bubbleEntries, "Data Set")
-                    bubbleDataSet.colors = top5Color
-                    bubbleDataSet.valueTextSize = 16f
+                    val bubbleDataSets = mutableListOf<BubbleDataSet>()
 
-                    val bubbleData = BubbleData(bubbleDataSet)
+                    for ((monthIndex, entries) in entriesByMonth) {
+                        val dataSet = BubbleDataSet(entries, "Month $monthIndex")
+                        dataSet.colors = listOf(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN)
+                        dataSet.valueTextSize = 12f
+                        bubbleDataSets.add(dataSet)
+                    }
+
+                    val bubbleData = BubbleData(bubbleDataSets as List<IBubbleDataSet>?)
                     chart.data = bubbleData
                     chart.notifyDataSetChanged()
                 }
