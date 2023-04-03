@@ -1,11 +1,7 @@
 package com.example.digiit.menus
 
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -20,8 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -31,23 +25,25 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.digiit.data.UserProvider
-import com.example.digiit.photos.createBitmapFromUri
+import com.example.digiit.photos.PhotoGetter
 import es.dmoral.toasty.Toasty
+
 
 @Composable
 fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
-    // photoUri for the
     val ctx = LocalContext.current
-    var photo: ImageBitmap by remember { mutableStateOf(auth.user!!.getImageBitmapOrDefault(ctx)) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        photo = createBitmapFromUri(context = ctx, uri = uri).asImageBitmap()
-    }
+
+    val photo = remember { mutableStateOf(auth.user!!.getImageBitmapOrDefault(ctx)) }
     val name = remember { mutableStateOf(auth.user!!.name) }
     val lastname = remember { mutableStateOf(auth.user!!.lastname) }
     val email = remember { mutableStateOf(auth.user!!.email) }
+
+    val showImageGetter = remember { mutableStateOf(false) }
+
     // Change this value to have the real maxValueSlider
     // TODO
     val maxValueSlider = remember { mutableStateOf("1000") }
+
     Dialog(
         onDismissRequest = { onDismiss(false) },
         properties = DialogProperties(
@@ -87,7 +83,7 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        bitmap = photo,
+                        bitmap = photo.value,
                         contentDescription = "Profile Image",
                         modifier = Modifier
                             .size(70.dp)
@@ -95,10 +91,7 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                     )
                     IconButton(
                         onClick = {
-                            launcher.launch(
-                                PickVisualMediaRequest(
-                                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
-                            )
+                            showImageGetter.value = true
                         },
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
@@ -149,7 +142,7 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                         auth.user!!.email = email.value
                         auth.user!!.name = name.value
                         auth.user!!.lastname = lastname.value
-                        auth.user!!.profilePicture = photo.asAndroidBitmap()
+                        auth.user!!.profilePicture = photo.value.asAndroidBitmap()
                         auth.user!!.save { err1 ->
                             if (err1 == null) {
                                 auth.user!!.saveProfilePicture { err2 ->
@@ -169,5 +162,14 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                 )
             }
         }
+    }
+
+    if (showImageGetter.value) {
+        PhotoGetter(onDismiss = {
+            showImageGetter.value = false
+        }, onRetrieve = { img ->
+            showImageGetter.value = false
+            photo.value = img.asImageBitmap()
+        })
     }
 }

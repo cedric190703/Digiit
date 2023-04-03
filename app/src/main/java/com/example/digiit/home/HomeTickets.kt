@@ -33,7 +33,7 @@ import es.dmoral.toasty.Toasty
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(auth: UserProvider) {
-    val showDialog =  remember { mutableStateOf(false) }
+    val showAddDialog =  remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -62,7 +62,7 @@ fun HomeScreen(auth: UserProvider) {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showDialog.value = true },
+                onClick = { showAddDialog.value = true },
                 Modifier.size(70.dp),
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = Color.White,
@@ -71,10 +71,11 @@ fun HomeScreen(auth: UserProvider) {
                     "add button",
                     modifier = Modifier.fillMaxSize(0.5F))
             }
-            if(showDialog.value)
+            if(showAddDialog.value) {
                 SelectOption(setShowDialog = {
-                    showDialog.value = it
-                }, user = auth.user ,TypeScreen.Home)
+                    showAddDialog.value = it
+                }, user = auth.user, TypeScreen.Ticket)
+            }
         }
     )
 }
