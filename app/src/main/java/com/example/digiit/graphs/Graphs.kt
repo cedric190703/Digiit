@@ -170,7 +170,7 @@ suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, b
     return result.sortedByDescending { it.second }
 }
 
-suspend fun getGraphData(user: User, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX): PieData {
+/*suspend fun getGraphData(user: User, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX): PieData {
     val top5 = getTopKinds(user, after, before).take(5)
     val dataPoints = top5.sortedByDescending { it.second }.take(5)
     val pieEntries = dataPoints.map { data ->
@@ -181,17 +181,15 @@ suspend fun getGraphData(user: User, after : LocalDateTime = LocalDateTime.MIN, 
     pieDataSet.colors = top5Color
 
     return PieData(pieDataSet)
-}
+}*/
+
 
 @Composable
-/**
- * @param auth : The user provider
- * @param after : LocalDateTime (exclude)
- * @param before: LocalDateTime (exlude !!)
-* @return a PieChart Graph with the most used kinds between after and before
-*/
+//PieChar With 5 most used kinds between two date
 fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    val coroutineScope = rememberCoroutineScope()
+    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+
+    val dataPoints = top5.sortedByDescending { it.second }.take(5)
 
     /*val dataPoints = listOf(
         Pair("Commerce", 25f),
@@ -199,6 +197,10 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
         Pair("Alimentations", 15f),
         Pair("Culture", 50f),
     )*/
+
+    val pieEntries = dataPoints.mapIndexed { _, data ->
+        PieEntry(data.second, data.first.title)
+    }
 
     Card(
         modifier = Modifier
@@ -229,11 +231,9 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                         setEntryLabelTextSize(14f)
                         setEntryLabelTypeface(Typeface.DEFAULT_BOLD)
 
-                        coroutineScope.launch {
-                            data = getGraphData(auth.user!!, after, before)
-                            data.setValueTextSize(13f)
-                            notifyDataSetChanged()
-                        }
+                        val pieDataSet = PieDataSet(pieEntries, "")
+                        pieDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+
 
                         legend.apply {
                             isEnabled = true
@@ -252,10 +252,13 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                     }
                 },
                 update = { chart ->
-                    coroutineScope.launch {
-                        chart.data = getGraphData(auth.user!!, after, before)
-                        chart.notifyDataSetChanged()
-                    }
+                    val pieDataSet = PieDataSet(pieEntries, "")
+                    pieDataSet.colors = listOf(Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED)
+
+                    val pieData = PieData(pieDataSet)
+                    chart.data = pieData
+                    chart.data.setValueTextSize(13f)
+                    chart.notifyDataSetChanged()
                 }
             )
         }
@@ -447,7 +450,7 @@ fun CubicLineChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MI
                         val dataSet = LineDataSet(lineEntries, "")
                         dataSet.color = Color.BLUE
                         dataSet.lineWidth = 4f
-                        dataSet.circleRadius = 5f
+                        dataSet.circleRadius = 6f
                         dataSet.setCircleColor(Color.BLUE)
                         dataSet.valueTextColor = Color.BLACK
                         dataSet.valueTextSize = 13f
