@@ -143,20 +143,17 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
             Column(modifier = Modifier.padding(14.dp)) {
                 Text(
                     text = buildAnnotatedString {
-                        append("Sélectionner un ")
+                        append("Ajouter un ")
                         withStyle(
                             style = SpanStyle(
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Blue,
                                 textDecoration = TextDecoration.Underline
                             )
                         ) {
-                            append("graph")
+                            append("graphe")
                         }
-                        append(" à ajouter")
-
                     },
-                    fontSize = 25.sp,
+                    fontSize = 30.sp,
                 )
             }
         }
@@ -205,7 +202,7 @@ fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
                                 TypeGraph.LineChart -> LineChart(auth, StartDate, EndDate)
                                 TypeGraph.GroupedBarChart -> GroupedBarChart()
                                 TypeGraph.BarChart -> BarChart(auth, StartDate, EndDate)
-                                TypeGraph.BubbleGraph -> BubbleChart()
+                                TypeGraph.BubbleGraph -> BubbleChart(auth, StartDate, EndDate)
                                 TypeGraph.CubicLine -> CubicLineChart(auth, StartDate, EndDate)
                                 TypeGraph.HorizontalBarChart -> HorizontalBarChart(auth, StartDate, EndDate)
                             }
