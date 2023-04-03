@@ -24,6 +24,7 @@ import com.example.digiit.data.card.Card
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.utils.ObservableMutableState
+import com.example.digiit.widgets.AsyncImage
 import com.example.digiit.widgets.ColorChooser
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -87,13 +88,14 @@ fun EditCard(
                     enabled = true
                 )
             ) {
-                Image(
-                    bitmap = card.getImageBitmapOrDefault(),
-                    contentDescription = "photo taken",
-                    modifier = Modifier
+                AsyncImage(modifier = Modifier
                         .padding(17.dp)
                         .size(350.dp)
-                )
+                ) { callback ->
+                    card.loadImage {
+                        callback(card.getImageBitmapOrDefault())
+                    }
+                }
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },

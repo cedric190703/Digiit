@@ -10,6 +10,7 @@ import com.example.digiit.utils.ActionCallback
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
@@ -122,7 +123,16 @@ class RemoteTicket(private val user: RemoteUser, private var saved: Boolean, pri
                 imageRef = storage.getReference("images/$imageId")
             }
             imageRef!!.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->
-                callback(task.exception)
+                if (task.isSuccessful) {
+                    val data = hashMapOf(
+                        "image" to imageId
+                    )
+                    document.set(data, SetOptions.merge()).addOnCompleteListener { task2 ->
+                        callback(task2.exception)
+                    }
+                } else {
+                    callback(task.exception)
+                }
             }
         } else {
             callback(null)

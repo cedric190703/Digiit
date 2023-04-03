@@ -23,6 +23,7 @@ import com.example.digiit.R
 import com.example.digiit.data.UserProvider
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
+import com.example.digiit.widgets.AsyncImage
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
 
@@ -235,13 +236,14 @@ fun CardViewBig(
                     }
                 }
                 Spacer(modifier = Modifier.padding(6.dp))
-                Image(
-                    bitmap = ticket.getImageBitmapOrDefault(),
-                    contentDescription = "photo taken",
-                    modifier = Modifier
-                        .padding(17.dp)
-                        .size(350.dp)
-                )
+                AsyncImage(modifier = Modifier
+                    .padding(17.dp)
+                    .size(350.dp)
+                ) { callback ->
+                    ticket.loadImage {
+                        callback(ticket.getImageBitmapOrDefault())
+                    }
+                }
                 Spacer(modifier = Modifier.padding(6.dp))
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),
@@ -614,13 +616,14 @@ fun CardViewBigWallet(
                     }
                 }
                 Spacer(modifier = Modifier.padding(6.dp))
-                Image(
-                    bitmap = wallet.getImageBitmapOrDefault(),
-                    contentDescription = "photo taken",
-                    modifier = Modifier
-                        .padding(17.dp)
-                        .size(350.dp)
-                )
+                AsyncImage(modifier = Modifier
+                    .padding(17.dp)
+                    .size(350.dp)
+                ) { callback ->
+                    wallet.loadImage {
+                        callback(wallet.getImageBitmapOrDefault())
+                    }
+                }
                 Spacer(modifier = Modifier.padding(6.dp))
                 Text(
                     modifier = Modifier.padding(vertical = 5.dp),

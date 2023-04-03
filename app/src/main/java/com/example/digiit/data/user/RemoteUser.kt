@@ -12,6 +12,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
@@ -170,7 +171,16 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
                 profilePictureRef = storage.getReference("profiles/$profilePictureId")
             }
             profilePictureRef!!.putBytes(bytes.toByteArray()).addOnCompleteListener { task ->
-                callback(task.exception)
+                if (task.isSuccessful) {
+                    val data = hashMapOf(
+                        "picture" to profilePictureId
+                    )
+                    document.set(data, SetOptions.merge()).addOnCompleteListener { task2 ->
+                        callback(task2.exception)
+                    }
+                } else {
+                    callback(task.exception)
+                }
             }
         } else {
             callback(null);
