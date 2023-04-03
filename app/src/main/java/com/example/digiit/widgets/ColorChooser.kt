@@ -42,7 +42,9 @@ fun ColorChooser(text: String, color: MutableState<Color>) {
         }
     }
 
-    Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth()) {
+    Row(horizontalArrangement = Arrangement.Start, modifier = Modifier
+            .fillMaxWidth()
+            .clickable { colorDialog.show() }) {
         Button(modifier = Modifier
             .padding(horizontal = 12.dp)
             .weight(1f), onClick = { }) {
@@ -55,8 +57,7 @@ fun ColorChooser(text: String, color: MutableState<Color>) {
                     .size(55.dp)
                     .clip(CircleShape)
                     .background(colorValue.value)
-                    .border(1.dp, MaterialTheme.colors.onBackground, CircleShape)
-                    .clickable { colorDialog.show() },
+                    .border(1.dp, MaterialTheme.colors.onBackground, CircleShape),
                 contentAlignment = Alignment.Center
             ) {}
         }

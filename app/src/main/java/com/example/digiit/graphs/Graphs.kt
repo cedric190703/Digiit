@@ -170,6 +170,19 @@ suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, b
     return result.sortedByDescending { it.second }
 }
 
+suspend fun getGraphData(user: User, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX): PieData {
+    val top5 = getTopKinds(user, after, before).take(5)
+    val dataPoints = top5.sortedByDescending { it.second }.take(5)
+    val pieEntries = dataPoints.map { data ->
+        PieEntry(data.second, data.first.title + " "+ data.second + "$")
+    }
+
+    val pieDataSet = PieDataSet(pieEntries, "")
+    pieDataSet.colors = top5Color
+
+    return PieData(pieDataSet)
+}
+
 @Composable
 /**
  * @param auth : The user provider
@@ -216,6 +229,12 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                         setEntryLabelTextSize(14f)
                         setEntryLabelTypeface(Typeface.DEFAULT_BOLD)
 
+                        coroutineScope.launch {
+                            data = getGraphData(auth.user!!, after, before)
+                            data.setValueTextSize(13f)
+                            notifyDataSetChanged()
+                        }
+
                         legend.apply {
                             isEnabled = true
                             textSize = 12f
@@ -234,18 +253,7 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                 },
                 update = { chart ->
                     coroutineScope.launch {
-                        val top5 = getTopKinds(auth.user!!, after, before).take(5)
-                        val dataPoints = top5.sortedByDescending { it.second }.take(5)
-                        val pieEntries = dataPoints.map { data ->
-                            PieEntry(data.second, data.first.title + " "+ data.second + "$")
-                        }
-
-                        val pieDataSet = PieDataSet(pieEntries, "")
-                        pieDataSet.colors = top5Color
-
-                        val pieData = PieData(pieDataSet)
-                        chart.data = pieData
-                        chart.data.setValueTextSize(13f)
+                        chart.data = getGraphData(auth.user!!, after, before)
                         chart.notifyDataSetChanged()
                     }
                 }

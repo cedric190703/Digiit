@@ -56,7 +56,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: UserPro
                                 )*/
                                 Toasty.success(context, "Enregisrement réussie", Toast.LENGTH_SHORT, true).show()
                                 navController.popBackStack()
-                                navController.navigate(Graph.HOME)
+                                navController.navigate(AuthScreen.Animation.route)
                             } else {
                                 Toasty.error(context, "Enregistremet échouée", Toast.LENGTH_SHORT, true).show()
                             }
@@ -78,6 +78,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: UserPro
                         if (error == null) {
                             Toasty.success(context, "Mail envoyé", Toast.LENGTH_SHORT, true).show()
                         } else {
+                            error.printStackTrace()
                             Toasty.error(context, "Echec de l'envoie du mail", Toast.LENGTH_SHORT, true).show()
                         }
                     }
@@ -88,7 +89,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: UserPro
         composable(route = AuthScreen.Animation.route) {
             Features(
                 onClick = {
-                    navController.navigate(AuthScreen.Login.route)
+                    navController.navigate(Graph.HOME)
                 }
             )
         }
