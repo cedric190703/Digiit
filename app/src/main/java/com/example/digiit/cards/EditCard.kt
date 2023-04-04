@@ -114,7 +114,7 @@ fun EditCard(
                     value = title,
                     onValueChange = { title = it },
                     label = { Text(text = "Titre") },
-                    placeholder = { Text(text = "Titre du ticket") }
+                    placeholder = { if(ticket != null) Text(text = "Titre du ticket") else Text(text = "Titre du document") }
                 )
 
                 Spacer(modifier = Modifier.padding(13.dp))
@@ -127,7 +127,7 @@ fun EditCard(
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Prix") },
-                    placeholder = { Text(text = "Prix du ticket") }
+                    placeholder = { if(ticket != null) Text(text = "Prix du ticket") else Text(text = "Prix du document") }
                 )
 
                 Spacer(modifier = Modifier.padding(18.dp))
@@ -136,7 +136,7 @@ fun EditCard(
                         value = tag,
                         onValueChange = { tag = it },
                         label = { Text(text = "Tag") },
-                        placeholder = { Text(text = "Tag du ticket") }
+                        placeholder = { if(ticket != null) Text(text = "Tag du ticket") else Text(text = "Tag du document") }
                     )
                 }
 
@@ -264,7 +264,7 @@ fun EditCard(
                     modifier = Modifier.height(95.dp),
                     onValueChange = { comment = it },
                     label = { Text(text = "Commentaire") },
-                    placeholder = { Text(text = "Commentaire du ticket") }
+                    placeholder = { if(ticket != null) Text(text = "Commentaire du ticket") else Text(text = "Commentaire du document") }
                 )
 
                 if(wallet != null) {

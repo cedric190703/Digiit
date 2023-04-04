@@ -1,10 +1,17 @@
 package com.example.digiit.home
 
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.navigation.NavDestination
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -12,11 +19,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.digiit.data.UserProvider
 import com.example.digiit.navgraphs.HomeNavGraph
-import com.google.firebase.firestore.auth.User
 
 @Composable
 fun SetHomeScreen(auth: UserProvider, navController: NavHostController = rememberNavController()) {
     Scaffold(
+        backgroundColor = Color.White,
         bottomBar = { BottomBar(navController = navController) }
     ) {padding ->
         HomeNavGraph(navController = navController, padding = padding, auth)
@@ -36,43 +43,44 @@ fun BottomBar(navController: NavHostController) {
 
     val bottomBarDestination = screens.any { it.route == currentDestination?.route }
     if (bottomBarDestination) {
-        BottomNavigation {
+        BottomAppBar(
+            backgroundColor = Color.White,
+            cutoutShape = RoundedCornerShape(16.dp),
+            elevation = 8.dp,
+            modifier = Modifier.height(64.dp)
+                .fillMaxWidth().clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
+
+        ) {
             screens.forEach { screen ->
-                AddItem(
-                    screen = screen,
-                    currentDestination = currentDestination,
-                    navController = navController
+                BottomNavigationItem(
+                    selected = currentDestination?.hierarchy?.any {
+                        it.route == screen.route
+                    } == true,
+                    onClick = {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id)
+                            launchSingleTop = true
+                        }
+                    },
+                    icon = {
+                        Icon(
+                        screen.icon,
+                        contentDescription = screen.title,
+                        tint = MaterialTheme.colors.primary,
+                        modifier = Modifier.size(28.dp)
+                    )
+                    },
+                    selectedContentColor = MaterialTheme.colors.primary,
+                    unselectedContentColor = MaterialTheme.colors.primary,
+                    alwaysShowLabel = false, // hide label when unselected
+                    label = {
+                        if (currentDestination?.hierarchy?.any { it.route == screen.route } == true) {
+                            Text(screen.title)
+                        }
+                    }
                 )
             }
         }
     }
 }
 
-@Composable
-fun RowScope.AddItem(
-    screen: BottomBarScreen,
-    currentDestination: NavDestination?,
-    navController: NavHostController
-) {
-    BottomNavigationItem(
-        label = {
-            Text(text = screen.title)
-        },
-        icon = {
-            Icon(
-                imageVector = screen.icon,
-                contentDescription = "Navigation Icon"
-            )
-        },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
-        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
-        onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
-        }
-    )
-}

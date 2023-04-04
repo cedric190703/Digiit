@@ -25,7 +25,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 
-
 enum class TypeScreen {
     Ticket, Wallet
 }
