@@ -64,7 +64,8 @@ fun BottomBar(navController: NavHostController) {
                     },
                     icon = {
                         Icon(
-                        screen.icon,
+                            if (currentDestination?.hierarchy?.any { it.route == screen.route } == true)
+                                screen.full_icon else screen.icon,
                         contentDescription = screen.title,
                         tint = MaterialTheme.colors.primary,
                         modifier = Modifier.size(28.dp)
