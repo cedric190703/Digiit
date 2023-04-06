@@ -1,16 +1,17 @@
 package com.example.digiit.home
 
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -46,9 +47,11 @@ fun BottomBar(navController: NavHostController) {
         BottomAppBar(
             backgroundColor = Color.White,
             cutoutShape = RoundedCornerShape(16.dp),
-            elevation = 8.dp,
+            elevation = 80.dp,
             modifier = Modifier.height(64.dp)
-                .fillMaxWidth().clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
+                .fillMaxWidth()//.clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
+                .shadow(elevation = 8.dp, shape = RectangleShape)
+
 
         ) {
             screens.forEach { screen ->
