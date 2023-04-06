@@ -26,15 +26,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.digiit.R
 
-
 fun loadBitmapFromUri(context: Context, uri: Uri?): Bitmap {
     val inputStream = uri?.let { context.contentResolver.openInputStream(it) }
     return BitmapFactory.decodeStream(inputStream)
 }
 
-
 @Composable
-fun PhotoGetter(modifier: Modifier = Modifier, footer: @Composable () -> Unit = {}, onDismiss: () -> Unit, onRetrieve: (img: Bitmap) -> Unit) {
+fun PhotoGetter(modifier: Modifier = Modifier,
+                footer: @Composable () -> Unit = {},
+                onDismiss: () -> Unit,
+                onRetrieve: (img: Bitmap) -> Unit) {
     val context = LocalContext.current
 
     val takePhotoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -131,12 +132,45 @@ fun PhotoGetter(modifier: Modifier = Modifier, footer: @Composable () -> Unit = 
                             )
                         },
                         onClick = {
-                            takePhotoLauncher.launch(Intent(context, TakePhoto::class.java))
+                            val intent = Intent(context, TakePhoto::class.java).apply {
+                                putExtra("mode", CameraMode.CAMERA)
+                            }
+                            takePhotoLauncher.launch(intent)
                         },
                         backgroundColor = MaterialTheme.colors.primary,
                         icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.take_photo),
+                                "Logo take photo",
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .size(35.dp),
+                                tint = Color.White
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.padding(12.dp))
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .height(85.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 5.dp),
+                        text = {
+                            Text(
+                                text = "Scanner un code-barre",
+                                fontSize = 17.sp
+                            )
+                        },
+                        onClick = {
+                            val intent = Intent(context, TakePhoto::class.java).apply {
+                                putExtra("mode", CameraMode.SCANNER)
+                            }
+                            takePhotoLauncher.launch(intent)
+                        },
+                        backgroundColor = MaterialTheme.colors.primary,
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.bar_code),
                                 "Logo take photo",
                                 modifier = Modifier
                                     .padding(5.dp)

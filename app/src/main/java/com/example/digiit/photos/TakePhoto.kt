@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.MutableState
@@ -22,7 +23,6 @@ import com.example.digiit.R
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
 
 class TakePhoto : ComponentActivity() {
     private lateinit var outputDirectory: File
@@ -37,15 +37,22 @@ class TakePhoto : ComponentActivity() {
             shouldShowCamera.value = true
         }
     }
+
+    @ExperimentalGetImage
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var mode = intent.extras?.getSerializable("mode") as? CameraMode ?: CameraMode.CAMERA
         setContent {
             if (shouldShowCamera.value) {
                 CameraView(
                     outputDirectory = outputDirectory,
                     executor = cameraExecutor,
                     onImageCaptured = ::handleImageCapture,
-                    onError = { Log.e("kilo", "View error:", it) }
+                    onError = { Log.e("kilo", "View error:", it)},
+                    mode = mode,
+                    stopActivity = {
+                        stopActivity()
+                    }
                 )
             }
 
@@ -62,6 +69,10 @@ class TakePhoto : ComponentActivity() {
 
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
+    }
+
+    private fun stopActivity() {
+        finish()
     }
 
     private fun requestCameraPermission() {

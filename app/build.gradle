@@ -115,4 +115,7 @@ dependencies {
 
     // For JSON
     implementation 'com.google.code.gson:gson:2.8.8'
+
+    // For QRcode with ML kit
+    implementation 'com.google.mlkit:barcode-scanning:17.0.3'
 }
