@@ -42,7 +42,8 @@ fun CameraView(
     onImageCaptured: (Uri) -> Unit,
     onError: (ImageCaptureException) -> Unit,
     mode: CameraMode,
-    stopActivity: () -> Unit
+    stopActivity: () -> Unit,
+    onBarCodeDetected: (Int) -> Unit
 ) {
     val lensFacing = CameraSelector.LENS_FACING_BACK
     val context = LocalContext.current
@@ -55,9 +56,9 @@ fun CameraView(
         ImageAnalysis.Builder()
             .build()
             .also {
-                it.setAnalyzer(executor, BarcodeAnalyser {barcodeValue ->
-                    // Use the barcodevalue here
-                    // TODO
+                it.setAnalyzer(executor, BarcodeAnalyser {barCodeValue ->
+                    // Return the barCodeValue to the main activity
+                    onBarCodeDetected(barCodeValue)
                     Toast.makeText(context, "Le code bar est trouvé", Toast.LENGTH_SHORT).show()
                 })
             }

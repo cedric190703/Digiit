@@ -52,6 +52,9 @@ class TakePhoto : ComponentActivity() {
                     mode = mode,
                     stopActivity = {
                         stopActivity()
+                    },
+                    onBarCodeDetected = { barcodeValue ->
+                        barCodeValue(barcodeValue)
                     }
                 )
             }
@@ -99,6 +102,14 @@ class TakePhoto : ComponentActivity() {
         shouldShowPhoto.value = true
         val resultIntent = Intent().apply {
             putExtra("PHOTO_URI", photoUri)
+        }
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
+    }
+
+    private fun barCodeValue(barCodeValue: Int) {
+        val resultIntent = Intent().apply {
+            putExtra("BARCODE", barCodeValue)
         }
         setResult(Activity.RESULT_OK, resultIntent)
         finish()

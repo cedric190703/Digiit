@@ -38,6 +38,13 @@ fun PhotoGetter(modifier: Modifier = Modifier,
                 onRetrieve: (img: Bitmap) -> Unit) {
     val context = LocalContext.current
 
+    val takePhotoResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val barcodeValue = result.data?.getIntExtra("BARCODE", 0)
+            // Use the barcodeValue
+        }
+    }
+
     val takePhotoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             @Suppress("DEPRECATION")
@@ -165,7 +172,7 @@ fun PhotoGetter(modifier: Modifier = Modifier,
                             val intent = Intent(context, TakePhoto::class.java).apply {
                                 putExtra("mode", CameraMode.SCANNER)
                             }
-                            takePhotoLauncher.launch(intent)
+                            takePhotoResult.launch(intent)
                         },
                         backgroundColor = MaterialTheme.colors.primary,
                         icon = {
