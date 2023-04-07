@@ -85,7 +85,8 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?, typeScreen: Type
                     Log.d("Error", "API error")
                 } finally {
                     // Call EditCard when apiResponse is not null
-                    card.value = if (typeScreen == TypeScreen.Wallet) user!!.createWallet() else user!!.createTicket()
+                    // OCR => only for the ticket part
+                    card.value = user!!.createTicket()
                     card.value!!.image = image.value
                     apiResponse?.let { apiResponse ->
                         if(apiResponse.status == "success") {
