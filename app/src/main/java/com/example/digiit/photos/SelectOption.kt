@@ -1,29 +1,22 @@
 package com.example.digiit.photos
 
+import android.graphics.Bitmap
 import android.util.Log
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import java.io.File
-import android.graphics.Bitmap
 import com.example.digiit.cards.EditCard
 import com.example.digiit.data.card.Card
 import com.example.digiit.data.user.User
-import com.example.digiit.getAPIResponse.ApiResponse
-import com.example.digiit.getAPIResponse.getApiResponse
 import com.example.digiit.widgets.LabelledCheckBox
-import com.example.digiit.widgets.LottieLoadingAnimation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
-import java.io.ByteArrayOutputStream
-import java.io.FileOutputStream
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 enum class TypeScreen {
     Ticket, Wallet
@@ -47,17 +40,40 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?, typeScreen: Type
             setShowDialog(false)
         }, false)
     } else {
+        // OCR
         if (enableOCR.value && image.value != null) {
+            // New ocr using ML Kit
+            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+            val inputImage = InputImage.fromBitmap(image.value!!, 0)
+            recognizer.process(inputImage)
+                .addOnSuccessListener { visionText ->
+                    var r = parseText(visionText)
+                    Log.d("OCR", r.toString())
+                    card.value = if (typeScreen == TypeScreen.Wallet) user!!.createWallet() else user!!.createTicket()
+                    card.value!!.image = image.value
+                    card.value!!.title = r.first
+                    card.value!!.price = r.second
+                    card.value!!.date = r.third
+
+
+                    }
+                    showEditCard.value = true
+
+            /*
+
             // Convert bitmap to byte array
             val outputStream = ByteArrayOutputStream()
             image.value!!.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             val byteArray = outputStream.toByteArray()
+
+
 
             // Create file from byte array
             val file = File(context.cacheDir, "image.jpg")
             val fileOutputStream = FileOutputStream(file)
             fileOutputStream.write(byteArray)
             fileOutputStream.close()
+
 
             // Close the stream
             outputStream.close()
@@ -111,7 +127,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?, typeScreen: Type
                     LottieLoadingAnimation()
                 },
                 buttons = {}
-            )
+            )*/
         } else {
             PhotoGetter(onDismiss = {
                 setShowDialog(false)
