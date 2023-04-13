@@ -1,6 +1,5 @@
 package com.example.digiit.home
 
-
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -22,12 +21,15 @@ import com.example.digiit.data.UserProvider
 import com.example.digiit.navgraphs.HomeNavGraph
 
 @Composable
-fun SetHomeScreen(auth: UserProvider, navController: NavHostController = rememberNavController()) {
+fun SetHomeScreen(auth: UserProvider, navControllerLogin: NavHostController) {
+    val navControllerHome = rememberNavController()
     Scaffold(
-        backgroundColor = Color.White,
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = navControllerHome) }
     ) {padding ->
-        HomeNavGraph(navController = navController, padding = padding, auth)
+        HomeNavGraph(navController = navControllerHome,
+            padding = padding,
+            auth,
+            loginNavController = navControllerLogin)
     }
 }
 
@@ -48,7 +50,8 @@ fun BottomBar(navController: NavHostController) {
             backgroundColor = Color.White,
             cutoutShape = RoundedCornerShape(16.dp),
             elevation = 80.dp,
-            modifier = Modifier.height(64.dp)
+            modifier = Modifier
+                .height(64.dp)
                 .fillMaxWidth()//.clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
                 .shadow(elevation = 8.dp, shape = RectangleShape)
 
@@ -87,4 +90,3 @@ fun BottomBar(navController: NavHostController) {
         }
     }
 }
-

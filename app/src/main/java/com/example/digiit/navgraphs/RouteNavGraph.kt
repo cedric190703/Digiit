@@ -9,7 +9,10 @@ import com.example.digiit.data.UserProvider
 import com.example.digiit.home.SetHomeScreen
 
 @Composable
-fun RootNavigationGraph(navController: NavHostController, auth: UserProvider) {
+fun RootNavigationGraph(
+    navController: NavHostController,
+    auth: UserProvider
+) {
     var sd = Graph.AUTHENTICATION
     if (auth.user != null) {
         sd = Graph.HOME
@@ -24,7 +27,7 @@ fun RootNavigationGraph(navController: NavHostController, auth: UserProvider) {
     ) {
         authNavGraph(navController = navController, auth = auth, context = context)
         composable(route = Graph.HOME) {
-            SetHomeScreen(auth)
+            SetHomeScreen(auth, navControllerLogin = navController)
         }
     }
 }

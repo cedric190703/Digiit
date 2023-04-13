@@ -2,7 +2,6 @@ package com.example.digiit.navgraphs
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,8 +14,10 @@ import com.example.digiit.navigationlogin.HomeLogin
 import com.example.digiit.navigationlogin.LostPassword
 import es.dmoral.toasty.Toasty
 
-
-fun NavGraphBuilder.authNavGraph(navController: NavHostController, auth: UserProvider, context: Context) {
+fun NavGraphBuilder.authNavGraph(
+    navController: NavHostController,
+    auth: UserProvider,
+    context: Context) {
     navigation(
         route = Graph.AUTHENTICATION,
         startDestination = AuthScreen.Splash.route

@@ -19,9 +19,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.digiit.R
 import com.example.digiit.data.UserProvider
 import com.example.digiit.menus.*
+import com.example.digiit.navgraphs.AuthScreen
+import com.example.digiit.navgraphs.Graph
 import com.example.digiit.widgets.CustomProgressBar
 import com.example.digiit.utils.getCurrentMonth
 import kotlinx.coroutines.Dispatchers
@@ -31,14 +35,15 @@ import java.time.temporal.TemporalAdjusters
 import kotlin.math.max
 import kotlin.math.min
 
-
 @Composable
-fun MenuScreen(auth: UserProvider) {
+fun MenuScreen(
+    navController: NavHostController,
+    auth: UserProvider) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->
-            MenuContent(padding, auth)
+            MenuContent(padding, auth, navController)
         }, topBar = {
             TopAppBar(
                 title = {
@@ -64,7 +69,9 @@ fun MenuScreen(auth: UserProvider) {
 }
 
 @Composable
-fun ColorChangingSlider(data: MutableState<Float>, maxValue: Float) {
+fun ColorChangingSlider(
+    data: MutableState<Float>,
+    maxValue: Float) {
     val color = getSliderColor(data.value, maxValue)
     CustomProgressBar(progress = data.value,maxValue = maxValue,color = color)
     Text(
@@ -86,7 +93,10 @@ private val optionsList: ArrayList<OptionsData> = ArrayList()
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MenuContent(paddingValues: PaddingValues, auth: UserProvider) {
+fun MenuContent(
+    paddingValues: PaddingValues,
+    auth: UserProvider,
+    navController: NavHostController,) {
     val context = LocalContext.current.applicationContext
     var listPrepared by remember { mutableStateOf(false) }
     val showDialogAccount = remember { mutableStateOf(false) }
@@ -108,7 +118,7 @@ fun MenuContent(paddingValues: PaddingValues, auth: UserProvider) {
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                UserDetails(context = context, auth)
+                UserDetails(context = context, auth, navController)
             }
             items(optionsList) { item ->
                 when(item.title)
@@ -170,7 +180,10 @@ fun MenuContent(paddingValues: PaddingValues, auth: UserProvider) {
 }
 
 @Composable
-private fun UserDetails(context: Context, auth: UserProvider) {
+private fun UserDetails(
+    context: Context,
+    auth: UserProvider,
+    navController: NavHostController,) {
     val showDialogAccount = remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -219,8 +232,9 @@ private fun UserDetails(context: Context, auth: UserProvider) {
                         .weight(weight = 1f, fill = false),
                     onClick = {
                         auth.user?.logout {  }
-                        //TODO : go to login screen
-                    }) {
+                        navController.navigate(AuthScreen.Login.route)
+                    }
+                ) {
                     Icon(
                         modifier = Modifier.size(24.dp),
                         painter = painterResource(id = R.drawable.logout),
