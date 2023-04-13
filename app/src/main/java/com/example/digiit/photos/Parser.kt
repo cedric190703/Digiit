@@ -12,9 +12,9 @@ fun parseText(scan: Text): Triple<String, Float, LocalDateTime> {
     var split = scan.text.split("\n")
     val title = split[0]
     // search for price : last number after "$"
-    var price = ""
+    var price = "0"
     for (i in split.size - 1 downTo 0) {
-        if (split[i].contains("$")) {
+        if (split[i].contains("$") && split[i].length > 1) {
             price = split[i].split("$")[1]
             break
         }
