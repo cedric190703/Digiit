@@ -18,6 +18,7 @@ class LocalUser(private val ctx: Context, private val userId: String): User() {
     override var email = ""
     override var name = "unimplemented"
     override var lastname = "unimplemented"
+    override var budget = 100.0f
 
     override val local = true
     override var profilePicture: Bitmap? = null

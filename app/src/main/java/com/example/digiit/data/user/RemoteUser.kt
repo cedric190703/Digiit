@@ -33,6 +33,7 @@ class RemoteUser(private val app: FirebaseApp, private val user: FirebaseUser) :
     override var email = ""
     override var name = ""
     override var lastname = ""
+    override var budget = 100.0f
 
     override val local = false
 

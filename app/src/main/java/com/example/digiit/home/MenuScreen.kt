@@ -174,7 +174,7 @@ fun MenuContent(
 
             Bilan(onDismiss = {
                 showDialogBilan.value = it
-            }, auth, maxValueData = 1000f, a , b)
+            }, auth, a , b)
         }
     }
 }
@@ -265,7 +265,7 @@ private fun UserDetails(
         val data = remember {
             mutableStateOf(s)
         }
-        ColorChangingSlider(data = data, 1000.0f)
+        ColorChangingSlider(data = data, auth.user!!.budget)
     }
 }
 
