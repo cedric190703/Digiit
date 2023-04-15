@@ -46,7 +46,7 @@ fun EditAccount(
 
     // Change this value to have the real maxValueSlider
     // TODO
-    val maxValueSlider = remember { mutableStateOf("1000") }
+    val maxValueSlider = remember { mutableStateOf(auth.user!!.budget.toString()) }
 
     Dialog(
         onDismissRequest = { onDismiss(false) },
@@ -152,6 +152,7 @@ fun EditAccount(
                         auth.user!!.name = name.value
                         auth.user!!.lastname = lastname.value
                         auth.user!!.profilePicture = photo.value.asAndroidBitmap()
+                        auth.user!!.budget = maxValueSlider.value.toFloat()
                         auth.user!!.save { err1 ->
                             if (err1 == null) {
                                 auth.user!!.saveProfilePicture { err2 ->

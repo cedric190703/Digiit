@@ -24,7 +24,7 @@ import java.time.LocalDateTime
 
 @Composable
 fun Bilan(onDismiss: (Boolean) -> Unit,
-          auth : UserProvider, maxValueData: Float, start : LocalDateTime, end : LocalDateTime ) {
+          auth : UserProvider, start : LocalDateTime, end : LocalDateTime ) {
     val listState = rememberLazyListState()
     Dialog(
         onDismissRequest = { onDismiss(false) },
@@ -117,7 +117,7 @@ fun Bilan(onDismiss: (Boolean) -> Unit,
                             )
                             Spacer(modifier = Modifier.padding(8.dp))
                             Text(
-                                text = "$${maxValueData.toInt()}",
+                                text = "$${auth.user!!.budget.toInt()}",
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 28.sp

@@ -24,6 +24,8 @@ abstract class User {
     abstract var lastname: String
     abstract var email: String
 
+    abstract var budget: Float
+
     abstract val local: Boolean
 
     abstract var profilePicture: Bitmap?
