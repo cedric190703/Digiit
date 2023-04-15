@@ -35,13 +35,16 @@ fun loadBitmapFromUri(context: Context, uri: Uri?): Bitmap {
 fun PhotoGetter(modifier: Modifier = Modifier,
                 footer: @Composable () -> Unit = {},
                 onDismiss: () -> Unit,
-                onRetrieve: (img: Bitmap) -> Unit) {
+                onRetrieve: (img: Bitmap) -> Unit,
+                typeScreen: TypeScreen) {
     val context = LocalContext.current
-
+    val barCode = remember {
+        mutableStateOf("")
+    }
     val takePhotoResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val barcodeValue = result.data?.getIntExtra("BARCODE", 0)
-            // Use the barcodeValue
+            barCode.value = barcodeValue.toString()
         }
     }
 
@@ -156,36 +159,38 @@ fun PhotoGetter(modifier: Modifier = Modifier,
                             )
                         }
                     )
-                    Spacer(modifier = Modifier.padding(12.dp))
-                    ExtendedFloatingActionButton(
-                        modifier = Modifier
-                            .height(85.dp)
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp),
-                        text = {
-                            Text(
-                                text = "Scanner un code-barre",
-                                fontSize = 17.sp
-                            )
-                        },
-                        onClick = {
-                            val intent = Intent(context, TakePhoto::class.java).apply {
-                                putExtra("mode", CameraMode.SCANNER)
+                    if(typeScreen == TypeScreen.Wallet) {
+                        Spacer(modifier = Modifier.padding(12.dp))
+                        ExtendedFloatingActionButton(
+                            modifier = Modifier
+                                .height(85.dp)
+                                .fillMaxWidth()
+                                .padding(horizontal = 5.dp),
+                            text = {
+                                Text(
+                                    text = "Scanner un code-barre",
+                                    fontSize = 17.sp
+                                )
+                            },
+                            onClick = {
+                                val intent = Intent(context, TakePhoto::class.java).apply {
+                                    putExtra("mode", CameraMode.SCANNER)
+                                }
+                                takePhotoResult.launch(intent)
+                            },
+                            backgroundColor = MaterialTheme.colors.primary,
+                            icon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.bar_code),
+                                    "Logo take bar code",
+                                    modifier = Modifier
+                                        .padding(5.dp)
+                                        .size(35.dp),
+                                    tint = Color.White
+                                )
                             }
-                            takePhotoResult.launch(intent)
-                        },
-                        backgroundColor = MaterialTheme.colors.primary,
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.bar_code),
-                                "Logo take photo",
-                                modifier = Modifier
-                                    .padding(5.dp)
-                                    .size(35.dp),
-                                tint = Color.White
-                            )
-                        }
-                    )
+                        )
+                    }
                     Spacer(modifier = Modifier.padding(12.dp))
                     ExtendedFloatingActionButton(
                         modifier = Modifier

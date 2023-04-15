@@ -78,22 +78,26 @@ fun CreateAccount(
                     value = nomVal.value,
                     onValueChange = { nomVal.value = it },
                     label = { Text(text = "Nom") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
                 )
                 OutlinedTextField(
                     value = prenomVal.value,
                     onValueChange = { prenomVal.value = it },
-                    label = { Text(text = "Prénom") }
+                    label = { Text(text = "Prénom") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
                 )
                 OutlinedTextField(
                     value = emailVal.value,
                     onValueChange = { emailVal.value = it },
                     label = { Text(text = "Addresse email") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
                 )
                 OutlinedTextField(
                     value = passwordVal.value,
                     onValueChange = { passwordVal.value = it },
                     label = { Text(text = "Mot de passe") },
-                    placeholder = { Text(text = "mot de passe") }
+                    placeholder = { Text(text = "mot de passe") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
                 )
                 Spacer(modifier = Modifier.padding(17.dp))
                 Button(onClick = { onClickCreate(emailVal.value, passwordVal.value, prenomVal.value) },

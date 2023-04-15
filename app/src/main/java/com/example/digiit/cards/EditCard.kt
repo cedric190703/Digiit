@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import com.example.digiit.data.card.Card
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.photos.PhotoGetter
+import com.example.digiit.photos.TypeScreen
 import com.example.digiit.utils.ObservableMutableState
 import com.example.digiit.widgets.AsyncImage
 import com.example.digiit.widgets.ColorChooser
@@ -46,7 +48,8 @@ fun EditCard(
     card: Card,
     setShowDialog: (Boolean) -> Unit,
     setView: (Boolean) -> Unit,
-    edit: Boolean = true
+    edit: Boolean = true,
+    typeScreen: TypeScreen
 ) {
     val ctx = LocalContext.current
 
@@ -114,7 +117,8 @@ fun EditCard(
                     value = title,
                     onValueChange = { title = it },
                     label = { Text(text = "Titre") },
-                    placeholder = { if(ticket != null) Text(text = "Titre du ticket") else Text(text = "Titre du document") }
+                    placeholder = { if(ticket != null) Text(text = "Titre du ticket") else Text(text = "Titre du document") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground)
                 )
 
                 Spacer(modifier = Modifier.padding(13.dp))
@@ -127,7 +131,8 @@ fun EditCard(
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Prix") },
-                    placeholder = { if(ticket != null) Text(text = "Prix du ticket") else Text(text = "Prix du document") }
+                    placeholder = { if(ticket != null) Text(text = "Prix du ticket") else Text(text = "Prix du document") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
                 )
 
                 Spacer(modifier = Modifier.padding(18.dp))
@@ -136,7 +141,8 @@ fun EditCard(
                         value = tag,
                         onValueChange = { tag = it },
                         label = { Text(text = "Tag") },
-                        placeholder = { if(ticket != null) Text(text = "Tag du ticket") else Text(text = "Tag du document") }
+                        placeholder = { if(ticket != null) Text(text = "Tag du ticket") else Text(text = "Tag du document") },
+                        textStyle = TextStyle(color = MaterialTheme.colors.onBackground)
                     )
                 }
 
@@ -264,7 +270,8 @@ fun EditCard(
                     modifier = Modifier.height(95.dp),
                     onValueChange = { comment = it },
                     label = { Text(text = "Commentaire") },
-                    placeholder = { if(ticket != null) Text(text = "Commentaire du ticket") else Text(text = "Commentaire du document") }
+                    placeholder = { if(ticket != null) Text(text = "Commentaire du ticket") else Text(text = "Commentaire du document") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground)
                 )
 
                 if(wallet != null) {
@@ -493,6 +500,6 @@ fun EditCard(
         }, onRetrieve = { img ->
             image = img
             showPictureGetter.value = false
-        })
+        }, typeScreen = typeScreen)
     }
 }

@@ -2,17 +2,13 @@ package com.example.digiit.photos
 
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -30,8 +26,10 @@ enum class TypeScreen {
 }
 
 @Composable
-fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?, typeScreen: TypeScreen){
-    val context = LocalContext.current
+fun SelectOption(
+    setShowDialog: (Boolean) -> Unit,
+    user: User?,
+    typeScreen: TypeScreen){
 
     val enableOCR = remember { mutableStateOf(false) }
 
@@ -60,7 +58,7 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?, typeScreen: Type
             setShowDialog(false)
         }, {
             setShowDialog(false)
-        }, false)
+        }, false, typeScreen = typeScreen)
     } else {
         // OCR
         if (enableOCR.value && image.value != null) {
@@ -102,7 +100,8 @@ fun SelectOption(setShowDialog: (Boolean) -> Unit, user: User?, typeScreen: Type
                         enableOCR.value = checked
                     }, label = "Activer l'OCR")
                 }
-            })
+            },
+            typeScreen = typeScreen)
         }
     }
 }

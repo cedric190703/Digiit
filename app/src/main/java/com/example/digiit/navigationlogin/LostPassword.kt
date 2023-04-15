@@ -25,8 +25,6 @@ fun LostPassword(
     sentMail: (String) -> Unit
 ) {
     val emailVal = remember { mutableStateOf("") }
-    val password1 = remember { mutableStateOf("") }
-    val password2 = remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -75,26 +73,7 @@ fun LostPassword(
                     value = emailVal.value,
                     onValueChange = { emailVal.value = it },
                     label = { Text(text = "Addresse email") },
-                )
-                Spacer(modifier = Modifier.padding(10.dp))
-                Text(
-                    text = "Entrer le nouveau mot de passe",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    fontSize = MaterialTheme.typography.h6.fontSize
-                )
-                OutlinedTextField(
-                    value = password1.value,
-                    onValueChange = { password1.value = it },
-                    label = { Text(text = "Mot de passe 1") },
-                    placeholder = { Text(text = "mot de passe 1") }
-                )
-                OutlinedTextField(
-                    value = password2.value,
-                    onValueChange = { password2.value = it },
-                    label = { Text(text = "Retaper le mot de passe") },
-                    placeholder = { Text(text = "Retaper le mot de passe") }
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
                 Button(onClick = { sentMail(emailVal.value) },

@@ -1,6 +1,5 @@
 package com.example.digiit.cards
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +22,8 @@ import com.example.digiit.R
 import com.example.digiit.data.UserProvider
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.data.wallet.Wallet
+import com.example.digiit.photos.TypeScreen
+import com.example.digiit.utils.BarcodeImage
 import com.example.digiit.widgets.AsyncImage
 import com.mahmoudalim.compose_rating_bar.RatingBarView
 import java.time.format.DateTimeFormatter
@@ -183,7 +184,7 @@ fun CardViewSmall(setState: (Boolean) -> Unit, ticket: Ticket, auth: UserProvide
                             },
                             setView = {
                                 setState(it)
-                            }, true)
+                            }, true, TypeScreen.Ticket)
                     }
                     if(bigScreen.value)
                     {
@@ -379,7 +380,7 @@ fun CardViewBig(
                         setView = {
                             setState(it)
                             setLittleDialog(it)
-                        })
+                        }, true, typeScreen = TypeScreen.Ticket)
                 }
             }
         }
@@ -429,6 +430,9 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet,auth: UserPr
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.padding(12.dp))
+                // Change here with the barCode from the wallet
+                BarcodeImage(number = "0123456790")
+                Spacer(modifier = Modifier.padding(72.dp))
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(65.dp),
                     text = {  Text(text = wallet.walletType.title,
@@ -466,7 +470,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet,auth: UserPr
                         verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             modifier = Modifier.padding(vertical = 5.dp),
-                            text = "Effectué le :",
+                            text = "Effectué le :       ",
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
@@ -484,7 +488,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet,auth: UserPr
                         verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             modifier = Modifier.padding(vertical = 5.dp),
-                            text = "Effectué à :     ",
+                            text = "Effectué à :       ",
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
@@ -502,8 +506,8 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet,auth: UserPr
                 Row(horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        modifier = Modifier.padding(vertical = 5.dp),
-                        text = "Date expiration :     ",
+                        modifier = Modifier.padding(start = 18.dp),
+                        text = "Date expiration :",
                         color = Color.White,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
@@ -564,7 +568,7 @@ fun CardViewSmallWallet(setState: (Boolean) -> Unit, wallet: Wallet,auth: UserPr
                         },
                         setView = {
                             setState(it)
-                        }, true)
+                        }, true, TypeScreen.Wallet)
                 }
                 if(bigScreen.value)
                 {
@@ -648,6 +652,10 @@ fun CardViewBigWallet(
                     fontSize = 35.sp,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.padding(12.dp))
+                // Change here with the barCode from the wallet
+                BarcodeImage(number = "0123456790")
+                Spacer(modifier = Modifier.padding(72.dp))
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(65.dp),
                     text = {  Text(text = wallet.type.title,
@@ -679,13 +687,13 @@ fun CardViewBigWallet(
                             tint = Color.White)
                     }
                 )
-                Spacer(modifier = Modifier.padding(6.dp))
+                Spacer(modifier = Modifier.padding(12.dp))
                 Column(verticalArrangement = Arrangement.Center) {
                     Row(horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            modifier = Modifier.padding(vertical = 5.dp),
-                            text = "Effectué le :",
+                            modifier = Modifier.padding(start = 18.dp),
+                            text = "Effectué le :  ",
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
@@ -702,7 +710,7 @@ fun CardViewBigWallet(
                     Row(horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            modifier = Modifier.padding(vertical = 5.dp),
+                            modifier = Modifier.padding(start = 18.dp),
                             text = "Effectué à :     ",
                             color = Color.White,
                             fontSize = 20.sp,
@@ -710,8 +718,26 @@ fun CardViewBigWallet(
                         )
                         Spacer(modifier = Modifier.padding(20.dp))
                         Text(
-                            modifier = Modifier.padding(vertical = 5.dp),
+                            modifier = Modifier.padding(start = 18.dp),
                             text = wallet.date.format(DateTimeFormatter.ofPattern("HH:mm")),
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier.padding(start = 18.dp),
+                            text = "Date expiration :",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.padding(20.dp))
+                        Text(
+                            modifier = Modifier.padding(vertical = 5.dp),
+                            text = wallet.expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -726,25 +752,6 @@ fun CardViewBigWallet(
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.padding(6.dp))
-                Row(horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 5.dp),
-                        text = "Date expiration :     ",
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    Text(
-                        modifier = Modifier.padding(vertical = 5.dp),
-                        text = wallet.expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
                 Spacer(modifier = Modifier.padding(6.dp))
                 Row() {
                     ExtendedFloatingActionButton(
@@ -782,7 +789,7 @@ fun CardViewBigWallet(
                         },
                         setView = {
                             setState(it)
-                        }, true)
+                        }, true, TypeScreen.Wallet)
                 }
             }
         }

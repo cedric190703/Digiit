@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,11 +27,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.digiit.data.UserProvider
 import com.example.digiit.photos.PhotoGetter
+import com.example.digiit.photos.TypeScreen
 import es.dmoral.toasty.Toasty
 
-
 @Composable
-fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
+fun EditAccount(
+    onDismiss: (Boolean) -> Unit,
+    auth: UserProvider
+) {
     val ctx = LocalContext.current
 
     val photo = remember { mutableStateOf(auth.user!!.getImageBitmapOrDefault(ctx)) }
@@ -114,24 +118,29 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
                 OutlinedTextField(
                     value = name.value,
                     onValueChange = { name.value = it },
-                    label = { Text(text = "Prénom") })
+                    label = { Text(text = "Prénom") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground)
+                )
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = lastname.value,
                     onValueChange = { lastname.value = it },
-                    label = { Text(text = "Nom") })
+                    label = { Text(text = "Nom") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground))
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = email.value,
                     onValueChange = { email.value = it },
-                    label = { Text(text = "Mail") })
+                    label = { Text(text = "Mail") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground))
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = maxValueSlider.value,
                     onValueChange = { maxValueSlider.value = it },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Montant maximum pour ce mois") },
-                    placeholder = { Text(text = "Montant maximum pour ce mois") }
+                    placeholder = { Text(text = "Montant maximum pour ce mois") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground)
                 )
                 ExtendedFloatingActionButton(
                     modifier = Modifier
@@ -170,6 +179,6 @@ fun EditAccount(onDismiss: (Boolean) -> Unit, auth: UserProvider) {
         }, onRetrieve = { img ->
             showImageGetter.value = false
             photo.value = img.asImageBitmap()
-        })
+        }, typeScreen = TypeScreen.Ticket)
     }
 }

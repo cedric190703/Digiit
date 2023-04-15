@@ -71,6 +71,7 @@ fun HomeLogin(
                     value = emailVal.value,
                     onValueChange = { emailVal.value = it },
                     label = { Text(text = "Addresse email") },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
                 )
 
                 Spacer(modifier = Modifier.padding(5.dp))
@@ -87,8 +88,9 @@ fun HomeLogin(
                         }
                     },
                     visualTransformation = if (passwordVisibility.value) VisualTransformation.None
-                    else PasswordVisualTransformation()
-                )
+                    else PasswordVisualTransformation(),
+                    textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
+                    )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Button(
                     onClick = {

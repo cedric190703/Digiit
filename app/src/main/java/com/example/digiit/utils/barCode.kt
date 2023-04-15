@@ -19,7 +19,7 @@ import com.google.zxing.common.BitMatrix
 @Composable
 fun BarcodeImage(number: String) {
     val bitmap = generateBarcode(number)
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().padding(start = 45.dp)) {
         Canvas(modifier = Modifier.align(Alignment.CenterStart)) {
             drawImage(bitmap.asImageBitmap())
         }
