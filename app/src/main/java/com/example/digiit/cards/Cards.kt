@@ -34,7 +34,6 @@ fun TicketCard(ticket: Ticket, auth: UserProvider) {
     val showDialog = remember { mutableStateOf(false) }
     Card(
         elevation = 0.dp,
-        //  border = BorderStroke(1.dp, ticket.colorIcon),
         backgroundColor = Color.Transparent,
         modifier = Modifier
             .padding(5.dp)
@@ -48,7 +47,6 @@ fun TicketCard(ticket: Ticket, auth: UserProvider) {
                         Grad.getOrDefault(ticket.colorTag, Color.Black),
                     )
                 )
-
             )
     ) {
         Row(
@@ -304,17 +302,8 @@ fun WalletCard(
                     ) {
                         // Tags
                         Tag(wallet.tag)
-                        /*Text(
-                            text = "#${wallet.tag}",
-                            modifier = Modifier.padding(vertical = 1.dp),
-                            fontSize = 19.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )*/
                     }
                 }
-
-
             }
             Divider()
             Row(

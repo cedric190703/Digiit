@@ -47,7 +47,7 @@ fun BottomBar(navController: NavHostController) {
     val bottomBarDestination = screens.any { it.route == currentDestination?.route }
     if (bottomBarDestination) {
         BottomAppBar(
-            backgroundColor = Color.White,
+            backgroundColor = MaterialTheme.colors.background,
             cutoutShape = RoundedCornerShape(16.dp),
             elevation = 80.dp,
             modifier = Modifier

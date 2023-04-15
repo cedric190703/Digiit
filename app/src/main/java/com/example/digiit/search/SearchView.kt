@@ -27,6 +27,38 @@ fun SearchViewHomeTicket(auth: UserProvider) {
     var expanded by remember { mutableStateOf(false) }
     val userTickets = auth.user!!.tickets
 
+    //For Home
+    val listItemsHome = getMenuItemsList()
+    val listOrdersHome = getMenuItemsFilter()
+
+    val updatedListItemsTickets = listItemsHome.map { item ->
+        if (item.text == filterItem.value) {
+            item.copy(
+                backGround = Color(0xFF0139CE),
+                iconColor = Color.White
+            )
+        } else {
+            item.copy(
+                backGround = MaterialTheme.colors.background,
+                iconColor = Color.Blue
+            )
+        }
+    }
+
+    val updatedListItemsOrder = listOrdersHome.map { item ->
+        if (item.text == filterOrder.value) {
+            item.copy(
+                backGround = Color(0xFF0139CE),
+                iconColor = Color.White
+            )
+        } else {
+            item.copy(
+                backGround = MaterialTheme.colors.background,
+                iconColor = Color.Blue
+            )
+        }
+    }
+
     Row (modifier = Modifier
         .padding(top = 10.dp, bottom = 20.dp)
         .fillMaxWidth(),
@@ -70,15 +102,12 @@ fun SearchViewHomeTicket(auth: UserProvider) {
                 textDecoration = TextDecoration.Underline,
                 fontWeight = FontWeight.Bold
             )
-            listItemsHome.forEach { menuItemData ->
+
+            updatedListItemsTickets.forEach { menuItemData ->
                 DropdownMenuItem(
                     modifier = Modifier.background(menuItemData.backGround),
                     onClick = {
-                        listItemsHome.forEach{ e -> e.iconColor = Color.Blue
-                            e.backGround = Color.White}
                         filterItem.value = menuItemData.text
-                        menuItemData.backGround = Color(0xFF0139CE)
-                        menuItemData.iconColor = Color.White
                         expanded = false
                     },
                     enabled = true
@@ -105,15 +134,11 @@ fun SearchViewHomeTicket(auth: UserProvider) {
                 textDecoration = TextDecoration.Underline,
                 fontWeight = FontWeight.Bold
             )
-            listOrdersHome.forEach { menuItemFilter ->
+            updatedListItemsOrder.forEach { menuItemFilter ->
                 DropdownMenuItem(
                     modifier = Modifier.background(menuItemFilter.backGround),
                     onClick = {
                         expanded = false
-                        listOrdersHome.forEach{ e -> e.iconColor = Color.Blue
-                            e.backGround = Color.White}
-                        menuItemFilter.backGround = Color(0xFF0139CE)
-                        menuItemFilter.iconColor = Color.White
                         filterOrder.value = menuItemFilter.text
                     },
                     enabled = true
@@ -143,6 +168,54 @@ fun SearchViewHomeWallet(auth: UserProvider) {
     val filterOrder = remember { mutableStateOf("Croissant") }
     var expanded by remember { mutableStateOf(false) }
     var expandedState by remember { mutableStateOf(false) }
+
+    //For Wallet
+    val listItemsWallet = getMenuItemsList()
+    val listOrdersWallet = getMenuItemsFilter()
+    val listItemsForWallet = getMenuItemForWallet()
+
+    val updatedListItemsWallets = listItemsWallet.map { item ->
+        if (item.text == filterItem.value) {
+            item.copy(
+                backGround = Color(0xFF0139CE),
+                iconColor = Color.White,
+            )
+        } else {
+            item.copy(
+                backGround = MaterialTheme.colors.background,
+                iconColor = Color.Blue
+            )
+        }
+    }
+
+    val updatedListItemsOrders = listOrdersWallet.map { item ->
+        if (item.text == filterOrder.value) {
+            item.copy(
+                backGround = Color(0xFF0139CE),
+                iconColor = Color.White
+            )
+        } else {
+            item.copy(
+                backGround = MaterialTheme.colors.background,
+                iconColor = Color.Blue
+            )
+        }
+    }
+
+    val updatedListItemsType = listItemsForWallet.map { item ->
+        if (item.text == typeItem.value) {
+            item.copy(
+                backGround = Color(0xFFCA7800),
+                iconColor = Color.White
+            )
+        } else {
+            item.copy(
+                backGround = MaterialTheme.colors.background,
+                iconColor = Color(0xFFCA7800)
+            )
+        }
+    }
+
     Row (modifier = Modifier
         .padding(top = 10.dp, bottom = 20.dp)
         .fillMaxWidth(),
@@ -201,15 +274,11 @@ fun SearchViewHomeWallet(auth: UserProvider) {
                 textDecoration = TextDecoration.Underline,
                 fontWeight = FontWeight.Bold
             )
-            listItemsWallet.forEach { menuItemData ->
+            updatedListItemsWallets.forEach { menuItemData ->
                 DropdownMenuItem(
                     modifier = Modifier.background(menuItemData.backGround),
                     onClick = {
-                        listItemsWallet.forEach{ e -> e.iconColor = Color.Blue
-                            e.backGround = Color.White}
                         filterItem.value = menuItemData.text
-                        menuItemData.backGround = Color(0xFF0139CE)
-                        menuItemData.iconColor = Color.White
                         expanded = false
                     },
                     enabled = true
@@ -236,15 +305,11 @@ fun SearchViewHomeWallet(auth: UserProvider) {
                 textDecoration = TextDecoration.Underline,
                 fontWeight = FontWeight.Bold
             )
-            listOrdersWallet.forEach { menuItemFilter ->
+            updatedListItemsOrders.forEach { menuItemFilter ->
                 DropdownMenuItem(
                     modifier = Modifier.background(menuItemFilter.backGround),
                     onClick = {
                         expanded = false
-                        listOrdersWallet.forEach{ e -> e.iconColor = Color.Blue
-                            e.backGround = Color.White}
-                        menuItemFilter.backGround = Color(0xFF0139CE)
-                        menuItemFilter.iconColor = Color.White
                         filterOrder.value = menuItemFilter.text
                     },
                     enabled = true
@@ -283,17 +348,11 @@ fun SearchViewHomeWallet(auth: UserProvider) {
                 textDecoration = TextDecoration.Underline,
                 fontWeight = FontWeight.Bold
             )
-            listItemsForWallet.forEach { menuItemData ->
+            updatedListItemsType.forEach { menuItemData ->
                 DropdownMenuItem(
                     modifier = Modifier.background(menuItemData.backGround),
                     onClick = {
-                        listItemsForWallet.forEach { e ->
-                            e.iconColor = Color(0xFFCA7800)
-                            e.backGround = Color.White
-                        }
                         typeItem.value = menuItemData.text
-                        menuItemData.backGround = Color(0xFFCA7800)
-                        menuItemData.iconColor = Color.White
                         expandedState = false
                     },
                     enabled = true
@@ -316,40 +375,34 @@ fun SearchViewHomeWallet(auth: UserProvider) {
     }
 }
 
-//For Home
-val listItemsHome = getMenuItemsList()
-val listOrdersHome = getMenuItemsFilter()
-
-//For Wallet
-val listItemsWallet = getMenuItemsList()
-val listOrdersWallet = getMenuItemsFilter()
-val listItemsForWallet = getMenuItemForWallet()
-
 data class MenuItemData(val text: String, val icon: Int, var backGround: Color, var iconColor: Color)
 
+@Composable
 fun getMenuItemsList(): ArrayList<MenuItemData> {
     val listItems = ArrayList<MenuItemData>()
     listItems.add(MenuItemData(text = "Enseigne", icon = R.drawable.sort_by_alphabet, Color(0xFF0139CE), Color.White))
-    listItems.add(MenuItemData(text = "Date", icon = R.drawable.date, Color.White, Color(0xFF0139CE)))
-    listItems.add(MenuItemData(text = "Amont", icon = R.drawable.money, Color.White, Color(0xFF0139CE)))
-    listItems.add(MenuItemData(text = "Type", icon = R.drawable.store, Color.White, Color(0xFF0139CE)))
+    listItems.add(MenuItemData(text = "Date", icon = R.drawable.date, MaterialTheme.colors.background, Color(0xFF0139CE)))
+    listItems.add(MenuItemData(text = "Amont", icon = R.drawable.money, MaterialTheme.colors.background, Color(0xFF0139CE)))
+    listItems.add(MenuItemData(text = "Type", icon = R.drawable.store, MaterialTheme.colors.background, Color(0xFF0139CE)))
 
     return listItems
 }
 
+@Composable
 fun getMenuItemsFilter(): ArrayList<MenuItemData> {
     val listItems = ArrayList<MenuItemData>()
     listItems.add(MenuItemData(text = "Croissant", icon = R.drawable.ascending, Color(0xFF0139CE), Color.White))
-    listItems.add(MenuItemData(text = "Décroissant", icon = R.drawable.descending, Color.White, Color(0xFF0139CE)))
+    listItems.add(MenuItemData(text = "Décroissant", icon = R.drawable.descending, MaterialTheme.colors.background, Color(0xFF0139CE)))
 
     return listItems
 }
 
+@Composable
 fun getMenuItemForWallet(): ArrayList<MenuItemData> {
     val listItems = ArrayList<MenuItemData>()
     listItems.add(MenuItemData(text = "Tout", icon = R.drawable.all, Color(0xFFCA7800), Color.White))
-    listItems.add(MenuItemData(text = "Carte fidélité", icon = R.drawable.wallet, Color.White, Color(0xFFCA7800)))
-    listItems.add(MenuItemData(text = "Bon commande", icon = R.drawable.shop, Color.White, Color(0xFFCA7800)))
+    listItems.add(MenuItemData(text = "Carte fidélité", icon = R.drawable.wallet, MaterialTheme.colors.background, Color(0xFFCA7800)))
+    listItems.add(MenuItemData(text = "Bon commande", icon = R.drawable.shop, MaterialTheme.colors.background, Color(0xFFCA7800)))
 
     return listItems
 }

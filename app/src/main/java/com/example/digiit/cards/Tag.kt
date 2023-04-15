@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun Tag(t: String) {
     if (t.isNullOrEmpty()) return
@@ -28,7 +27,6 @@ fun Tag(t: String) {
             text = "#$t",
             style = MaterialTheme.typography.h6,
             fontSize = 16.sp,
-            color = Color.Black,
             modifier = Modifier
                 .padding(8.dp)
                 .background(Color.Transparent)
