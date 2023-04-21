@@ -1,5 +1,6 @@
 package com.example.digiit
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,38 +8,42 @@ import androidx.navigation.compose.rememberNavController
 import com.example.digiit.data.UserProvider
 import com.example.digiit.navgraphs.RootNavigationGraph
 import com.example.digiit.ui.theme.DigiitTheme
+import com.example.digiit.utils.MemoryRemember
 import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+
 
 class MainActivity : ComponentActivity() {
-    var a = "vf"
-    lateinit var auth: UserProvider
-    lateinit var db: FirebaseFirestore
+    companion object {
+        val auth = MemoryRemember { UserProvider(FirebaseApp.getInstance()) }
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        auth = UserProvider(FirebaseApp.getInstance())
-        db = Firebase.firestore
+    private var configChanged = false
 
-        super.onCreate(savedInstanceState)
+    public override fun onCreate(savedInstanceState: Bundle?) {
         setContent {
             DigiitTheme {
                 val navController = rememberNavController()
-                RootNavigationGraph(navController = navController, auth = auth)
+                RootNavigationGraph(navController = navController, auth = auth.value)
             }
         }
+
+        super.onCreate(savedInstanceState)
     }
 
     public override fun onStart() {
         super.onStart()
+    }
 
-        if (auth.user != null) {
-            // User is signed in
-            println("\n User is signed in + ${auth.user!!.name}")
-        } else {
-            // No user is signed in
-            println("\n No user is signed in")
+    public override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        configChanged = true
+        recreate()
+    }
+
+    public override fun onDestroy() {
+        if (!configChanged) {
+            auth.free()
         }
+        super.onDestroy()
     }
 }

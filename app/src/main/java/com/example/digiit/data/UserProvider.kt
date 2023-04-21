@@ -20,6 +20,10 @@ class UserProvider(private val firebase: FirebaseApp) {
     private val auth = Firebase.auth(firebase)
     private val users = ArrayList<User>()
 
+    init {
+        println("UserProvider created");
+    }
+
     var user: User? = null
 
     fun loginRemoteUser(email: String, password: String, callback: AuthCallback) {
