@@ -8,8 +8,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Comment on commit
-      uses: peter-evans/create-or-update-comment@v1
+      uses: unsplash/comment-on-commit-action@v2.1.1
       with:
-        body: "🤡 <- You"
-        commit_message: ${{ github.event.head_commit.message }}
-        issue_number: ${{ github.event.number }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        message: "🤡 <- your mum "
