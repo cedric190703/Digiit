@@ -12,13 +12,20 @@ fun parseText(scan: Text): Triple<String, Float, LocalDateTime> {
     var split = scan.text.split("\n")
     val title = split[0]
     // search for price : last number after "$"
-    var price = "0"
+    var price = 0f
+    val regex = Regex("\\b(?:\\$\\d+\\.\\d{2}|\\d+\\.\\d{2}\\$)\\b")
     for (i in split.size - 1 downTo 0) {
-        if (split[i].contains("$") && split[i].length > 1) {
-            price = split[i].split("$")[1]
-            break
+        Log.d("OCR found", split[i])
+        var res = regex.find(split[i].replace(" ", ""))
+        if (res != null) {
+            var p = res.value.trim('$').toFloat()
+            if (p > price) {
+                price = p
+            }
         }
     }
+
+
     var sdate = ""
     for (i in split.size - 1 downTo 0) {
         // TODO optionel : add regex for other date format
@@ -34,5 +41,5 @@ fun parseText(scan: Text): Triple<String, Float, LocalDateTime> {
     }catch (e: Exception){
         Log.d("OCR", e.toString())
     }
-    return Triple(title, price.toFloat(), date.atStartOfDay())
+    return Triple(title, price, date.atStartOfDay())
 }
