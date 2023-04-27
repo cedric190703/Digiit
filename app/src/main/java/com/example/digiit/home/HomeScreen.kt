@@ -6,44 +6,35 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.digiit.data.UserProvider
-import com.example.digiit.navgraphs.HomeNavGraph
+import com.example.digiit.ApplicationData
+import com.example.digiit.navigation.HomeNavGraph
+
 
 @Composable
-fun HomeScreen(auth: UserProvider, navControllerLogin: NavHostController) {
-    val navControllerHome = rememberNavController()
+fun HomeScreen(auth: ApplicationData) {
     Scaffold(
-        bottomBar = { HomeBottomBar(navController = navControllerHome) }
+        bottomBar = { HomeBottomBar(auth) }
     ) {padding ->
-        HomeNavGraph(navController = navControllerHome,
-            padding = padding,
-            auth,
-            loginNavController = navControllerLogin)
+        HomeNavGraph(auth, padding)
     }
 }
 
+
 @Composable
-fun HomeBottomBar(navController: NavHostController) {
+fun HomeBottomBar(auth: ApplicationData) {
     val screens = listOf(
-        HomeBottomBarEntry.Home,
+        HomeBottomBarEntry.Ticket,
         HomeBottomBarEntry.Wallet,
         HomeBottomBarEntry.Data,
         HomeBottomBarEntry.Menu
     )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    val currentDestination = auth.navigation.currentPath()
 
-    val bottomBarDestination = screens.any { it.route == currentDestination?.route }
+    val bottomBarDestination = screens.any { it.path == currentDestination }
     if (bottomBarDestination) {
         BottomAppBar(
             backgroundColor = MaterialTheme.colors.background,
@@ -57,30 +48,28 @@ fun HomeBottomBar(navController: NavHostController) {
 
         ) {
             screens.forEach { screen ->
+                val selected = currentDestination == screen.path
                 BottomNavigationItem(
-                    selected = currentDestination?.hierarchy?.any {
-                        it.route == screen.route
-                    } == true,
+                    selected = selected,
                     onClick = {
-                        navController.navigate(screen.route) {
-                            popUpTo(navController.graph.findStartDestination().id)
-                            launchSingleTop = true
-                        }
+                        auth.navigation.navigate(screen.path)
+                        //navController.navigate(screen.route) {
+                        //    popUpTo(navController.graph.findStartDestination().id)
+                        //    launchSingleTop = true
+                        //}
                     },
                     icon = {
-                        Icon(
-                            if (currentDestination?.hierarchy?.any { it.route == screen.route } == true)
-                                screen.full_icon else screen.icon,
-                        contentDescription = screen.title,
-                        tint = MaterialTheme.colors.primary,
-                        modifier = Modifier.size(28.dp)
-                    )
+                        Icon(if(selected) screen.full_icon else screen.icon,
+                            contentDescription = screen.title,
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.size(28.dp)
+                        )
                     },
                     selectedContentColor = MaterialTheme.colors.primary,
                     unselectedContentColor = MaterialTheme.colors.primary,
                     alwaysShowLabel = false, // hide label when unselected
                     label = {
-                        if (currentDestination?.hierarchy?.any { it.route == screen.route } == true) {
+                        if (selected) {
                             Text(screen.title)
                         }
                     }

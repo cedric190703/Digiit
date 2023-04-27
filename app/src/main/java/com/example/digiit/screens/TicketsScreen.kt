@@ -21,8 +21,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.digiit.ApplicationData
 import com.example.digiit.R
-import com.example.digiit.data.UserProvider
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.photos.SelectOption
 import com.example.digiit.photos.TypeScreen
@@ -30,15 +30,16 @@ import com.example.digiit.scrollbar.scrollbar
 import com.example.digiit.widgets.search.SearchViewHomeTicket
 import es.dmoral.toasty.Toasty
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TicketsScreen(auth: UserProvider) {
+fun TicketsScreen(auth: ApplicationData) {
     val showAddDialog =  remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->
-            HomeTicketContent(padding, auth)
+            HomeTicketContent(auth, padding)
         }, topBar = {
             TopAppBar(
                 title = {
@@ -82,7 +83,7 @@ fun TicketsScreen(auth: UserProvider) {
 
 @ExperimentalMaterialApi
 @Composable
-fun HomeTicketContent(paddingValues: PaddingValues, auth: UserProvider) {
+fun HomeTicketContent(auth: ApplicationData, padding: PaddingValues) {
     val context = LocalContext.current.applicationContext
     val userTickets = auth.user!!.tickets
     val listState = rememberLazyListState()

@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 //Function that get text form ocr ml kit and return a list of string (title, price, date)
 fun parseText(scan: Text): Triple<String, Float, LocalDateTime> {
     //Get first block of text
-    var split = scan.text.split("\n")
+    val split = scan.text.split("\n")
     val title = split[0]
     // search for price : last number after "$"
     var price = "0"

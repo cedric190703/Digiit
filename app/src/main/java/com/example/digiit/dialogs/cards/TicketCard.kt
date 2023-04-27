@@ -19,9 +19,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.digiit.ApplicationData
 import com.example.digiit.R
 import com.example.digiit.cards.Tag
-import com.example.digiit.data.UserProvider
 import com.example.digiit.data.ticket.Ticket
 import com.example.digiit.ui.theme.Grad
 import com.mahmoudalim.compose_rating_bar.RatingBarView
@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun TicketCard(ticket: Ticket, auth: UserProvider) {
+fun TicketCard(ticket: Ticket, auth: ApplicationData) {
     val ratingVal = remember { mutableStateOf(ticket.rating.toInt()) }
     val showDialog = remember { mutableStateOf(false) }
     Card(

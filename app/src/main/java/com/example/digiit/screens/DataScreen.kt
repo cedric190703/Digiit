@@ -4,22 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -29,13 +24,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.digiit.ApplicationData
 import com.example.digiit.R
-import com.example.digiit.data.UserProvider
 import com.example.digiit.graphs.*
 import com.example.digiit.scrollbar.scrollbar
 
+
 @Composable
-fun DataScreen(auth: UserProvider) {
+fun DataScreen(auth: ApplicationData) {
     val showDialog = remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier
@@ -86,7 +82,7 @@ fun DataScreen(auth: UserProvider) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DataContent(paddingValues: PaddingValues, auth: UserProvider) {
+fun DataContent(paddingValues: PaddingValues, auth: ApplicationData) {
     val listState = rememberLazyListState()
     val tickets=auth.user!!.tickets
     val listGraphs=auth.user!!.listGraphs

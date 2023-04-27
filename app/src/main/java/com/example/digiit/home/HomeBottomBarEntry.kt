@@ -10,36 +10,37 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.digiit.navigation.Routes
 
 sealed class HomeBottomBarEntry(
-    val route: String,
+    val path: String,
     val title: String,
     val icon: ImageVector,
     val full_icon : ImageVector
 ) {
-    object Home : HomeBottomBarEntry(
-        route = "Ticket",
+    object Ticket : HomeBottomBarEntry(
+        path = Routes.TICKETS.path,
         title = "Ticket",
         icon = Icons.Outlined.Home,
         full_icon = Icons.Rounded.Home
     )
 
     object Wallet : HomeBottomBarEntry(
-        route = "Portefeuille",
+        path = Routes.WALLETS.path,
         title = "Portefeuille",
         icon = Icons.Outlined.Email,
         full_icon = Icons.Rounded.Email
     )
 
     object Data : HomeBottomBarEntry(
-        route = "Data",
+        path = Routes.DATA.path,
         title = "Data",
         icon = Icons.Outlined.Share,
         full_icon = Icons.Rounded.Share
     )
 
     object Menu : HomeBottomBarEntry(
-        route = "Menu",
+        path = Routes.MENU.path,
         title = "Menu",
         icon = Icons.Outlined.Menu,
         full_icon = Icons.Rounded.Menu

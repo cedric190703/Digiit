@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.digiit.data.UserProvider
+import com.example.digiit.ApplicationData
 import com.example.digiit.photos.PhotoGetter
 import com.example.digiit.photos.TypeScreen
 import es.dmoral.toasty.Toasty
@@ -33,7 +33,7 @@ import es.dmoral.toasty.Toasty
 @Composable
 fun EditAccount(
     onDismiss: (Boolean) -> Unit,
-    auth: UserProvider
+    auth: ApplicationData
 ) {
     val ctx = LocalContext.current
 

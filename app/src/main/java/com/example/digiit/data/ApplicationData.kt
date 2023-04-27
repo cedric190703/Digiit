@@ -1,6 +1,5 @@
 package com.example.digiit.data
 
-import com.example.digiit.data.user.LocalUser
 import com.example.digiit.data.user.RemoteUser
 import com.example.digiit.data.user.User
 import com.example.digiit.utils.ActionCallback
@@ -9,8 +8,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import org.json.JSONObject
-import java.io.File
 
 
 typealias AuthCallback = (error: Exception?, user: RemoteUser?) -> Unit

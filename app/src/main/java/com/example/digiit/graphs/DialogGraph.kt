@@ -3,7 +3,6 @@
 package com.example.digiit.graphs
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -18,15 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.digiit.data.UserProvider
-import com.google.type.DateTime
+import com.example.digiit.ApplicationData
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.example.digiit.data.user.User
 import java.time.LocalTime
 
 val icons = listOf<TypeGraph>(
@@ -43,7 +40,7 @@ var StartDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN)
 var EndDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
 
 @Composable
-fun DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
+fun DialogGraph(auth: ApplicationData, setShowDialog: (Boolean) -> Unit) {
     val dateDialogState = rememberMaterialDialogState()
     var pickedDateDebut by remember {
         mutableStateOf(LocalDateTime.now())

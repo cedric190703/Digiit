@@ -19,13 +19,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.example.digiit.ApplicationData
 import com.example.digiit.R
-import com.example.digiit.data.UserProvider
 import com.example.digiit.dialogs.menus.*
-import com.example.digiit.navgraphs.AuthScreen
-import com.example.digiit.navgraphs.Graph
+import com.example.digiit.navigation.Routes
 import com.example.digiit.widgets.CustomProgressBar
 import com.example.digiit.utils.getCurrentMonth
 import kotlinx.coroutines.Dispatchers
@@ -35,15 +32,14 @@ import java.time.temporal.TemporalAdjusters
 import kotlin.math.max
 import kotlin.math.min
 
+
 @Composable
-fun MenuScreen(
-    navController: NavHostController,
-    auth: UserProvider) {
+fun MenuScreen(auth: ApplicationData) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         content = { padding ->
-            MenuContent(padding, auth, navController)
+            MenuContent(auth, padding)
         }, topBar = {
             TopAppBar(
                 title = {
@@ -93,10 +89,7 @@ private val optionsList: ArrayList<OptionsData> = ArrayList()
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MenuContent(
-    paddingValues: PaddingValues,
-    auth: UserProvider,
-    navController: NavHostController,) {
+fun MenuContent(auth: ApplicationData, padding: PaddingValues) {
     val context = LocalContext.current.applicationContext
     var listPrepared by remember { mutableStateOf(false) }
     val showDialogAccount = remember { mutableStateOf(false) }
@@ -118,7 +111,7 @@ fun MenuContent(
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                UserDetails(context = context, auth, navController)
+                UserDetails(auth)
             }
             items(optionsList) { item ->
                 when(item.title)
@@ -180,10 +173,7 @@ fun MenuContent(
 }
 
 @Composable
-private fun UserDetails(
-    context: Context,
-    auth: UserProvider,
-    navController: NavHostController,) {
+private fun UserDetails(auth: ApplicationData) {
     val showDialogAccount = remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -232,7 +222,7 @@ private fun UserDetails(
                         .weight(weight = 1f, fill = false),
                     onClick = {
                         auth.user?.logout {  }
-                        navController.navigate(AuthScreen.Login.route)
+                        auth.navigation.navigate(Routes.LOGIN.path)
                     }
                 ) {
                     Icon(

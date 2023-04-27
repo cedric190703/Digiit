@@ -17,15 +17,15 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
+import com.example.digiit.ApplicationData
 import com.example.digiit.R
-import com.example.digiit.data.UserProvider
+
 
 @Composable
-fun SearchViewHomeTicket(auth: UserProvider) {
+fun SearchViewHomeTicket(auth: ApplicationData) {
     val filterItem = remember { mutableStateOf("Enseigne") }
     val filterOrder = remember { mutableStateOf("Croissant") }
     var expanded by remember { mutableStateOf(false) }
-    val userTickets = auth.user!!.tickets
 
     //For Home
     val listItemsHome = getMenuItemsList()
@@ -162,7 +162,7 @@ fun SearchViewHomeTicket(auth: UserProvider) {
 }
 
 @Composable
-fun SearchViewHomeWallet(auth: UserProvider) {
+fun SearchViewHomeWallet(auth: ApplicationData) {
     val typeItem = remember { mutableStateOf("Tout") }
     val filterItem = remember { mutableStateOf("Enseigne") }
     val filterOrder = remember { mutableStateOf("Croissant") }

@@ -18,13 +18,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.example.digiit.ApplicationData
 import com.example.digiit.R
-import com.example.digiit.data.UserProvider
 import es.dmoral.toasty.Toasty
 
 @Composable
 fun HomeLogin(
-    auth: UserProvider,
+    auth: ApplicationData,
     onClickGoHome: () -> Unit,
     onClickSignUp: () -> Unit,
     onClickForget: () -> Unit
@@ -107,7 +107,7 @@ fun HomeLogin(
                             return@Button
                         }
                         isLoading.value = true
-                        auth.loginRemoteUser(emailVal.value, password.value) { error, _ ->
+                        auth.userProvider.loginRemoteUser(emailVal.value, password.value) { error, _ ->
                             if (error == null) {
                                 Toasty.success(
                                     context,

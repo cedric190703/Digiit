@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.digiit.ApplicationData
 import com.example.digiit.data.TradeKinds
-import com.example.digiit.data.UserProvider
 import com.example.digiit.data.user.User
 import com.github.mikephil.charting.charts.*
 import com.github.mikephil.charting.components.AxisBase
@@ -25,7 +24,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBubbleDataSet
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -62,7 +60,7 @@ enum class Mois(val numero: Int, val nom: String) {
         /**
          * Generate the linechart graph with each months spending
          */
-fun LineChartByMonth(auth: UserProvider, start : LocalDateTime, end :  LocalDateTime) {
+fun LineChartByMonth(auth: ApplicationData, start : LocalDateTime, end :  LocalDateTime) {
 
     val dataGraph = mutableListOf<Pair<LocalDateTime, Float>>()
     var current = start.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS)
@@ -188,7 +186,7 @@ suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, b
 
 @Composable
 //PieChar With 5 most used kinds between two date
-fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+fun PieChart(auth : ApplicationData, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
     val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
 
     val dataPoints = top5.sortedByDescending { it.second }.take(5)
@@ -268,7 +266,7 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
 }
 
 @Composable
-fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+fun BarChart(auth: ApplicationData, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
     val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
 
     val dataPoints = top5.sortedByDescending { it.second }.take(5)
@@ -337,7 +335,7 @@ fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
 }
 
 @Composable
-fun LineChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+fun LineChart(auth : ApplicationData, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
     val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
 
     val dataPoints = top5.sortedByDescending { it.second }.take(5)
@@ -417,7 +415,7 @@ fun LineChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, be
 
 @Composable
 //PieChar With 5 most used kinds between two date
-fun CubicLineChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+fun CubicLineChart(auth: ApplicationData, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
     val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
 
     val dataPoints = top5.sortedByDescending { it.second }.take(5)
@@ -607,7 +605,7 @@ fun GroupedBarChart() {
 }
 
 @Composable
-fun HorizontalBarChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+fun HorizontalBarChart(auth : ApplicationData, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
     val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
 
     val dataPoints = top5.sortedByDescending { it.second }.take(5)
@@ -678,7 +676,7 @@ fun HorizontalBarChart(auth : UserProvider, after : LocalDateTime = LocalDateTim
 }
 
 @Composable
-fun BubbleChart(auth : UserProvider, start : LocalDateTime = LocalDateTime.MIN, end : LocalDateTime = LocalDateTime.MAX) {
+fun BubbleChart(auth : ApplicationData, start : LocalDateTime = LocalDateTime.MIN, end : LocalDateTime = LocalDateTime.MAX) {
     val months = mutableListOf<LocalDateTime>()
 
     // (date, averageRating, spending)
@@ -802,7 +800,7 @@ fun BubbleChart(auth : UserProvider, start : LocalDateTime = LocalDateTime.MIN, 
 }
 
 @Composable
-fun RadarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
+fun RadarChart(auth: ApplicationData, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
     var top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
 
     var dataPoints = top5.sortedByDescending { it.second }.take(5)

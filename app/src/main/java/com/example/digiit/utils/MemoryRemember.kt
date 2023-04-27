@@ -2,6 +2,7 @@ package com.example.digiit.utils
 
 class MemoryRemember<T>(val callback: () -> T) {
     private var _value: T? = null
+    private var locked = false
 
     val value: T
     get() {
@@ -10,6 +11,14 @@ class MemoryRemember<T>(val callback: () -> T) {
     }
 
     fun free() {
-        _value = null
+        if (!locked) _value = null
+    }
+
+    fun lock() {
+        locked = true
+    }
+
+    fun unlock() {
+        locked = false
     }
 }

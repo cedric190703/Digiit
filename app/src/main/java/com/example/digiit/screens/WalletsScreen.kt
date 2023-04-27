@@ -21,9 +21,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.digiit.ApplicationData
 import com.example.digiit.R
 import com.example.digiit.dialogs.cards.WalletCard
-import com.example.digiit.data.UserProvider
 import com.example.digiit.data.wallet.Wallet
 import com.example.digiit.photos.SelectOption
 import com.example.digiit.photos.TypeScreen
@@ -32,7 +32,7 @@ import com.example.digiit.widgets.search.SearchViewHomeWallet
 import es.dmoral.toasty.Toasty
 
 @Composable
-fun WalletsScreen(auth: UserProvider) {
+fun WalletsScreen(auth: ApplicationData) {
     val showDialog =  remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier
@@ -80,7 +80,7 @@ fun WalletsScreen(auth: UserProvider) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun WalletContent(paddingValues: PaddingValues, auth: UserProvider) {
+fun WalletContent(paddingValues: PaddingValues, auth: ApplicationData) {
     val context = LocalContext.current.applicationContext
     val userWallets = auth.user!!.wallets
     val listState = rememberLazyListState()

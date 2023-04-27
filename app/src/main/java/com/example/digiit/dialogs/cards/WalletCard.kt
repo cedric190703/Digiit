@@ -20,15 +20,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.digiit.ApplicationData
 import com.example.digiit.cards.Tag
-import com.example.digiit.data.UserProvider
 import com.example.digiit.data.wallet.Wallet
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun WalletCard(wallet: Wallet, auth: UserProvider) {
+fun WalletCard(wallet: Wallet, auth: ApplicationData) {
     val showDialog = remember { mutableStateOf(false)}
     Card(
         elevation = 0.dp,

@@ -21,21 +21,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.digiit.data.UserProvider
+import com.example.digiit.ApplicationData
 import com.example.digiit.data.card.Card
 import es.dmoral.toasty.Toasty
 
-//For the toasts
-//Toasty.error(ctx, "This is an error toast.", Toast.LENGTH_SHORT, true).show()
-//Toasty.success(ctx, "This is a Success toast.", Toast.LENGTH_SHORT, true).show()
-//Toasty.info(ctx, "This is a Info toast.", Toast.LENGTH_SHORT, true).show()
-//Toasty.warning(ctx, "This is a Warning toast.", Toast.LENGTH_SHORT, true).show()
-//Toasty.normal(ctx, "This is a Normal toast.").show()
 
 @Composable
 fun DeleteCard(
     card: Card,
-    auth: UserProvider,
+    auth: ApplicationData,
     cornerRadius: Dp = 12.dp,
     deleteButtonColor: Color = Color(0xFFD10303),
     cancelButtonColor: Color = Color(0xFF0A46AD),

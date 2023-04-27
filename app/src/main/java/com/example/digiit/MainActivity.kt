@@ -6,7 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.example.digiit.data.UserProvider
-import com.example.digiit.navgraphs.RootNavigationGraph
+import com.example.digiit.navigation.AppNav
+import com.example.digiit.navigation.RootNavigationGraph
 import com.example.digiit.ui.theme.DigiitTheme
 import com.example.digiit.utils.MemoryRemember
 import com.google.firebase.FirebaseApp
@@ -17,13 +18,16 @@ class MainActivity : ComponentActivity() {
         val auth = MemoryRemember { UserProvider(FirebaseApp.getInstance()) }
     }
 
-    private var configChanged = false
+    lateinit var app: ApplicationData
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+        auth.unlock()
+
         setContent {
             DigiitTheme {
                 val navController = rememberNavController()
-                RootNavigationGraph(navController = navController, auth = auth.value)
+                val app = ApplicationData(applicationContext, AppNav(), auth.value)
+                RootNavigationGraph(app)
             }
         }
 
@@ -36,14 +40,12 @@ class MainActivity : ComponentActivity() {
 
     public override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        configChanged = true
+        auth.lock()
         recreate()
     }
 
     public override fun onDestroy() {
-        if (!configChanged) {
-            auth.free()
-        }
+        auth.free()
         super.onDestroy()
     }
 }

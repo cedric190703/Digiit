@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.digiit.data.UserProvider
+import com.example.digiit.ApplicationData
 import com.example.digiit.graphs.CubicLineChart
 import com.example.digiit.graphs.LineChartByMonth
 import com.example.digiit.graphs.PieChart
@@ -24,7 +24,7 @@ import java.time.LocalDateTime
 
 @Composable
 fun Bilan(onDismiss: (Boolean) -> Unit,
-          auth : UserProvider, start : LocalDateTime, end : LocalDateTime ) {
+          auth : ApplicationData, start : LocalDateTime, end : LocalDateTime ) {
     val listState = rememberLazyListState()
     Dialog(
         onDismissRequest = { onDismiss(false) },

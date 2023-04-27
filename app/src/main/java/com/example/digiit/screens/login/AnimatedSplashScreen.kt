@@ -17,28 +17,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.example.digiit.navgraphs.AuthScreen
+import com.example.digiit.ApplicationData
 import com.example.digiit.R
+import com.example.digiit.navigation.Routes
 
-fun skipSplashScreen(navController : NavHostController) {
-    navController.navigate(AuthScreen.Login.route)
+
+fun skipSplashScreen(auth: ApplicationData) {
+    auth.navigation.navigate(Routes.LOGIN.path)
 }
 
+
 @Composable
-fun AnimatedSplashScreen(navController : NavHostController) {
+fun AnimatedSplashScreen(auth: ApplicationData) {
     val startAnimation = remember { mutableStateOf(false) }
     val anim = animateFloatAsState(
         targetValue = if(startAnimation.value) 1f else 0f,
         animationSpec = tween(
             durationMillis = 1500
         ),
-        finishedListener = { skipSplashScreen(navController) }
+        finishedListener = { skipSplashScreen(auth) }
     )
     LaunchedEffect(0) {
         startAnimation.value = true
     }
-    Splash(anim = anim) { skipSplashScreen(navController) }
+    Splash(anim = anim) { skipSplashScreen(auth) }
 }
 
 @Composable
