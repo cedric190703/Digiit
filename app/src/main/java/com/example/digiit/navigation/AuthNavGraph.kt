@@ -14,7 +14,11 @@ import es.dmoral.toasty.Toasty
 
 @Composable
 fun AuthNavGraph(auth: ApplicationData) {
-    AppNavHost(nav = auth.navigation, route = Routes.AUTH.route, default = Routes.SPLASH.route) {
+    AppNavHost(
+        nav = auth.navigation,
+        route = Routes.AUTH.route,
+        default = Routes.SPLASH.route
+    ) {
         composable(route = Routes.LOGIN.route) {
             HomeLogin(
                 auth = auth,

@@ -17,7 +17,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|layoutDirection"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|layoutDirection|colorMode"
             android:theme="@style/Theme.Digiit">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

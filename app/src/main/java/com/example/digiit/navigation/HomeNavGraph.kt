@@ -1,7 +1,9 @@
 package com.example.digiit.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,7 +17,12 @@ fun HomeNavGraph(
     auth: ApplicationData,
     padding: PaddingValues
 ) {
-    AppNavHost(nav = auth.navigation, route = Routes.HOME.route, default = Routes.TICKETS.route) {
+    AppNavHost(
+        nav = auth.navigation,
+        route = Routes.HOME.route,
+        default = Routes.TICKETS.route,
+        modifier = Modifier.padding(padding)
+    ) {
         composable(route = Routes.TICKETS.route) {
             TicketsScreen(auth)
         }

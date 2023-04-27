@@ -1,6 +1,7 @@
 package com.example.digiit.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -47,16 +48,16 @@ class AppNav(var controller: NavController? = null) {
 
 
 @Composable
-fun AppNavHost(nav: AppNav, route: String, default: String, content: NavGraphBuilder.() -> Unit) {
+fun AppNavHost(nav: AppNav, route: String, default: String, modifier: Modifier = Modifier, content: NavGraphBuilder.() -> Unit) {
     val navController = rememberNavController()
     nav.registerChild(route, navController)
     val child = nav.getChild(route)
     val start: String = (child?.currentRoute() ?: "").ifEmpty { default }
-    println("======================== Start of '$route' is '$start'")
     NavHost(
         navController = navController,
         route = route,
-        startDestination = start
+        startDestination = start,
+        modifier = modifier
     ) {
         content()
     }
