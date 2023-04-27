@@ -28,10 +28,7 @@ import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun WalletCard(
-    wallet: Wallet,
-    auth: UserProvider
-) {
+fun WalletCard(wallet: Wallet, auth: UserProvider) {
     val showDialog = remember { mutableStateOf(false)}
     Card(
         elevation = 0.dp,
@@ -66,8 +63,6 @@ fun WalletCard(
     ) {
         //parent column
         Column() {
-
-
             // Main Row
             Row(
                 modifier = Modifier
@@ -189,6 +184,6 @@ fun WalletCard(
     }
     if(showDialog.value)
     {
-        WalletDetailsSmall(setState = { showDialog.value = it }, wallet, auth)
+        WalletDetails(setState = { showDialog.value = it }, wallet, auth)
     }
 }

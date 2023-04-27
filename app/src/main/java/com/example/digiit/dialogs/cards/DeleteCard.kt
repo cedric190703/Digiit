@@ -33,7 +33,7 @@ import es.dmoral.toasty.Toasty
 //Toasty.normal(ctx, "This is a Normal toast.").show()
 
 @Composable
-fun DeleteTicket(
+fun DeleteCard(
     card: Card,
     auth: UserProvider,
     cornerRadius: Dp = 12.dp,
@@ -51,9 +51,7 @@ fun DeleteTicket(
     buttonTextStyle: TextStyle = TextStyle(
         fontSize = 16.sp
     ),
-    onDismiss: (Boolean) -> Unit,
-    setSmallDialog: (Boolean) -> Unit,
-    setBigScreen: (Boolean) -> Unit
+    onDismiss: (deleted: Boolean) -> Unit
 ) {
     val context = LocalContext.current.applicationContext
 
@@ -146,13 +144,11 @@ fun DeleteTicket(
                                 indication = null,
                                 interactionSource = interactionSource
                             ) {
-                                onDismiss(false)
                                 card.delete { error ->
                                     if (error == null) {
-                                        auth.user!!.tickets.remove(card)
+                                        auth.user!!.tickets.remove(card) // TODO : Fix
                                         Toasty.success(context, "Ticket supprimé", Toast.LENGTH_SHORT).show()
-                                        setSmallDialog(false)
-                                        setBigScreen(false)
+                                        onDismiss(true)
                                     } else {
                                         Toasty.error(context, "Echec de la suppression", Toast.LENGTH_SHORT).show()
                                     }

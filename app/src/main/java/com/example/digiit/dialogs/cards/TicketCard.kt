@@ -160,6 +160,6 @@ fun TicketCard(ticket: Ticket, auth: UserProvider) {
     }
     if(showDialog.value)
     {
-        TicketDetailsSmall(setState = { showDialog.value = it }, ticket, auth)
+        TicketDetails(setState = { showDialog.value = it }, ticket, auth)
     }
 }
