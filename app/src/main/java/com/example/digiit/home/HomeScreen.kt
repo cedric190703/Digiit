@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -21,10 +20,10 @@ import com.example.digiit.data.UserProvider
 import com.example.digiit.navgraphs.HomeNavGraph
 
 @Composable
-fun SetHomeScreen(auth: UserProvider, navControllerLogin: NavHostController) {
+fun HomeScreen(auth: UserProvider, navControllerLogin: NavHostController) {
     val navControllerHome = rememberNavController()
     Scaffold(
-        bottomBar = { BottomBar(navController = navControllerHome) }
+        bottomBar = { HomeBottomBar(navController = navControllerHome) }
     ) {padding ->
         HomeNavGraph(navController = navControllerHome,
             padding = padding,
@@ -34,12 +33,12 @@ fun SetHomeScreen(auth: UserProvider, navControllerLogin: NavHostController) {
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun HomeBottomBar(navController: NavHostController) {
     val screens = listOf(
-        BottomBarScreen.Home,
-        BottomBarScreen.Wallet,
-        BottomBarScreen.Data,
-        BottomBarScreen.Menu
+        HomeBottomBarEntry.Home,
+        HomeBottomBarEntry.Wallet,
+        HomeBottomBarEntry.Data,
+        HomeBottomBarEntry.Menu
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

@@ -7,11 +7,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.digiit.data.UserProvider
-import com.example.digiit.navigationlogin.AnimatedSplashScreen
-import com.example.digiit.showfeatures.Features
-import com.example.digiit.navigationlogin.CreateAccount
-import com.example.digiit.navigationlogin.HomeLogin
-import com.example.digiit.navigationlogin.LostPassword
+import com.example.digiit.screens.login.AnimatedSplashScreen
+import com.example.digiit.screens.FeaturesScreen
+import com.example.digiit.screens.login.CreateAccount
+import com.example.digiit.screens.login.HomeLogin
+import com.example.digiit.screens.login.LostPassword
 import es.dmoral.toasty.Toasty
 
 fun NavGraphBuilder.authNavGraph(
@@ -88,7 +88,7 @@ fun NavGraphBuilder.authNavGraph(
             )
         }
         composable(route = AuthScreen.Animation.route) {
-            Features(
+            FeaturesScreen(
                 onClick = {
                     navController.navigate(Graph.HOME)
                 }

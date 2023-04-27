@@ -41,7 +41,7 @@ class TakePhoto : ComponentActivity() {
     @ExperimentalGetImage
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var mode = intent.extras?.getSerializable("mode") as? CameraMode ?: CameraMode.CAMERA
+        val mode = intent.extras?.getSerializable("mode") as? CameraMode ?: CameraMode.CAMERA
         setContent {
             if (shouldShowCamera.value) {
                 CameraView(

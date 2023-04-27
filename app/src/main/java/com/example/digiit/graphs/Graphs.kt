@@ -153,7 +153,9 @@ fun LineChartByMonth(auth: UserProvider, start : LocalDateTime, end :  LocalDate
             )
         }
     }
-}@OptIn(ExperimentalCoroutinesApi::class)
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
 suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX): List<Pair<TradeKinds, Float>> {
     val result = ArrayList<Pair<TradeKinds, Float>>()
     for (kind in TradeKinds.values()) {

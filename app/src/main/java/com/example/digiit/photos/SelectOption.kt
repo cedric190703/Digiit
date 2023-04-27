@@ -70,7 +70,7 @@ fun SelectOption(
 
             recognizer.process(inputImage)
                 .addOnSuccessListener { visionText ->
-                    var r = parseText(visionText)
+                    val r = parseText(visionText)
                     Log.d("OCR", r.toString())
                     card.value = if (typeScreen == TypeScreen.Wallet) user!!.createWallet() else user!!.createTicket()
                     card.value!!.image = image.value

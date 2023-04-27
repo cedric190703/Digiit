@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.digiit.data.UserProvider
-import com.example.digiit.home.SetHomeScreen
+import com.example.digiit.home.HomeScreen
 
 @Composable
 fun RootNavigationGraph(
@@ -27,7 +27,7 @@ fun RootNavigationGraph(
     ) {
         authNavGraph(navController = navController, auth = auth, context = context)
         composable(route = Graph.HOME) {
-            SetHomeScreen(auth, navControllerLogin = navController)
+            HomeScreen(auth, navControllerLogin = navController)
         }
     }
 }
