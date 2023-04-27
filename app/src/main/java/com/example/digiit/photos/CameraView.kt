@@ -43,7 +43,7 @@ fun CameraView(
     onError: (ImageCaptureException) -> Unit,
     mode: CameraMode,
     stopActivity: () -> Unit,
-    onBarCodeDetected: (Int) -> Unit
+    onBarCodeDetected: (String) -> Unit
 ) {
     val lensFacing = CameraSelector.LENS_FACING_BACK
     val context = LocalContext.current
@@ -60,6 +60,7 @@ fun CameraView(
                     // Return the barCodeValue to the main activity
                     onBarCodeDetected(barCodeValue)
                     Toast.makeText(context, "Le code bar est trouvé", Toast.LENGTH_SHORT).show()
+                    //TODO: Create a new wallet with the barCodeValue
                 })
             }
     } else null

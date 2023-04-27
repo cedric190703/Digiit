@@ -107,7 +107,7 @@ class TakePhoto : ComponentActivity() {
         finish()
     }
 
-    private fun barCodeValue(barCodeValue: Int) {
+    private fun barCodeValue(barCodeValue: String) {
         val resultIntent = Intent().apply {
             putExtra("BARCODE", barCodeValue)
         }

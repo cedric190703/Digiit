@@ -19,7 +19,7 @@ import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.Executors
 
 @ExperimentalGetImage
-class BarcodeAnalyser(val callback: (Int) -> Unit) : ImageAnalysis.Analyzer {
+class BarcodeAnalyser(val callback: (String) -> Unit) : ImageAnalysis.Analyzer {
 
     private val options = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
@@ -43,9 +43,8 @@ class BarcodeAnalyser(val callback: (Int) -> Unit) : ImageAnalysis.Analyzer {
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
                 if (barcodes.isNotEmpty()) {
-                    val barcodeValue = barcodes[0].rawValue?.toInt()
+                    val barcodeValue = barcodes[0].rawValue
                     if (barcodeValue != null) {
-                        // Return the number for the loyalty card
                         callback(barcodeValue)
                     }
                 }
