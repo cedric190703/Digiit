@@ -1,0 +1,14 @@
+name: Comment on commit
+on:
+  push:
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Comment on commit
+      uses: unsplash/comment-on-commit-action@v2.1.1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        message: "🤡 <- your mum "

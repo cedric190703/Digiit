@@ -104,7 +104,7 @@ fun WalletDetails(setState: (Boolean) -> Unit, wallet: Wallet, auth: Application
 
                 Spacer(modifier = Modifier.padding(12.dp))
                 // TODO : Change here with the barCode from the wallet
-                BarcodeImage(number = "0123456790")
+                BarcodeImage(number = "63669053437950728317")
 
                 Spacer(modifier = Modifier.padding(72.dp))
                 ExtendedFloatingActionButton(
