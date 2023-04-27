@@ -1,0 +1,15 @@
+name: Comment on commit
+on:
+  push:
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Comment on commit
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        body: "🤡 <- You"
+        commit_message: ${{ github.event.head_commit.message }}
+        issue_number: ${{ github.event.number }}
