@@ -12,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.UserProvider
 import com.example.digiit.data.user.User
@@ -187,9 +188,12 @@ suspend fun getTopKinds(user: User, after : LocalDateTime = LocalDateTime.MIN, b
 @Composable
 //PieChar With 5 most used kinds between two date
 fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
-
-    val dataPoints = top5.sortedByDescending { it.second }.take(5)
+    val top5= if(ListOfType.size==0)
+        TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    else
+        ListOfType.map{ kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    val dataPoints = if(ListOfType.size!=0) top5.sortedByDescending { it.second}.take(ListOfType.size)
+    else top5.sortedByDescending { it.second}.take(5)
 
     /*val dataPoints = listOf(
         Pair("Commerce", 25f),
@@ -267,9 +271,12 @@ fun PieChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
 
 @Composable
 fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
-
-    val dataPoints = top5.sortedByDescending { it.second }.take(5)
+    val top5= if(ListOfType.size==0)
+        TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    else
+        ListOfType.map{ kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    val dataPoints = if(ListOfType.size!=0) top5.sortedByDescending { it.second}.take(ListOfType.size)
+    else top5.sortedByDescending { it.second}.take(5)
 
     val barEntries = dataPoints.mapIndexed { index, data ->
         BarEntry(index.toFloat(), data.second)
@@ -314,7 +321,11 @@ fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
                             setDrawGridLines(false)
                             valueFormatter = object : ValueFormatter() {
                                 override fun getFormattedValue(value: Float): String {
-                                    return dataPoints[value.toInt()].first.toString()
+                                    return if (value.toInt() < dataPoints.size && value.toInt() >= 0) {
+                                        dataPoints[value.toInt()].first.toString()
+                                    } else {
+                                        ""
+                                    }
                                 }
                             }
                         }
@@ -336,9 +347,12 @@ fun BarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, bef
 
 @Composable
 fun LineChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
-
-    val dataPoints = top5.sortedByDescending { it.second }.take(5)
+    val top5= if(ListOfType.size==0)
+        TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    else
+        ListOfType.map{ kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    val dataPoints = if(ListOfType.size!=0) top5.sortedByDescending { it.second}.take(ListOfType.size)
+    else top5.sortedByDescending { it.second}.take(5)
 
     val lineEntries = dataPoints.mapIndexed { index, data ->
         Entry(index.toFloat(), data.second)
@@ -385,7 +399,11 @@ fun LineChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, be
                             setDrawGridLines(false)
                             valueFormatter = object : ValueFormatter() {
                                 override fun getFormattedValue(value: Float): String {
-                                    return dataPoints[value.toInt()].first.toString()
+                                    return if (value.toInt() < dataPoints.size && value.toInt() >= 0) {
+                                        dataPoints[value.toInt()].first.toString()
+                                    } else {
+                                        ""
+                                    }
                                 }
                             }
                             textSize = 12f
@@ -416,9 +434,12 @@ fun LineChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, be
 @Composable
 //PieChar With 5 most used kinds between two date
 fun CubicLineChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
-
-    val dataPoints = top5.sortedByDescending { it.second }.take(5)
+    val top5= if(ListOfType.size==0)
+        TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    else
+    ListOfType.map{ kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    val dataPoints = if(ListOfType.size!=0) top5.sortedByDescending { it.second}.take(ListOfType.size)
+    else top5.sortedByDescending { it.second}.take(5)
 
     val lineEntries = dataPoints.mapIndexed { index, data ->
         Entry(index.toFloat(), data.second)
@@ -474,7 +495,11 @@ fun CubicLineChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MI
                             setDrawGridLines(false)
                             valueFormatter = object : ValueFormatter() {
                                 override fun getFormattedValue(value: Float): String {
-                                    return dataPoints[value.toInt()].first.toString()
+                                    return if (value.toInt() < dataPoints.size && value.toInt() >= 0) {
+                                        dataPoints[value.toInt()].first.toString()
+                                    } else {
+                                        ""
+                                    }
                                 }
                             }
                             textSize = 12f
@@ -606,9 +631,12 @@ fun GroupedBarChart() {
 
 @Composable
 fun HorizontalBarChart(auth : UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    val top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
-
-    val dataPoints = top5.sortedByDescending { it.second }.take(5)
+    val top5= if(ListOfType.size==0)
+        TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    else
+        ListOfType.map{ kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    val dataPoints = if(ListOfType.size!=0) top5.sortedByDescending { it.second}.take(ListOfType.size)
+    else top5.sortedByDescending { it.second}.take(5)
 
     val barEntries = dataPoints.mapIndexed { index, data ->
         BarEntry(index.toFloat(), data.second)
@@ -654,9 +682,13 @@ fun HorizontalBarChart(auth : UserProvider, after : LocalDateTime = LocalDateTim
                         xAxis.setDrawGridLines(false)
                         xAxis.granularity = 1f
                         xAxis.valueFormatter = object : ValueFormatter() {
-                            override fun getFormattedValue(value: Float): String {
-                                return dataPoints[value.toInt()].first.toString()
-                            }
+                                override fun getFormattedValue(value: Float): String {
+                                    return if (value.toInt() < dataPoints.size && value.toInt() >= 0) {
+                                        dataPoints[value.toInt()].first.toString()
+                                    } else {
+                                        ""
+                                    }
+                                }
                         }
                         legend.isEnabled = false
                     }
@@ -801,9 +833,12 @@ fun BubbleChart(auth : UserProvider, start : LocalDateTime = LocalDateTime.MIN, 
 
 @Composable
 fun RadarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, before : LocalDateTime = LocalDateTime.MAX) {
-    var top5 = TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
-
-    var dataPoints = top5.sortedByDescending { it.second }.take(5)
+    val top5= if(ListOfType.size==0)
+        TradeKinds.values().map {kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    else
+        ListOfType.map{ kind -> Pair(kind,  auth.user!!.getSpeedingIn(kind,after,before))}
+    val dataPoints = if(ListOfType.size!=0) top5.sortedByDescending { it.second}.take(ListOfType.size)
+    else top5.sortedByDescending { it.second}.take(5)
 
     val maxValue = dataPoints.maxByOrNull { it.second }?.second ?: 0f
     val yAxisMaxValue = (maxValue / 10f).coerceAtLeast(1f) * 10f
@@ -862,7 +897,11 @@ fun RadarChart( auth: UserProvider, after : LocalDateTime = LocalDateTime.MIN, b
                         xAxis.apply {
                             valueFormatter = object : ValueFormatter() {
                                 override fun getFormattedValue(value: Float): String {
-                                    return dataPoints[value.toInt() % dataPoints.size].first.toString()
+                                    return if (value.toInt() < dataPoints.size && value.toInt() >= 0) {
+                                        dataPoints[value.toInt()].first.toString()
+                                    } else {
+                                        ""
+                                    }
                                 }
                             }
                             textSize = 10f

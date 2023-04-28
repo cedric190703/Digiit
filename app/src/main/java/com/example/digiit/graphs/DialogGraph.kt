@@ -3,13 +3,13 @@
 package com.example.digiit.graphs
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,30 +18,132 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.digiit.data.TradeKinds
 import com.example.digiit.data.UserProvider
-import com.google.type.DateTime
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.example.digiit.data.user.User
 import java.time.LocalTime
 
 val icons = listOf<TypeGraph>(
     TypeGraph.LineChart,
     TypeGraph.CubicLine,
     TypeGraph.BarChart,
-    TypeGraph.BubbleGraph,
-    TypeGraph.GroupedBarChart,
-    TypeGraph.PieChart,
+    TypeGraph.HorizontalBarChart,
     TypeGraph.RadarChartData,
-    TypeGraph.HorizontalBarChart)
+    TypeGraph.PieChart)
 
 var StartDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN)
 var EndDate: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
+val selectedOptions = mutableStateListOf<String>()
+var ListOfType=mutableStateListOf<TradeKinds>()
+fun addandcheckifin(str : TradeKinds)
+{
+    if (!ListOfType.contains(str)) {
+        ListOfType.add(str)
+    }
+    println("plussssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss LAIDE")
+}
+fun removeandcheckifin(str : TradeKinds)
+{
+    val index = ListOfType.indexOfFirst { it.title == str.title }
+    if (index != -1) {
+        ListOfType.removeAt(index)
+    }
+    println(ListOfType.size)
+}
+@Composable
+fun MultiSelectDropdownList(
+    options: List<TradeKinds>,
+    selectedOptions: MutableList<String>
+) {
+    var expanded by remember { mutableStateOf(false) }
 
+    Column {
+        // Bouton de sélection
+        Button(
+            onClick = { expanded = true },
+            shape = RoundedCornerShape(15.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = if (selectedOptions.isNotEmpty()) {
+                    if (selectedOptions.size==1)
+                    {
+                        "${selectedOptions.size} filtre sélectionné"
+                    }
+                    else
+                    "${selectedOptions.size} filtres sélectionnés"
+                } else {
+                    "Filtres avancés"
+                }
+            )
+        }
+
+        // Liste des options
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            options.forEach { option ->
+                val isChecked = selectedOptions.contains(option.title)
+                DropdownMenuItem(
+                    onClick = {
+                        if (isChecked) {
+                            selectedOptions.remove(option.title)
+                            removeandcheckifin(option)
+                            println("JesaisPas plus" + option.title)
+                        } else {
+                            selectedOptions.add(option.title)
+                            addandcheckifin(option)
+                            println("ddadadada plus" + option.title)
+                        }
+                    }
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = isChecked,
+                            onCheckedChange = {
+                                if (isChecked) {
+                                    selectedOptions.remove(option.title)
+                                    println("delete" + option.title)
+                                } else {
+                                    selectedOptions.add(option.title)
+                                    println("add" + option.title)
+                                }
+                            }
+                        )
+
+                        Text(
+                            text = option.title,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+@Composable
+fun MyScreen(auth: UserProvider) {
+    var reallist= listOf<TradeKinds>().toMutableList()
+    auth.user!!.tickets.forEach(){
+        if (!reallist.contains(it.type)){
+            reallist.add(it.type)
+
+        }
+
+    }
+    val selectedOptions = selectedOptions
+    MultiSelectDropdownList(options = reallist, selectedOptions = selectedOptions)
+}
 @Composable
 fun DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
     val dateDialogState = rememberMaterialDialogState()
@@ -221,12 +323,21 @@ fun DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
                             .fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
+                    MyScreen(auth)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Divider(
+                        color = MaterialTheme.colors.primary,
+                        thickness = 5.dp,
+                        modifier = Modifier
+                            .height(1.5.dp)
+                            .fillMaxWidth()
+                    )
                     Text(
                         text = "Sélectionner un type de graphique à ajouter: ",
                         fontSize = 27.sp
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
-                    repeat(4) { index ->
+                    repeat(3) { index ->
                         val firstIconIndex = index * 2
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -244,8 +355,7 @@ fun DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
                                         when (firstIconIndex){
                                             0->auth.user!!.listGraphs.add(TypeGraph.CubicLine)
                                             2->auth.user!!.listGraphs.add(TypeGraph.BarChart)
-                                            4->auth.user!!.listGraphs.add(TypeGraph.GroupedBarChart)
-                                            6->auth.user!!.listGraphs.add(TypeGraph.RadarChartData)
+                                            4->auth.user!!.listGraphs.add(TypeGraph.RadarChartData)
                                         }
                                     },
                                     icon = {
@@ -270,9 +380,8 @@ fun DialogGraph(auth: UserProvider,setShowDialog: (Boolean) -> Unit) {
                                         setShowDialog(false)
                                         when (secondIconIndex){
                                             1->auth.user!!.listGraphs.add(TypeGraph.LineChart)
-                                            3->auth.user!!.listGraphs.add(TypeGraph.BubbleGraph)
                                             5->auth.user!!.listGraphs.add(TypeGraph.PieChart)
-                                            7->auth.user!!.listGraphs.add(TypeGraph.HorizontalBarChart)
+                                            3->auth.user!!.listGraphs.add(TypeGraph.HorizontalBarChart)
                                         }
                                     },
                                     icon = {
