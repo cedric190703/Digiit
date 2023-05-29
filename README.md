@@ -7,20 +7,20 @@
 <img src="./images/logo.png" alt="Logo Digiit" width="300" height="300">
 </p>
 <hr size="4">
-## Digiit have 4 main pages :
-### Home
+Digiit have 4 main pages :
+Home
 <p align="center">
 <img src="./images/tickets.png" alt="tickets image" width="300" height="550">
 </p>
-### Wallets
+Wallets
 <p align="center">
 <img src="./images/Wallets.png" alt="wallets image" width="300" height="550">
 </p>
-### Data
+Data
 <p align="center">
 <img src="./images/data.png" alt="data image" width="300" height="550">
 </p>
-### Menu
+Menu
 <p align="center">
 <img src="./images/menu.png" alt="menu image" width="300" height="550">
 </p>
