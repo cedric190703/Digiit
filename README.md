@@ -10,17 +10,17 @@
 ## Digiit have 4 main pages :
 ### Home
 <p align="center">
-<img src="./images/tickets.png" alt="tickets image" width="300" height="300">
+<img src="./images/tickets.png" alt="tickets image" width="300" height="550">
 </p>
 ### Wallets
 <p align="center">
-<img src="./images/wallets.png" alt="wallets image" width="300" height="300">
+<img src="./images/Wallets.png" alt="wallets image" width="300" height="550">
 </p>
 ### Data
 <p align="center">
-<img src="./images/data.png" alt="data image" width="300" height="300">
+<img src="./images/data.png" alt="data image" width="300" height="550">
 </p>
 ### Menu
 <p align="center">
-<img src="./images/menu.png" alt="menu image" width="300" height="300">
+<img src="./images/menu.png" alt="menu image" width="300" height="550">
 </p>
